@@ -1,4 +1,4 @@
-﻿
+﻿@model Trave.Models.HomeViewModel
 @{
     ViewBag.Title = "Travela - Dream Destinations, Unforgettable Experiences";
 }
@@ -89,301 +89,106 @@
             <h1 class="mb-0">Popular Destination</h1>
         </div>
         <div class="tab-class text-center">
-            <ul class="nav nav-pills d-inline-flex justify-content-center mb-5">
-                <li class="nav-item">
-                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">
-                        <span class="text-dark" style="width: 150px;">All</span>
+            <ul class="nav nav-pills d-inline-flex justify-content-center mb-5 position-relative" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="mx-3 py-2 px-4 border border-primary bg-light rounded-pill active text-dark"
+                       id="pill-tab-all"
+                       data-bs-toggle="pill"
+                       href="#pill-content-all"
+                       role="tab"
+                       aria-controls="pill-content-all"
+                       aria-selected="true">
+                        All
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="d-flex py-2 mx-3 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
-                        <span class="text-dark" style="width: 150px;">USA</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
-                        <span class="text-dark" style="width: 150px;">Canada</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
-                        <span class="text-dark" style="width: 150px;">Europe</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-5">
-                        <span class="text-dark" style="width: 150px;">China</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#tab-6">
-                        <span class="text-dark" style="width: 150px;">Singapore</span>
-                    </a>
-                </li>
+
+                @foreach (var item in Model.DiaDiems.Take(4))
+                {
+                    <li class="nav-item" role="presentation">
+                        <a class="mx-3 py-2 px-4 border border-primary bg-light rounded-pill text-dark"
+                           id="pill-tab-@item.MaDD"
+                           data-bs-toggle="pill"
+                           href="#pill-content-@item.MaDD"
+                           role="tab"
+                           aria-controls="pill-content-@item.MaDD"
+                           aria-selected="false">
+                            @item.QuocGia
+                        </a>
+                    </li>
+                }
+
+                @if (Model.DiaDiems.Count() > 4)
+                {
+                    <li class="nav-item dropdown position-static">
+                        <a class="mx-3 py-2 px-4 border border-primary bg-light rounded-pill dropdown-toggle text-dark"
+                           data-bs-toggle="dropdown"
+                           href="#"
+                           role="button"
+                           aria-expanded="false">
+                            More
+                        </a>
+
+                        <div class="dropdown-menu w-100 p-2 mt-2">
+                            <div class="container-fluid">
+                                <div class="row g-2">
+                                    @foreach (var item in Model.DiaDiems.Skip(4))
+                                    {
+                                        <div class="col-4">
+                                            <a class="dropdown-item text-dark text-wrap rounded-2"
+                                               id="pill-tab-@item.MaDD"
+                                               data-bs-toggle="pill"
+                                               href="#pill-content-@item.MaDD"
+                                               role="tab"
+                                               aria-controls="pill-content-@item.MaDD"
+                                               aria-selected="false">
+                                                @item.QuocGia
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
             </ul>
-            <div class="tab-content">
-                <div id="tab-1" class="tab-pane fade show p-0 active">
+            <div class="tab-content" id="pills-tabContent">
+
+                <div class="tab-pane fade show active"
+                     id="pill-content-all"
+                     role="tabpanel"
+                     aria-labelledby="pill-tab-all">
                     <div class="row g-4">
-                        <div class="col-xl-8">
-                            <div class="row g-4">
-                                <div class="col-lg-6">
-                                    <div class="destination-img">
-                                        <img class="img-fluid rounded w-100" src="img/destination-1.jpg" alt="">
-                                        <div class="destination-overlay p-4">
-                                            <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                            <h4 class="text-white mb-2 mt-3">New York City</h4>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                        <div class="search-icon">
-                                            <a href="img/destination-1.jpg" data-lightbox="destination-1"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                        </div>
+                        @foreach (var item in Model.DiaDiems.Take(6))
+                        {
+                            <div class="col-lg-4">
+                                <div class="destination-img">
+                                    <img class="img-fluid rounded w-100 " style="object-fit: cover;" src="@Url.Content("~/img/Destination/"+item.HinhAnh)" alt="@item.ThanhPho">
+                                    <div class="destination-overlay p-4">
+                                        @*<a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>*@
+                                        <h4 class="text-white mb-2 mt-3">@item.ThanhPho</h4>
+                                        <a href="#" class="btn-hover text-white">View This Place <i class="fa fa-arrow-right ms-2"></i></a>
                                     </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="destination-img">
-                                        <img class="img-fluid rounded w-100" src="img/destination-2.jpg" alt="">
-                                        <div class="destination-overlay p-4">
-                                            <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                            <h4 class="text-white mb-2 mt-3">Las vegas</h4>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                        <div class="search-icon">
-                                            <a href="img/destination-2.jpg" data-lightbox="destination-2"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="destination-img">
-                                        <img class="img-fluid rounded w-100" src="img/destination-7.jpg" alt="">
-                                        <div class="destination-overlay p-4">
-                                            <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                            <h4 class="text-white mb-2 mt-3">Los angelas</h4>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                        <div class="search-icon">
-                                            <a href="img/destination-7.jpg" data-lightbox="destination-7"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="destination-img">
-                                        <img class="img-fluid rounded w-100" src="img/destination-8.jpg" alt="">
-                                        <div class="destination-overlay p-4">
-                                            <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                            <h4 class="text-white mb-2 mt-3">Los angelas</h4>
-                                            <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                        </div>
-                                        <div class="search-icon">
-                                            <a href="img/destination-8.jpg" data-lightbox="destination-8"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                        </div>
+                                    <div class="search-icon">
+                                        <a href="@Url.Content("~/img/Destination/"+item.HinhAnh)" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="destination-img h-100">
-                                <img class="img-fluid rounded w-100 h-100" src="img/destination-9.jpg" style="object-fit: cover; min-height: 300px;" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-9.jpg" data-lightbox="destination-4"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-4.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">Los angelas</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-4.jpg" data-lightbox="destination-4"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-5.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">Los angelas</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-5.jpg" data-lightbox="destination-5"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-6.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">Los angelas</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-6.jpg" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
+
                 </div>
-                <div id="tab-2" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-5.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-5.jpg" data-lightbox="destination-5"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-6.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-6.jpg" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
+
+                @foreach (var item in Model.DiaDiems)
+                {
+                    <div class="tab-pane fade"
+                         id="pill-content-@item.MaDD"
+                         role="tabpanel"
+                         aria-labelledby="pill-tab-@item.MaDD">
+
+                        <p>Hiển thị nội dung cho @item.QuocGia...</p>
+
                     </div>
-                </div>
-                <div id="tab-3" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-5.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-5.jpg" data-lightbox="destination-5"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-6.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-6.jpg" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-4" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-5.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-5.jpg" data-lightbox="destination-5"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-6.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-6.jpg" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-5" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-5.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-5.jpg" data-lightbox="destination-5"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-6.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-6.jpg" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-6" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-5.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-5.jpg" data-lightbox="destination-5"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="destination-img">
-                                <img class="img-fluid rounded w-100" src="img/destination-6.jpg" alt="">
-                                <div class="destination-overlay p-4">
-                                    <a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>
-                                    <h4 class="text-white mb-2 mt-3">San francisco</h4>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                                <div class="search-icon">
-                                    <a href="img/destination-6.jpg" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -847,7 +652,6 @@
     </div>
 </div>
 <!-- Gallery End -->
-
 <!-- Blog Start -->
 <div class="container-fluid blog py-5">
     <div class="container py-5">
@@ -1027,7 +831,7 @@
         </div>
     </div>
 </div>
-<!-- Testimonial End -->    
+<!-- Testimonial End -->
 <!-- Subscribe Start -->
 <div class="container-fluid subscribe py-5">
     <div class="container text-center py-5">

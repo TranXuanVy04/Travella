@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Trave.Models;
 
 namespace Trave.Controllers
 {
     public class HomeController : Controller
     {
+        private DULICHEntities db = new DULICHEntities();
         public ActionResult Index()
         {
-            return View();
+            var model = new HomeViewModel
+            {
+                DiaDiems = db.DiaDiems.ToList(),
+                Tours = db.Tours.ToList()
+            };
+            return View(model);
         }
 
         public ActionResult Tour()
@@ -31,5 +38,6 @@ namespace Trave.Controllers
 
             return View();
         }
+        
     }
 }
