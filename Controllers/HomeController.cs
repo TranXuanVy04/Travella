@@ -13,7 +13,7 @@ namespace Trave.Controllers
             return View();
         }
 
-        public ActionResult Index1()
+        public ActionResult Tour()
         {
             return View();
         }
