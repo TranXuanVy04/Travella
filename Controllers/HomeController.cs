@@ -22,7 +22,10 @@ namespace Trave.Controllers
 
         public ActionResult Tour()
         {
-            return View();
+
+            var a = db.Tours.ToList();
+
+            return View(a);
         }
 
         public ActionResult About()

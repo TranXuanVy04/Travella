@@ -39,6 +39,5 @@ namespace Trave.Models
         public virtual ICollection<LichSuDat> LichSuDats { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ThanhToan> ThanhToans { get; set; }
-        public virtual Tour Tour1 { get; set; }
     }
 }

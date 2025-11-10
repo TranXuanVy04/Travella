@@ -33,18 +33,18 @@
             {
                 <div class="packages-item">
                     <div class="packages-img">
-                        <img src="@Url.Content("~/img/Tour/"+Model.anh)" class="img-fluid w-100 rounded-top" alt="Image">
+                        <img src="@Url.Content("~/img/Tour/"+item.Anh)" class="img-fluid w-100 rounded-top" alt="Image">
                         <div class="packages-info d-flex border border-start-0 border-end-0 position-absolute" style="width: 100%; bottom: 0; left: 0; z-index: 5;">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i>@item.MaDD</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i>@item.DiaDiem.ThanhPho</small>
                             <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt me-2"></i>@item.ThoiGian</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-user me-2"></i>@item.nguoi</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-user me-2"></i>@item.songuoi</small>
                         </div>
                         <div class="packages-price py-2 px-4">@item.Gia</div>
                     </div>
                     <div class="packages-content bg-light">
                         <div class="p-4 pb-0">
                             <h5 class="mb-0">@item.TenTour</h5>
-                            <small class="text-uppercase">@item.MaDD</small>
+                            <small class="text-uppercase">@item.DanhMuc.TenDM</small>
                             <div class="mb-3">
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
@@ -52,12 +52,10 @@
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
                             </div>
-                            <p class="mb-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt nemo quia quae illum aperiam fugiat voluptatem repellat</p>
+                            <p class="mb-4">@item.Mota</p>
                         </div>
                         <div class="row bg-primary rounded-bottom mx-0">
-                            <div class="col-6 text-start px-0">
-                                <a href="#" class="btn-hover btn text-white py-2 px-4">Read More</a>
-                            </div>
+                          
                             <div class="col-6 text-end px-0">
                                 <a href="#" class="btn-hover btn text-white py-2 px-4">Book Now</a>
                             </div>

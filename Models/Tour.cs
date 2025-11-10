@@ -19,7 +19,6 @@ namespace Trave.Models
         {
             this.DanhGias = new HashSet<DanhGia>();
             this.DatVes = new HashSet<DatVe>();
-            this.DatVes1 = new HashSet<DatVe>();
             this.MucYeuThiches = new HashSet<MucYeuThich>();
         }
     
@@ -32,14 +31,15 @@ namespace Trave.Models
         public string MaDD { get; set; }
         public string MaDM { get; set; }
         public string PhuongTien { get; set; }
+        public Nullable<int> songuoi { get; set; }
+        public string Mota { get; set; }
+        public string Anh { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DanhGia> DanhGias { get; set; }
         public virtual DanhMuc DanhMuc { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DatVe> DatVes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DatVe> DatVes1 { get; set; }
         public virtual DiaDiem DiaDiem { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MucYeuThich> MucYeuThiches { get; set; }
