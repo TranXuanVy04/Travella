@@ -10,6 +10,7 @@ namespace Trave.Controllers
     public class HomeController : Controller
     {
         private DULICHEntities db = new DULICHEntities();
+        
         public ActionResult Index()
         {
             var model = new HomeViewModel
