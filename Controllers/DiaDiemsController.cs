@@ -12,7 +12,7 @@ namespace Trave.Controllers
 {
     public class DiaDiemsController : Controller
     {
-        private DULICHEntities db = new DULICHEntities();
+        private DULICHEntities1 db = new DULICHEntities1();
 
         // GET: DiaDiems
         public ActionResult Index()
