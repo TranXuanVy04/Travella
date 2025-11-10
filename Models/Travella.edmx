@@ -154,7 +154,7 @@
             <PropertyRef Name="MaTour" />
           </Key>
           <Property Name="MaTour" Type="char" MaxLength="10" Nullable="false" />
-          <Property Name="TenTour" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TenTour" Type="nvarchar" MaxLength="250" />
           <Property Name="Gia" Type="float" Nullable="false" />
           <Property Name="Trạng_Thái" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ThoiGian" Type="varchar" MaxLength="50" Nullable="false" />
@@ -565,7 +565,7 @@
             <PropertyRef Name="MaTour" />
           </Key>
           <Property Name="MaTour" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="TenTour" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TenTour" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Gia" Type="Double" Nullable="false" />
           <Property Name="Trạng_Thái" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ThoiGian" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />

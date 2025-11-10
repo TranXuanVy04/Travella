@@ -183,21 +183,6 @@
     <Compile Include="Models\Tour.cs">
       <DependentUpon>Travella.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Travela.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Travela.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Travela.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Travela.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Travela.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Models\Travella.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -306,16 +291,6 @@
     <Content Include="img\testimonial-3.jpg" />
     <Content Include="img\testimonial-4.jpg" />
     <Content Include="img\tour-booking-bg.jpg" />
-    <Content Include="Models\Travela.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Travela.edmx</DependentUpon>
-      <LastGenOutput>Travela.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\Travela.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Travela.edmx</DependentUpon>
-      <LastGenOutput>Travela.cs</LastGenOutput>
-    </Content>
     <Content Include="Models\Travella.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Travella.edmx</DependentUpon>
@@ -416,13 +391,6 @@
     <Content Include="Content\scss\bootstrap\scss\_type.scss" />
     <Content Include="Content\scss\bootstrap\scss\_utilities.scss" />
     <Content Include="Content\scss\bootstrap\scss\_variables.scss" />
-    <EntityDeploy Include="Models\Travela.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Travela.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Travela.edmx.diagram">
-      <DependentUpon>Travela.edmx</DependentUpon>
-    </Content>
     <EntityDeploy Include="Models\Travella.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Travella.Designer.cs</LastGenOutput>
