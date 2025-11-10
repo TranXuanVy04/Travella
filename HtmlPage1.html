@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Thanh Toán</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-section, .summary-section {
+            flex: 1 1 45%;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+        }
+
+            .payment-methods label {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                cursor: pointer;
+            }
+
+        .btn-pay {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+            .btn-pay:hover {
+                background-color: #4338ca;
+            }
+
+        .summary-section {
+            background-color: #f9fafb;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .summary-total {
+            font-weight: bold;
+            font-size: 18px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-section, .summary-section {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Thông Tin Thanh Toán</h2>
+            <label>Họ và tên</label>
+            <input type="text" placeholder="Nguyễn Văn A">
+
+            <label>Email</label>
+            <input type="email" placeholder="example@gmail.com">
+
+            <label>Số điện thoại</label>
+            <input type="tel" placeholder="0123 456 789">
+
+            <label>Địa chỉ giao hàng</label>
+            <textarea rows="3" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"></textarea>
+
+            <h2>Phương Thức Thanh Toán</h2>
+            <div class="payment-methods">
+                <label><input type="radio" name="method" checked> Thẻ tín dụng</label>
+                <label><input type="radio" name="method"> Chuyển khoản</label>
+                <label><input type="radio" name="method"> COD</label>
+            </div>
+
+            <div id="credit-card-info">
+                <label>Số thẻ</label>
+                <input type="text" placeholder="1234 5678 9012 3456">
+
+                <label>Ngày hết hạn</label>
+                <input type="month">
+
+                <label>Mã CVV</label>
+                <input type="text" placeholder="123">
+            </div>
+
+            <button class="btn-pay" onclick="handlePayment()">Xác Nhận Thanh Toán</button>
+        </div>
+        <div class="summary-section">
+            <h2>Tóm Tắt Đơn Hàng</h2>
+            <div class="summary-item"><span>Sản phẩm A:</span></div>
+            <div class="summary-item"><span>Sản phẩm B</span></div>
+            <div class="summary-item"><span>Phí vận chuyển:</span></div>
+            <div class="summary-total"><span>Tổng cộng:</span></div>
+        </div>
+    </div>
+
+    <script>
+    const paymentMethods = document.querySelectorAll('input[name="method"]');
+    const creditCardInfo = document.getElementById('credit-card-info');
+
+    paymentMethods.forEach(method => {
+      method.addEventListener('change', () => {
+        creditCardInfo.style.display = method.value === 'credit' || method.nextSibling.textContent.includes('thẻ') ? 'block' : 'none';
+      });
+    });
+
+    function handlePayment() {
+      alert("Thanh toán thành công! Cảm ơn bạn đã mua hàng 💜");
+    }
+    </script>
+
+</body>
+</html>
+

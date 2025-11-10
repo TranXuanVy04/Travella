@@ -241,6 +241,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="HtmlPage1.html" />
     <Content Include="img\about-img-1.png" />
     <Content Include="img\about-img.jpg" />
     <Content Include="img\blog-1.jpg" />
