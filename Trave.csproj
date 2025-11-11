@@ -434,6 +434,7 @@
     <Content Include="Views\DiaDiems\Edit.cshtml" />
     <Content Include="Views\DiaDiems\Index.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -47,6 +47,12 @@ namespace Trave.Controllers
 
             return View();
         }
+        public ActionResult Details()
+        {
+            ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
 
     }
 }
