@@ -1,0 +1,241 @@
+﻿@model Trave.Models.Tour
+@{
+    ViewBag.Title = "Chi tiết Tour: " + Model.TenTour;
+}
+
+<style>
+   
+    .tour-detail-card {
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+        background-color: #ffffff;
+    }    
+    .main-image {
+        max-height: 480px;
+        object-fit: cover;
+        border-radius: 8px;
+    }    
+    h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #343a40; 
+    }
+
+    .price-display {
+        font-size: 2.8rem; 
+        font-weight: 700;
+        color: #dc3545; 
+        line-height: 1.2;
+    }
+
+    .price-old {
+        font-size: 0.9rem;
+        color: #888;
+    }
+
+   
+    .sticky-sidebar {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+    }
+
+  
+    .btn-action {
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        padding: 15px;
+        font-weight: 600;
+        transition: background-color 0.3s;
+    }
+
+        .btn-action.btn-danger:hover {
+            background-color: #c82333;
+        }
+
+  
+    .detail-list li {
+        padding: 10px 0;
+        border-bottom: 1px dashed #eee;
+        font-size: 0.95rem;
+    }
+
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+    
+    .review-form label {
+        font-weight: 600;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+
+        <div class="col-lg-8">
+
+            <ol class="breadcrumb bg-transparent p-0 mb-4">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                <li class="breadcrumb-item active">@Model.TenTour</li>
+            </ol>
+
+            <h1 class="mb-3">@Model.TenTour</h1>
+
+            <div class="tour-detail-card p-0 mb-4">
+                @if (Model.DiaDiem != null && !string.IsNullOrEmpty(Model.DiaDiem.HinhAnh))
+                {
+                    <img src="@Url.Content(Model.DiaDiem.HinhAnh)" alt="@Model.TenTour" class="img-fluid w-100 main-image" />
+                    <div class="p-3 border-top">
+                        <a href="#" class="btn btn-sm btn-outline-info">
+                            <i class="fa fa-images"></i> Xem Thư viện Ảnh (30+ hình)
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <div class="tour-detail-card">
+                <h3 class="mb-4 text-secondary"><i class="fa fa-map-marked-alt"></i> Điểm nhấn Tour và Mô tả Địa điểm</h3>
+
+                <div class="border-left pl-3 mb-4" style="border-color: #007bff !important; font-style: italic;">
+                    <p>@Html.Raw(Model.DiaDiem?.MoTa ?? "Thông tin mô tả địa điểm đang được cập nhật.")</p>
+                </div>
+
+                <h5 class="mt-4 text-primary">Thông số cơ bản:</h5>
+                <div class="row">
+                    <div class="col-md-4 text-center py-2">
+                        <i class="fa fa-clock fa-2x text-success"></i>
+                        <p class="mt-2 mb-0"><strong>Thời gian</strong><br />@Model.ThoiGian</p>
+                    </div>
+                    <div class="col-md-4 text-center py-2">
+                        <i class="fa fa-calendar-alt fa-2x text-info"></i>
+                        <p class="mt-2 mb-0"><strong>Khởi hành</strong><br />@Model.NgayKhoiHanh.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div class="col-md-4 text-center py-2">
+                        <i class="fa fa-car-side fa-2x text-warning"></i>
+                        <p class="mt-2 mb-0"><strong>Phương tiện</strong><br />@Model.PhuongTien</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tour-detail-card">
+                <h3 class="text-secondary mb-4"><i class="fa fa-list-alt"></i> Thông tin chi tiết Tour</h3>
+                <ul class="list-unstyled detail-list">
+                    <li><strong>Mã Tour:</strong> @Model.MaTour</li>
+                    <li><strong>Địa điểm (MaDD):</strong> @Model.DiaDiem?.TenDD (@Model.DiaDiem?.ThanhPho)</li>
+                    <li><strong>Danh mục (MaDM):</strong> @Model.DanhMuc?.TenDM</li>
+                </ul>
+            </div>
+
+            <div class="tour-detail-card">
+                <h3 class="text-info mb-4"><i class="fa fa-star"></i> Đánh giá & Phản hồi</h3>
+
+                @{
+                    var reviewCount = Model.DanhGias?.Count() ?? 0;
+                }
+
+                <div class="mb-4">
+                    @if (reviewCount > 0)
+                    {
+                        <p>
+                            <strong>Điểm trung bình:</strong>
+                            <span class="rating-star">★★★★☆</span>
+                            (@reviewCount đánh giá)
+                        </p>
+                        <a href="#" class="btn btn-outline-info btn-sm">Xem tất cả @reviewCount đánh giá</a>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Chưa có đánh giá nào cho tour này.</p>
+                    }
+                </div>
+
+                <h5>Gửi Đánh giá của bạn</h5>
+                <form action="/DanhGia/TaoMoi" method="post" class="p-3 border rounded bg-light review-form">
+                    <input type="hidden" name="MaTour" value="@Model.MaTour" />
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Số Sao:</label>
+                        <div class="col-sm-9">
+                            <select name="SoSao" class="form-control">
+                                <option value="5">5 Sao - Tuyệt vời</option>
+                                <option value="4">4 Sao - Rất tốt</option>
+                                <option value="3">3 Sao - Tốt</option>
+                                <option value="2">2 Sao - Tạm ổn</option>
+                                <option value="1">1 Sao - Kém</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Nội dung:</label>
+                        <div class="col-sm-9">
+                            <textarea name="NoiDung" class="form-control" rows="4" placeholder="Viết đánh giá chi tiết của bạn..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary btn-block">Gửi Đánh giá</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+            <div class="tour-detail-card sticky-sidebar">
+
+                <div class="text-right mb-4 border-bottom pb-3">
+          
+                    <span class="price-display">
+                        @String.Format("{0:N0} VNĐ", Model.Gia)
+                    </span> <small class="text-muted">/ khách</small>
+                    <p class="text-danger small mt-1">Đăng ký ngay để nhận ưu đãi giới hạn!</p>
+                </div>
+
+                <ul class="list-unstyled mb-4 detail-list">
+                    <li class="mb-2"><i class="fa fa-calendar-check text-success mr-2"></i> **Trạng thái:** <span class="badge badge-success">@Model.Trạng_Thái</span></li>
+                    <li class="mb-2"><i class="fa fa-calendar-alt text-primary mr-2"></i> **Ngày đi:** @Model.NgayKhoiHanh.ToString("dd/MM/yyyy")</li>
+                    <li class="mb-2"><i class="fa fa-map-pin text-primary mr-2"></i> **Nơi khởi hành:** TP. Hồ Chí Minh</li>
+                </ul>
+
+                <div class="mb-4">
+                    <a href="/DatVe/DatTour/@Model.MaTour" class="btn btn-danger btn-action">
+                        <i class="fa fa-shopping-cart"></i> ĐẶT TOUR NGAY
+                    </a>
+
+                    <a href="/MucYeuThich/Them/@Model.MaTour" class="btn btn-outline-warning btn-action">
+                        <i class="fa fa-heart"></i> THÊM VÀO YÊU THÍCH
+                    </a>
+                </div>
+
+                <div class="text-center p-3 rounded bg-light border">
+                    <p class="m-0 text-secondary">Hỗ trợ và Tư vấn Tour?</p>
+                    <a href="tel:090123456" class="btn btn-success mt-2">
+                        <i class="fa fa-phone-alt"></i> Liên hệ ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="imageGalleryModal" tabindex="-1" role="dialog" aria-labelledby="imageGalleryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageGalleryLabel">Thư viện ảnh Tour: @Model.TenTour</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="@Url.Content(Model.DiaDiem?.HinhAnh)" alt="@Model.TenTour" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
