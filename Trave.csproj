@@ -237,6 +237,7 @@
     <Content Include="Content\lib\owlcarousel\owl.carousel.js" />
     <Content Include="Content\lib\owlcarousel\owl.carousel.min.js" />
     <Content Include="Content\lib\waypoints\waypoints.min.js" />
+    <Content Include="Content\Login.css" />
     <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -244,6 +245,7 @@
     <Content Include="HtmlPage1.html" />
     <Content Include="img\about-img-1.png" />
     <Content Include="img\about-img.jpg" />
+    <Content Include="img\Background\Login_Background.png" />
     <Content Include="img\blog-1.jpg" />
     <Content Include="img\blog-2.jpg" />
     <Content Include="img\blog-3.jpg" />
@@ -431,6 +433,7 @@
     <Content Include="Views\DiaDiems\Details.cshtml" />
     <Content Include="Views\DiaDiems\Edit.cshtml" />
     <Content Include="Views\DiaDiems\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
