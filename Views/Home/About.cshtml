@@ -1,16 +1,18 @@
-﻿@{
+﻿@model  IEnumerable<Trave.Models.guide>
+@{
     ViewBag.Title = "About";
 }
 <!-- Header Start -->
 <div class="container-fluid bg-breadcrumb">
     <div class="container text-center py-5" style="max-width: 900px;">
         <h3 class="text-white display-3 mb-4">
-            About Us</h3>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active text-white">About</li>
-            </ol>
+            About Us
+        </h3>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("index","home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item active text-white">About</li>
+        </ol>
     </div>
 </div>
 <!-- Header End -->
@@ -20,14 +22,19 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-5">
                 <div class="h-100" style="border: 50px solid; border-color: transparent #13357B transparent #13357B;">
-                    <img src="~/img/about-img.jpg" class="img-fluid w-100 h-100" alt="">
+                    <img src="~/img/About/Travel.png" class="img-fluid w-100 h-100" alt="">
                 </div>
             </div>
             <div class="col-lg-7" style="background: linear-gradient(rgba(255, 255, 255, .8), rgba(255, 255, 255, .8)), url(img/about-img-1.png);">
                 <h5 class="section-about-title pe-3">About Us</h5>
                 <h1 class="mb-4">Welcome to <span class="text-primary">Travela</span></h1>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, dolorum, doloribus sunt dicta, officia voluptatibus libero necessitatibus natus impedit quam ullam assumenda? Id atque iste consectetur. Commodi odit ab saepe!</p>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium quos voluptatem suscipit neque enim, doloribus ipsum rem eos distinctio, dignissimos nisi saepe nulla? Libero numquam perferendis provident placeat molestiae quia?</p>
+                <p class="mb-4">Du lịch không đơn thuần là di chuyển từ nơi này đến nơi khác. Đó là hành trình mở rộng tầm nhìn, kết nối cảm xúc và lưu giữ những khoảnh khắc không thể quên. Tại đây, chúng tôi mang đến cho bạn những tour du lịch được thiết kế tỉ mỉ, phù hợp với mọi phong cách — từ nghỉ dưỡng sang trọng, khám phá thiên nhiên, đến trải nghiệm văn hóa bản địa.</p>
+                <p class="mb-4">
+                    Chúng tôi hiểu rằng mỗi du khách đều có một câu chuyện riêng. Vì thế, mỗi hành trình đều được cá nhân hóa để phù hợp với sở thích, ngân sách và thời gian của bạn. Dù bạn đang tìm kiếm một kỳ nghỉ lãng mạn, một chuyến đi gia đình ấm áp hay một hành trình khám phá đầy thử thách, chúng tôi đều có lựa chọn lý tưởng dành cho bạn.
+                </p>
+                <p class="mb-4">
+                    Hãy để chúng tôi đồng hành cùng bạn trên từng bước chân, từ khâu lên kế hoạch đến khi bạn đặt chân đến vùng đất mới. Với đội ngũ chuyên nghiệp, dịch vụ tận tâm và mạng lưới đối tác toàn cầu, chúng tôi cam kết mang đến cho bạn một trải nghiệm du lịch trọn vẹn, an toàn và đầy cảm hứng.
+                </p>
                 <div class="row gy-2 gx-4 mb-4">
                     <div class="col-sm-6">
                         <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>First Class Flights</p>
@@ -48,7 +55,6 @@
                         <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>24/7 Service</p>
                     </div>
                 </div>
-                @*<a class="btn btn-primary rounded-pill py-3 px-5 mt-2" href="">Read More</a>*@
             </div>
         </div>
     </div>
@@ -62,90 +68,41 @@
             <h1 class="mb-0">Meet Our Guide</h1>
         </div>
         <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="guide-item">
-                    <div class="guide-img">
-                        <div class="guide-img-efects">
-                            <img src="~/img/guide-1.jpg" class="img-fluid w-100 rounded-top" alt="Image">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-3">
+                    <div class="guide-item">
+                        <div class="guide-img">
+                            <div class="guide-img-efects">
+                                <img src="@Url.Content("~/img/guide/"+item.anhguide)" class="img-fluid w-100 rounded-top" alt="@item.tenguide">
+                            </div>
+                            <div class="guide-icon rounded-pill p-2">
+                                <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
+                                <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                            </div>
                         </div>
-                        <div class="guide-icon rounded-pill p-2">
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                    <div class="guide-title text-center rounded-bottom p-4">
-                        <div class="guide-title-inner">
-                            <h4 class="mt-3">Full Name</h4>
-                            <p class="mb-0">Designation</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="guide-item">
-                    <div class="guide-img">
-                        <div class="guide-img-efects">
-                            <img src="img/guide-2.jpg" class="img-fluid w-100 rounded-top" alt="Image">
-                        </div>
-                        <div class="guide-icon rounded-pill p-2">
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                    <div class="guide-title text-center rounded-bottom p-4">
-                        <div class="guide-title-inner">
-                            <h4 class="mt-3">Full Name</h4>
-                            <p class="mb-0">Designation</p>
+
+                        <div class="guide-title text-center rounded-bottom p-4">
+                            <div class="guide-title-inner">
+
+                                <div class="guide-default-content">
+                                    <h4 class="mt-3">@item.tenguide</h4>
+                                    <p class="mb-0">@item.quoctich</p>
+                                </div>
+
+                                <div class="guide-hover-content">
+                                    <h4 class="mt-3">@item.tuoi</h4>
+                                    <p class="mb-0">Years Old</p>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="guide-item">
-                    <div class="guide-img">
-                        <div class="guide-img-efects">
-                            <img src="img/guide-3.jpg" class="img-fluid w-100 rounded-top" alt="Image">
-                        </div>
-                        <div class="guide-icon rounded-pill p-2">
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                    <div class="guide-title text-center rounded-bottom p-4">
-                        <div class="guide-title-inner">
-                            <h4 class="mt-3">Full Name</h4>
-                            <p class="mb-0">Designation</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="guide-item">
-                    <div class="guide-img">
-                        <div class="guide-img-efects">
-                            <img src="img/guide-4.jpg" class="img-fluid w-100 rounded-top" alt="Image">
-                        </div>
-                        <div class="guide-icon rounded-pill p-2">
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                            <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                    <div class="guide-title text-center rounded-bottom p-4">
-                        <div class="guide-title-inner">
-                            <h4 class="mt-3">Full Name</h4>
-                            <p class="mb-0">Designation</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+            }
         </div>
     </div>
 </div>

@@ -14,23 +14,11 @@ namespace Trave.Models
     
     public partial class NhanVien
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public NhanVien()
-        {
-            this.HoaDons = new HashSet<HoaDon>();
-            this.ThanhToans = new HashSet<ThanhToan>();
-        }
-    
         public string MaNV { get; set; }
         public string HoTen { get; set; }
         public string GioiTinh { get; set; }
         public string SDT { get; set; }
         public string DiaChi { get; set; }
         public string Email { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HoaDon> HoaDons { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ThanhToan> ThanhToans { get; set; }
     }
 }

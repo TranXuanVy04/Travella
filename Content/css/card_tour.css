@@ -1,0 +1,128 @@
+﻿/* CSS cho Card Tour mới */
+.package-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+    background: #fff;
+}
+
+    .package-card:hover {
+        transform: translateY(-5px); /* Nổi lên khi hover */
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+    }
+
+.package-img-wrapper {
+    overflow: hidden;
+    position: relative;
+    height: 230px; /* Cố định chiều cao ảnh */
+}
+
+    .package-img-wrapper img {
+        transition: transform 0.5s ease;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.package-card:hover .package-img-wrapper img {
+    transform: scale(1.1); /* Zoom ảnh khi hover */
+}
+
+.category-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #13357B; /* Màu chủ đạo của bạn */
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    z-index: 2;
+}
+
+.package-meta {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.price-tag {
+    color: #13357B; /* Màu chủ đạo */
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+/* Class để giới hạn số dòng văn bản */
+.text-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Số dòng muốn hiển thị (3 dòng) */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 72px; /* Chiều cao cố định (khoảng 24px * 3 dòng) để giữ khung kể cả khi text ngắn */
+}
+
+/* Đảm bảo card luôn cao bằng nhau */
+.package-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Chiều cao 100% khung chứa */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Chiếm hết khoảng trống còn lại */
+}
+
+/* Đẩy phần footer (giá + nút) xuống cuối cùng */
+.mt-auto {
+    margin-top: auto !important;
+}
+/* 1. Giới hạn Tên Tour (ví dụ: 2 dòng) */
+.text-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Số dòng tối đa */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Chiều cao tối thiểu để giữ khung (chiều cao 1 dòng * 2) */
+    min-height: 3em; /* 1.5em (line-height) * 2 lines */
+}
+
+/* 2. Giới hạn Mô tả (ví dụ: 3 dòng) */
+.text-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Số dòng tối đa */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Chiều cao tối thiểu (chiều cao 1 dòng * 3) */
+    min-height: 4.8em; /* 1.6em (line-height) * 3 lines */
+}
+
+/* 3. CSS cho Owl Carousel để card bằng nhau */
+.owl-carousel .owl-item {
+    height: 100%; /* Cho phép các item co giãn */
+}
+
+.packages-item {
+    height: 100%; /* Cho phép wrapper co giãn */
+}
+
+.package-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* BẮT BUỘC: Card chiếm 100% chiều cao */
+}
+
+    .package-card .card-body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; /* BẮT BUỘC: Thân card lấp đầy khoảng trống */
+    }
+
+/* 4. Wrapper để đẩy Giá/Nút xuống đáy */
+.mt-auto-wrapper {
+    margin-top: auto; /* BẮT BUỘC: Ma thuật Flexbox là đây */
+}

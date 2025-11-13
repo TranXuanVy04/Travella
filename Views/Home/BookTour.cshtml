@@ -1,0 +1,169 @@
+﻿
+@model Trave.Models.Tour
+
+@{
+    ViewBag.Title = "Xác nhận Đặt Tour";
+
+    // Lấy dữ liệu được gửi từ Action [HttpGet] BookTour
+    int persons = (int)ViewBag.NumberOfPersons;
+    DateTime? bookingDate = ViewBag.BookingDate;
+    double total = (double)ViewBag.Total;
+}
+
+<div class="container-fluid bg-breadcrumb">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h1 class="text-white display-3 mb-4">
+            Xác nhận Đặt Tour
+        </h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Details", "Home", new { id = Model.MaTour.Trim() })">Details</a></li>
+            <li class="breadcrumb-item active text-white">Booking</li>
+        </ol>
+    </div>
+</div>
+<div class="container-fluid py-5">
+    <div class="container py-5">
+
+        @using (Html.BeginForm("SubmitBooking", "Home", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.Hidden("MaTour", Model.MaTour.Trim())
+            @Html.Hidden("SoNguoi", persons)
+            @Html.Hidden("BookingDate", bookingDate?.ToString("MM/dd/yyyy hh:mm tt", System.Globalization.CultureInfo.InvariantCulture))
+            @Html.Hidden("TongTien", total)
+
+            <div class="row g-5">
+
+                <div class="col-lg-7">
+                    <h4 class="mb-4">Chi tiết thanh toán</h4>
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="name" name="HoTen" placeholder="Họ và Tên" required>
+                                <label for="name">Họ và Tên</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" name="Email" placeholder="Email" required>
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="phone" name="SoDienThoai" placeholder="Số điện thoại" required>
+                                <label for="phone">Số điện thoại</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="address" name="DiaChi" placeholder="Địa chỉ">
+                                <label for="address">Địa chỉ (Không bắt buộc)</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Yêu cầu đặc biệt (ví dụ: ăn chay, phòng riêng...)"
+                                          id="message" name="GhiChu" style="height: 100px"></textarea>
+                                <label for="message">Yêu cầu đặc biệt</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <select class="form-select" id="vehicle" name="PhuongTien" required>
+                                    <option value="Máy bay" selected>Máy bay (Mặc định)</option>
+                                    <option value="Tàu hỏa">Tàu hỏa</option>
+                                    <option value="Xe bus">Xe bus</option>
+                                    <option value="Tự túc">Tự túc (Chỉ đặt dịch vụ)</option>
+                                </select>
+                                <label for="vehicle">Phương tiện di chuyển</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <select class="form-select" id="guide" name="guide" required>
+                                    <option value="Máy bay" selected>Máy bay (Mặc định)</option>
+                                    <option value="Tàu hỏa">Tàu hỏa</option>
+                                    <option value="Xe bus">Xe bus</option>
+                                    <option value="Tự túc">Tự túc (Chỉ đặt dịch vụ)</option>
+                                </select>
+                                <label for="guide">Chọn Guide</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="my-4">Phương thức thanh toán</h4>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="creditCard" value="CreditCard" checked>
+                        <label class="form-check-label" for="creditCard">
+                            Thẻ Tín dụng / Thẻ Ghi nợ
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="bankTransfer" value="BankTransfer">
+                        <label class="form-check-label" for="bankTransfer">
+                            Chuyển khoản Ngân hàng
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="paypal" value="PayPal">
+                        <label class="form-check-label" for="paypal">
+                            PayPal
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card shadow border-0 rounded-3 sticky-top" style="top: 100px;">
+                        <img src="@Url.Content("~/img/Destination/" + Model.anhmota)"
+                             class="card-img-top rounded-top-3"
+                             style="height: 200px; object-fit: cover;"
+                             alt="@Model.TenTour">
+
+                        <div class="card-body p-4">
+                            <h4 class="card-title fw-bold">@Model.TenTour</h4>
+                            <div class="text-muted mb-3">
+                                <small class="me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Model.DiaDiem.ThanhPho</small>
+                                <small><i class="fa fa-clock text-primary me-2"></i>@Model.ThoiGian</small>
+                            </div>
+
+                            <hr>
+
+                            <h5 class="mb-3">Tóm tắt đơn hàng</h5>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Giá 1 người:</p>
+                                <p class="mb-2">$@Model.Gia.ToString("N0")</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Số lượng:</p>
+                                <p class="mb-2">x @persons</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Ngày đi:</p>
+                                <p class="mb-2">@bookingDate</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Phí dịch vụ:</p>
+                                <p class="mb-2 text-success">Miễn phí</p>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="mb-0">Tổng cộng:</h5>
+                                <h4 class="text-primary fw-bold mb-0">$@total.ToString("N0")</h4>
+                            </div>
+
+                            <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm" type="submit">
+                                Xác nhận và Thanh toán
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

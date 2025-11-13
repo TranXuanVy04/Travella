@@ -132,71 +132,71 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\DiaDiemsController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ToursController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\DanhGia.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+    <Compile Include="Models\Booking.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Contact.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DanhMuc.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatVe.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DiaDiem.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\HoaDon.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+    <Compile Include="Models\guide.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\KhachHang.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\KhuyenMai.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\LichSuDat.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MucYeuThich.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\NhanVien.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Quyen.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagram.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\TaiKhoan.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ThanhToan.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tour.cs">
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Travella.Context.cs">
+    <Compile Include="Models\Travela.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Travella.Context.tt</DependentUpon>
+      <DependentUpon>Travela.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Travella.cs">
+    <Compile Include="Models\Travela.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Travella.tt</DependentUpon>
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Travella.Designer.cs">
+    <Compile Include="Models\Travela.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Travella.edmx</DependentUpon>
+      <DependentUpon>Travela.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -218,6 +218,11 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\card_tour.css" />
+    <Content Include="Content\css\destination.css" />
+    <Content Include="Content\css\detail.css" />
+    <Content Include="Content\css\guide.css" />
+    <Content Include="Content\css\Tour_Detail.css" />
     <Content Include="Content\lib\easing\easing.js" />
     <Content Include="Content\lib\easing\easing.min.js" />
     <Content Include="Content\lib\lightbox\css\lightbox.min.css" />
@@ -245,6 +250,7 @@
     <Content Include="HtmlPage1.html" />
     <Content Include="img\about-img-1.png" />
     <Content Include="img\about-img.jpg" />
+    <Content Include="img\About\Travel.png" />
     <Content Include="img\Background\Login_Background.png" />
     <Content Include="img\blog-1.jpg" />
     <Content Include="img\blog-2.jpg" />
@@ -268,6 +274,7 @@
     <Content Include="img\explore-tour-4.jpg" />
     <Content Include="img\explore-tour-5.jpg" />
     <Content Include="img\explore-tour-6.jpg" />
+    <Content Include="img\fav-icon.png" />
     <Content Include="img\gallery-1.jpg" />
     <Content Include="img\gallery-10.jpg" />
     <Content Include="img\gallery-11.jpg" />
@@ -294,15 +301,15 @@
     <Content Include="img\testimonial-3.jpg" />
     <Content Include="img\testimonial-4.jpg" />
     <Content Include="img\tour-booking-bg.jpg" />
-    <Content Include="Models\Travella.Context.tt">
+    <Content Include="Models\Travela.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Travella.edmx</DependentUpon>
-      <LastGenOutput>Travella.Context.cs</LastGenOutput>
+      <DependentUpon>Travela.edmx</DependentUpon>
+      <LastGenOutput>Travela.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\Travella.tt">
+    <Content Include="Models\Travela.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Travella.edmx</DependentUpon>
-      <LastGenOutput>Travella.cs</LastGenOutput>
+      <DependentUpon>Travela.edmx</DependentUpon>
+      <LastGenOutput>Travela.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -394,12 +401,12 @@
     <Content Include="Content\scss\bootstrap\scss\_type.scss" />
     <Content Include="Content\scss\bootstrap\scss\_utilities.scss" />
     <Content Include="Content\scss\bootstrap\scss\_variables.scss" />
-    <EntityDeploy Include="Models\Travella.edmx">
+    <EntityDeploy Include="Models\Travela.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Travella.Designer.cs</LastGenOutput>
+      <LastGenOutput>Travela.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\Travella.edmx.diagram">
-      <DependentUpon>Travella.edmx</DependentUpon>
+    <Content Include="Models\Travela.edmx.diagram">
+      <DependentUpon>Travela.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
@@ -428,18 +435,29 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Tour.cshtml" />
-    <Content Include="Views\DiaDiems\Create.cshtml" />
-    <Content Include="Views\DiaDiems\Delete.cshtml" />
-    <Content Include="Views\DiaDiems\Details.cshtml" />
-    <Content Include="Views\DiaDiems\Edit.cshtml" />
-    <Content Include="Views\DiaDiems\Index.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\Home\BookTour.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\Admin\DMList.cshtml" />
+    <Content Include="Views\Admin\DMCreate.cshtml" />
+    <Content Include="Views\Admin\DMEdit.cshtml" />
+    <Content Include="Views\Admin\DMDelete.cshtml" />
+    <Content Include="Views\Admin\DMDetails.cshtml" />
+    <Content Include="Views\Tours\Create.cshtml" />
+    <Content Include="Views\Tours\Delete.cshtml" />
+    <Content Include="Views\Tours\Details.cshtml" />
+    <Content Include="Views\Tours\Edit.cshtml" />
+    <Content Include="Views\Tours\Index.cshtml" />
+    <Content Include="Views\Admin\Tourlist.cshtml" />
+    <Content Include="Views\Admin\TourDetails.cshtml" />
+    <Content Include="Views\Admin\TourCreate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="img\Destination\" />
-    <Folder Include="img\Tour\" />
+    <Folder Include="img\Tours\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

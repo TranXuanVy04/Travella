@@ -1,0 +1,136 @@
+﻿/* 1. Thiết kế thanh lọc "Sang trọng" (Elegant Filter Bar) */
+.elegant-filter-bar {
+    border-bottom: 1px solid #eee;
+    padding-left: 0;
+    margin-bottom: 2rem !important;
+}
+
+    .elegant-filter-bar .nav-item {
+        margin-bottom: -1px; /* Giúp gạch chân đè lên đường kẻ */
+    }
+
+    .elegant-filter-bar .nav-link {
+        background: none !important;
+        border: none !important;
+        color: #6c757d; /* Màu chữ xám */
+        font-size: 1.1rem; /* Chữ to rõ hơn */
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border-bottom: 3px solid transparent; /* Gạch chân ẩn */
+        border-radius: 0;
+        transition: all 0.2s ease;
+    }
+
+        .elegant-filter-bar .nav-link.active,
+        .elegant-filter-bar .nav-link:hover {
+            color: #13357B; /* Màu xanh chủ đạo của bạn */
+            border-bottom-color: #13357B; /* Hiện gạch chân */
+        }
+
+    /* 2. Thiết kế Mega Menu (cho "More") */
+    .elegant-filter-bar .dropdown-menu.mega-menu {
+        width: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 0;
+        padding: 2rem;
+        border-radius: 0 0 0.5rem 0.5rem;
+        border: 1px solid #eee;
+        border-top: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+.mega-menu-item {
+    display: block;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+    .mega-menu-item:hover {
+        background: #f8f9fa;
+        color: #13357B;
+    }
+
+/* --- 3. CSS CHO CARD ĐIỂM ĐẾN (Thiết kế Overlay mới) --- */
+.destination-card {
+    position: relative;
+    overflow: hidden; /* Cần thiết cho border-radius */
+    border-radius: 15px; /* Bo góc */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Tạo chiều sâu */
+    text-decoration: none !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Sử dụng 100% chiều cao của cột (đã được set 'd-flex' trong HTML)
+      Bỏ 'height: 400px' cố định để card tự co giãn bằng nhau.
+    */
+    height: 100%;
+}
+
+    .destination-card:hover {
+        transform: translateY(-5px); /* Hiệu ứng nổi */
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+.destination-card-img {
+    width: 100%;
+    height: 100%; /* Đảm bảo hình ảnh lấp đầy thẻ */
+    object-fit: cover;
+    filter: brightness(0.9); /* Làm tối nhẹ để chữ nổi bật */
+    transition: filter 0.3s ease;
+}
+
+.destination-card:hover .destination-card-img {
+    filter: brightness(1.05); /* Hiệu ứng sáng hơn khi hover */
+}
+
+/* Lớp phủ và Text */
+.destination-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Đẩy nội dung xuống đáy */
+    padding: 20px;
+    /* Gradient mờ từ trên xuống, đậm dần ở dưới để text nổi bật */
+    background: linear-gradient( to bottom, rgba(0, 0, 0, 0) 0%, /* Trong suốt ở trên */
+    rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.6) 100% /* Đen đậm ở dưới */
+    );
+}
+
+.destination-card-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    line-height: 1.2;
+    color: #fff; /* Đảm bảo chữ màu trắng */
+}
+
+.destination-card-country {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-bottom: 0;
+    color: #fff; /* Đảm bảo chữ màu trắng */
+}
+
+/* Huy hiệu Tour Count (Màu xám) */
+.tour-count-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: rgba(108, 117, 125, 0.8); /* Màu xám mờ nhẹ */
+    color: white; /* Giữ chữ màu trắng */
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 10;
+    backdrop-filter: blur(3px); /* Thêm hiệu ứng blur nhẹ nếu bạn muốn */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Giữ bóng nhẹ */
+}

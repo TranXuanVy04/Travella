@@ -1,241 +1,243 @@
 ﻿@model Trave.Models.Tour
+
 @{
-    ViewBag.Title = "Chi tiết Tour: " + Model.TenTour;
+    ViewBag.Title = Model.TenTour;
+    var relatedTours = ViewBag.RelatedTours as List<Trave.Models.Tour>;
 }
 
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <style>
-   
-    .tour-detail-card {
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-bottom: 30px;
-        background-color: #ffffff;
-    }    
-    .main-image {
-        max-height: 480px;
-        object-fit: cover;
-        border-radius: 8px;
-    }    
-    h1 {
-        font-size: 2rem;
-        font-weight: 600;
-        color: #343a40; 
-    }
-
-    .price-display {
-        font-size: 2.8rem; 
-        font-weight: 700;
-        color: #dc3545; 
-        line-height: 1.2;
-    }
-
-    .price-old {
-        font-size: 0.9rem;
-        color: #888;
-    }
-
-   
-    .sticky-sidebar {
-        position: sticky;
-        top: 20px;
-        z-index: 100;
-    }
-
-  
-    .btn-action {
-        width: 100%;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
-        padding: 15px;
-        font-weight: 600;
-        transition: background-color 0.3s;
-    }
-
-        .btn-action.btn-danger:hover {
-            background-color: #c82333;
-        }
-
-  
-    .detail-list li {
-        padding: 10px 0;
-        border-bottom: 1px dashed #eee;
-        font-size: 0.95rem;
-    }
-
-        .detail-list li:last-child {
-            border-bottom: none;
-        }
-
     
-    .review-form label {
-        font-weight: 600;
-    }
 </style>
 
-<div class="container mt-5">
-    <div class="row">
+<div class="container-fluid bg-breadcrumb">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h1 class="text-white display-3 mb-4">Chi Tiết Tour</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Tour", "Home")">Tours</a></li>
+            <li class="breadcrumb-item active text-white">@Model.TenTour</li>
+        </ol>
+    </div>
+</div>
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="row g-5">
 
-        <div class="col-lg-8">
-
-            <ol class="breadcrumb bg-transparent p-0 mb-4">
-                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
-                <li class="breadcrumb-item active">@Model.TenTour</li>
-            </ol>
-
-            <h1 class="mb-3">@Model.TenTour</h1>
-
-            <div class="tour-detail-card p-0 mb-4">
-                @if (Model.DiaDiem != null && !string.IsNullOrEmpty(Model.DiaDiem.HinhAnh))
-                {
-                    <img src="@Url.Content(Model.DiaDiem.HinhAnh)" alt="@Model.TenTour" class="img-fluid w-100 main-image" />
-                    <div class="p-3 border-top">
-                        <a href="#" class="btn btn-sm btn-outline-info">
-                            <i class="fa fa-images"></i> Xem Thư viện Ảnh (30+ hình)
-                        </a>
-                    </div>
-                }
-            </div>
-
-            <div class="tour-detail-card">
-                <h3 class="mb-4 text-secondary"><i class="fa fa-map-marked-alt"></i> Điểm nhấn Tour và Mô tả Địa điểm</h3>
-
-                <div class="border-left pl-3 mb-4" style="border-color: #007bff !important; font-style: italic;">
-                    <p>@Html.Raw(Model.DiaDiem?.MoTa ?? "Thông tin mô tả địa điểm đang được cập nhật.")</p>
-                </div>
-
-                <h5 class="mt-4 text-primary">Thông số cơ bản:</h5>
-                <div class="row">
-                    <div class="col-md-4 text-center py-2">
-                        <i class="fa fa-clock fa-2x text-success"></i>
-                        <p class="mt-2 mb-0"><strong>Thời gian</strong><br />@Model.ThoiGian</p>
-                    </div>
-                    <div class="col-md-4 text-center py-2">
-                        <i class="fa fa-calendar-alt fa-2x text-info"></i>
-                        <p class="mt-2 mb-0"><strong>Khởi hành</strong><br />@Model.NgayKhoiHanh.ToString("dd/MM/yyyy")</p>
-                    </div>
-                    <div class="col-md-4 text-center py-2">
-                        <i class="fa fa-car-side fa-2x text-warning"></i>
-                        <p class="mt-2 mb-0"><strong>Phương tiện</strong><br />@Model.PhuongTien</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tour-detail-card">
-                <h3 class="text-secondary mb-4"><i class="fa fa-list-alt"></i> Thông tin chi tiết Tour</h3>
-                <ul class="list-unstyled detail-list">
-                    <li><strong>Mã Tour:</strong> @Model.MaTour</li>
-                    <li><strong>Địa điểm (MaDD):</strong> @Model.DiaDiem?.TenDD (@Model.DiaDiem?.ThanhPho)</li>
-                    <li><strong>Danh mục (MaDM):</strong> @Model.DanhMuc?.TenDM</li>
-                </ul>
-            </div>
-
-            <div class="tour-detail-card">
-                <h3 class="text-info mb-4"><i class="fa fa-star"></i> Đánh giá & Phản hồi</h3>
-
-                @{
-                    var reviewCount = Model.DanhGias?.Count() ?? 0;
-                }
-
+            <div class="col-lg-8">
                 <div class="mb-4">
-                    @if (reviewCount > 0)
-                    {
-                        <p>
-                            <strong>Điểm trung bình:</strong>
-                            <span class="rating-star">★★★★☆</span>
-                            (@reviewCount đánh giá)
+                    <img src="@Url.Content("~/img/Tour/" + Model.anhmota)"
+                         class="img-fluid w-100 rounded-3 shadow-lg"
+                         style="height: 500px; object-fit: cover;"
+                         alt="@Model.TenTour">
+                </div>
+
+                <h1 class="display-5 fw-bold mb-3">@Model.TenTour</h1>
+
+                <div class="d-flex flex-wrap align-items-center mb-4 pb-4 border-bottom">
+                    <span class="badge bg-primary rounded-pill fs-6 py-2 px-3 me-2 mb-2">
+                        <i class="fa fa-clock me-2"></i>@Model.ThoiGian Ngày
+                    </span>
+                    <span class="badge bg-light text-dark rounded-pill fs-6 py-2 px-3 me-2 mb-2 shadow-sm border">
+                        <i class="fa fa-map-marker-alt text-primary me-2"></i>@Model.DiaDiem.ThanhPho
+                    </span>
+                    <span class="badge bg-light text-dark rounded-pill fs-6 py-2 px-3 me-2 mb-2 shadow-sm border">
+                        <i class="fa fa-tag text-primary me-2"></i>@Model.DanhMuc.TenDM
+                    </span>
+                    <span class="badge bg-light text-dark rounded-pill fs-6 py-2 px-3 me-2 mb-2 shadow-sm border">
+                        <i class="fa fa-users text-primary me-2"></i>Tối đa @Model.songuoi người
+                    </span>
+                </div>
+
+                <h2 class="text-primary fw-bold mb-4 d-lg-none display-6">Giá: $@Model.Gia</h2>
+
+                <ul class="nav details-tab-nav" id="detailsTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Tổng quan</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="itinerary-tab" data-bs-toggle="tab" data-bs-target="#itinerary" type="button" role="tab" aria-controls="itinerary" aria-selected="false">Lịch trình</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="include-tab" data-bs-toggle="tab" data-bs-target="#include" type="button" role="tab" aria-controls="include" aria-selected="false">Bao gồm</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="detailsTabContent">
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                        <h4 class="mb-3">Mô tả chi tiết</h4>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            @* Đảm bảo bạn đã .Include(t => t.motatour) trong Controller *@
+                            @*@Model.motatour.motadai*@
                         </p>
-                        <a href="#" class="btn btn-outline-info btn-sm">Xem tất cả @reviewCount đánh giá</a>
-                    }
-                    else
-                    {
-                        <p class="text-muted">Chưa có đánh giá nào cho tour này.</p>
-                    }
+                    </div>
+
+                    <div class="tab-pane fade" id="itinerary" role="tabpanel" aria-labelledby="itinerary-tab">
+                        <h4 class="mb-3">Lịch trình chi tiết</h4>
+                        <div class="accordion itinerary-accordion" id="itineraryAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <i class="fa fa-calendar-check text-primary me-3"></i> Ngày 1: Khởi hành
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#itineraryAccordion">
+                                    <div class="accordion-body">
+                                        Nội dung mô tả cho ngày 1...
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <i class="fa fa-calendar-check text-primary me-3"></i> Ngày 2: Tham quan
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#itineraryAccordion">
+                                    <div class="accordion-body">
+                                        Nội dung mô tả cho ngày 2...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="include" role="tabpanel" aria-labelledby="include-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mb-3"><i class="fa fa-check text-success me-2"></i> Bao gồm</h5>
+                                <ul class="list-unstyled text-muted">
+                                    <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Vé máy bay khứ hồi</li>
+                                    <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Khách sạn 4-5 sao</li>
+                                    <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Bữa sáng hàng ngày</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="mb-3"><i class="fa fa-times text-danger me-2"></i> Không bao gồm</h5>
+                                <ul class="list-unstyled text-muted">
+                                    <li class="mb-2"><i class="fa fa-times text-danger me-2"></i> Phí Visa</li>
+                                    <li class="mb-2"><i class="fa fa-times text-danger me-2"></i> Bữa trưa và bữa tối</li>
+                                    <li class="mb-2"><i class="fa fa-times text-danger me-2"></i> Bảo hiểm du lịch</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div> <div class="col-lg-4">
+                <div class="card shadow-lg rounded-3 border-0 sticky-top sticky-top-form">
+                    <div class="card-body p-4">
+                        <h4 class="mb-2">Đặt Tour Này</h4>
+                        <h2 class="text-primary fw-bold mb-4">$@Model.Gia <small class="text-muted fs-6 fw-normal">/ người</small></h2>
 
-                <h5>Gửi Đánh giá của bạn</h5>
-                <form action="/DanhGia/TaoMoi" method="post" class="p-3 border rounded bg-light review-form">
-                    <input type="hidden" name="MaTour" value="@Model.MaTour" />
+                        @using (Html.BeginForm("BookTour", "Home", FormMethod.Get))
+                        {
+                            @Html.Hidden("id", Model.MaTour.Trim())
 
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Số Sao:</label>
-                        <div class="col-sm-9">
-                            <select name="SoSao" class="form-control">
-                                <option value="5">5 Sao - Tuyệt vời</option>
-                                <option value="4">4 Sao - Rất tốt</option>
-                                <option value="3">3 Sao - Tốt</option>
-                                <option value="2">2 Sao - Tạm ổn</option>
-                                <option value="1">1 Sao - Kém</option>
-                            </select>
-                        </div>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <input type="text"
+                                               class="form-control bg-light border-0"
+                                               id="datepicker"
+                                               name="date" placeholder="Ngày đi"
+                                               required>
+                                        <label for="datepicker">Ngày đi</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <select class="form-select bg-light border-0" id="SelectPerson" name="persons" required>
+                                            <option value="1">1 Người</option>
+                                            <option value="2">2 Người</option>
+                                            <option value="3">3 Người</option>
+                                            <option value="4">4 Người</option>
+                                            <option value="5">5+ Người</option>
+                                        </select>
+                                        <label for="SelectPerson">Số người</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm" type="submit">
+                                        Book Now
+                                    </button>
+                                </div>
+                            </div>
+                        }
                     </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Nội dung:</label>
-                        <div class="col-sm-9">
-                            <textarea name="NoiDung" class="form-control" rows="4" placeholder="Viết đánh giá chi tiết của bạn..."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group row mb-0">
-                        <div class="col-sm-9 offset-sm-3">
-                            <button type="submit" class="btn btn-primary btn-block">Gửi Đánh giá</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-
-        </div>
-
-        <div class="col-lg-4">
-            <div class="tour-detail-card sticky-sidebar">
-
-                <div class="text-right mb-4 border-bottom pb-3">
-          
-                    <span class="price-display">
-                        @String.Format("{0:N0} VNĐ", Model.Gia)
-                    </span> <small class="text-muted">/ khách</small>
-                    <p class="text-danger small mt-1">Đăng ký ngay để nhận ưu đãi giới hạn!</p>
-                </div>
-
-                <ul class="list-unstyled mb-4 detail-list">
-                    <li class="mb-2"><i class="fa fa-calendar-check text-success mr-2"></i> **Trạng thái:** <span class="badge badge-success">@Model.Trạng_Thái</span></li>
-                    <li class="mb-2"><i class="fa fa-calendar-alt text-primary mr-2"></i> **Ngày đi:** @Model.NgayKhoiHanh.ToString("dd/MM/yyyy")</li>
-                    <li class="mb-2"><i class="fa fa-map-pin text-primary mr-2"></i> **Nơi khởi hành:** TP. Hồ Chí Minh</li>
-                </ul>
-
-                <div class="mb-4">
-                    <a href="/DatVe/DatTour/@Model.MaTour" class="btn btn-danger btn-action">
-                        <i class="fa fa-shopping-cart"></i> ĐẶT TOUR NGAY
-                    </a>
-
-                    <a href="/MucYeuThich/Them/@Model.MaTour" class="btn btn-outline-warning btn-action">
-                        <i class="fa fa-heart"></i> THÊM VÀO YÊU THÍCH
-                    </a>
-                </div>
-
-                <div class="text-center p-3 rounded bg-light border">
-                    <p class="m-0 text-secondary">Hỗ trợ và Tư vấn Tour?</p>
-                    <a href="tel:090123456" class="btn btn-success mt-2">
-                        <i class="fa fa-phone-alt"></i> Liên hệ ngay
-                    </a>
-                </div>
+        </div> @if (relatedTours != null && relatedTours.Any())
+        {
+            <hr class="my-5">
+            <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+                <h5 class="section-title px-3">Related Tours</h5>
+                <h1 class="mb-0">Các Tour Tương Tự</h1>
             </div>
-        </div>
+            <div class="row g-4 justify-content-center">
+
+                @foreach (var item in relatedTours)
+                {
+                    <div class="col-lg-4 col-md-6 d-flex">
+                        <div class="card package-card h-100 rounded-3 shadow-sm border-0">
+
+                            <div class="package-img-wrapper rounded-top-3">
+                                <img src="@Url.Content("~/img/Tour/"+item.anhmota)" alt="@item.TenTour">
+                                <div class="category-badge shadow-sm">
+                                    <i class="fa fa-tag me-1"></i> @item.DanhMuc.TenDM
+                                </div>
+                            </div>
+
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between mb-3 package-meta">
+                                    <small><i class="fa fa-map-marker-alt text-primary me-2"></i>@item.DiaDiem.ThanhPho</small>
+                                    <small><i class="fa fa-clock text-primary me-2"></i>@item.ThoiGian Ngày</small>
+                                </div>
+
+                                <h5 class="card-title mb-3 text-dark text-clamp-2">
+                                    <a href="@Url.Action("Details", "Home", new { id = item.MaTour.Trim() })" class="text-dark text-decoration-none">
+                                        @item.TenTour
+                                    </a>
+                                </h5>
+
+                                <p class="card-text text-muted mb-4 text-clamp-3" style="font-size: 0.95rem; line-height: 1.6;">
+                                    @item.mota
+                                </p>
+
+                                <div class="mt-auto-wrapper">
+                                    <hr class="text-muted opacity-25">
+                                    <div class="d-flex align-items-center justify-content-between mt-3">
+                                        <div>
+                                            <small class="text-muted d-block" style="font-size: 0.8rem;">Giá chỉ từ</small>
+                                            <span class="price-tag">$@item.Gia</span>
+                                        </div>
+                                        <a class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm transition-hover"
+                                           href="@Url.Action("Details", "Home", new { id = item.MaTour.Trim() })">
+                                            Book Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
     </div>
 </div>
-<div class="modal fade" id="imageGalleryModal" tabindex="-1" role="dialog" aria-labelledby="imageGalleryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageGalleryLabel">Thư viện ảnh Tour: @Model.TenTour</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <img src="@Url.Content(Model.DiaDiem?.HinhAnh)" alt="@Model.TenTour" class="img-fluid" />
-            </div>
-        </div>
-    </div>
-</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    flatpickr("#datepicker", {
+        dateFormat: "Y-m-d", // Format chuẩn C# (hoặc MM/dd/yyyy)
+        altInput: true,      // Input ảo cho người dùng
+        altFormat: "d/m/Y",  // Format người dùng thấy: ngày/tháng/năm
+        disableMobile: "true"
+    });
+});
+</script>

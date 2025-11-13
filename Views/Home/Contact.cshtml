@@ -1,16 +1,18 @@
-﻿@{
+﻿@model  Trave.Models.Contact
+@{
     ViewBag.Title = "Contact";
 }
 <!-- Header Start -->
 <div class="container-fluid bg-breadcrumb">
     <div class="container text-center py-5" style="max-width: 900px;">
-        <h3 class="text-white display-3 mb-4">
-            Contact Us</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active text-white">Contact</li>
-            </ol>
+        <h1 class="text-white display-3 mb-4">
+            Contact Us
+        </h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("index","home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item active text-white">Contact</li>
+        </ol>
     </div>
 </div>
 <!-- Header End -->
@@ -26,84 +28,90 @@
                 <div class="bg-white rounded p-4">
                     <div class="text-center mb-4">
                         <i class="fa fa-map-marker-alt fa-3x text-primary"></i>
-                        <h4 class="text-primary"><Address></Address></h4>
-                        <p class="mb-0">123 ranking Street, <br> New York, USA</p>
+                        <h4 class="text-primary">Address</h4>
+                        <p class="mb-0">140 Lê Trọng Tấn - Tân phú, <br> HCM City</p>
                     </div>
                     <div class="text-center mb-4">
                         <i class="fa fa-phone-alt fa-3x text-primary mb-3"></i>
                         <h4 class="text-primary">Mobile</h4>
-                        <p class="mb-0">+012 345 67890</p>
-                        <p class="mb-0">+012 345 67890</p>
+                        <p class="mb-0">012 345 67890</p>
                     </div>
 
                     <div class="text-center">
                         <i class="fa fa-envelope-open fa-3x text-primary mb-3"></i>
                         <h4 class="text-primary">Email</h4>
                         <p class="mb-0">info@example.com</p>
-                        <p class="mb-0">info@example.com</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-8">
                 <h3 class="mb-2">Send us a message</h3>
-                <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
-                <form>
+                <p class="mb-4">Send us a message using the contact form below — our friendly travel consultants will get back to you as soon as possible with personalized recommendations and answers to your inquiries.</p>
+                @* Giả sử Model của bạn có các thuộc tính: YourName, YourEmail, Subject, Message
+                    Và bạn đang ở trong View có @model YourContactModel
+                *@
+
+                @* Sử dụng BeginForm để chỉ định Action và Controller xử lý form.
+                    Ví dụ: @using (Html.BeginForm("GuiLienHe", "Home", FormMethod.Post))
+                *@
+                @using (Html.BeginForm("contact", "Home", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken() @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control border-0" id="name" placeholder="Your Name">
-                                <label for="name">Your Name</label>
+                                @* Dùng EditorFor để liên kết với Model.
+                                    Thêm 'placeholder' là BẮT BUỘC để form-floating hoạt động.
+                                *@
+                                @Html.EditorFor(model => model.YourName, new { htmlAttributes = new { @class = "form-control border-0", placeholder = "Your Name" } })
+
+                                @Html.LabelFor(model => model.YourName)
+
+                                @Html.ValidationMessageFor(model => model.YourName, "", new { @class = "text-danger" })
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="email" class="form-control border-0" id="email" placeholder="Your Email">
-                                <label for="email">Your Email</label>
+                                @Html.EditorFor(model => model.YourEmail, new { htmlAttributes = new { @class = "form-control border-0", placeholder = "Your Email" } })
+                                @Html.LabelFor(model => model.YourEmail)
+                                @Html.ValidationMessageFor(model => model.YourEmail, "", new { @class = "text-danger" })
                             </div>
                         </div>
+
                         <div class="col-12">
                             <div class="form-floating">
-                                <input type="text" class="form-control border-0" id="subject" placeholder="Subject">
-                                <label for="subject">Subject</label>
+                                @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control border-0", placeholder = "Subject" } })
+                                @Html.LabelFor(model => model.Subject)
+                                @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
                             </div>
                         </div>
+
                         <div class="col-12">
                             <div class="form-floating">
-                                <textarea class="form-control border-0" placeholder="Leave a message here" id="message" style="height: 160px"></textarea>
-                                <label for="message">Message</label>
+                                @* Dùng TextAreaFor để đảm bảo đây là <textarea>.
+                                    Bạn cũng có thể dùng EditorFor nếu Model có [DataType(DataType.MultilineText)].
+                                *@
+                                @Html.TextAreaFor(model => model.Message, new { @class = "form-control border-0", placeholder = "Leave a message here", style = "height: 160px" })
+                                @Html.LabelFor(model => model.Message)
+                                @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
                             </div>
                         </div>
+
                         <div class="col-12">
                             <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                         </div>
                     </div>
-                </form>
+                }
             </div>
             <div class="col-12">
-                <div class="rounded">
-                    <iframe class="rounded w-100"
-                            style="height: 450px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387191.33750346623!2d-73.97968099999999!3d40.6974881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1694259649153!5m2!1sen!2sbd"
-                            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="rounded ">
+                    <iframe class="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.057341470054!2d106.62883439999999!3d10.806920300000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752be27ea41e05%3A0xfa77697a39f13ab0!2zMTQwIEzDqiBUcuG7jW5nIFThuqVuLCBUw6J5IFRo4bqhbmgsIFTDom4gUGjDuiwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oIDcwMDAwMA!5e0!3m2!1svi!2s!4v1763060218389!5m2!1svi!2s" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <!-- Contact End -->
-<!-- Subscribe Start -->
-<div class="container-fluid subscribe py-5">
-    <div class="container text-center py-5">
-        <div class="mx-auto text-center" style="max-width: 900px;">
-            <h5 class="subscribe-title px-3">Subscribe</h5>
-            <h1 class="text-white mb-4">Our Newsletter</h1>
-            <p class="text-white mb-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum tempore nam, architecto doloremque velit explicabo? Voluptate sunt eveniet fuga eligendi! Expedita laudantium fugiat corrupti eum cum repellat a laborum quasi.
-            </p>
-            <div class="position-relative mx-auto">
-                <input class="form-control border-primary rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
-                <button type="button" class="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 px-4 mt-2 me-2">Subscribe</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Subscribe End -->
+

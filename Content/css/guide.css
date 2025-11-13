@@ -1,0 +1,35 @@
+﻿/* Làm cho 2 khối nội dung xếp chồng lên nhau */
+.guide-title-inner {
+    display: grid;
+}
+
+.guide-default-content,
+.guide-hover-content {
+    /* Cả hai khối đều nằm ở cùng một vị trí */
+    grid-area: 1 / 1;
+    /* Cài đặt cho hiệu ứng chuyển động */
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+/* --- Trạng thái Mặc định --- */
+.guide-default-content {
+    opacity: 1;
+    max-height: 100px; /* Đặt chiều cao đủ lớn để chứa nội dung */
+}
+
+.guide-hover-content {
+    opacity: 0;
+    max-height: 0;
+}
+
+/* --- Trạng thái Khi Hover vào thẻ .guide-item --- */
+.guide-item:hover .guide-default-content {
+    opacity: 0;
+    max-height: 0;
+}
+
+.guide-item:hover .guide-hover-content {
+    opacity: 1;
+    max-height: 100px; /* Đặt chiều cao đủ lớn để chứa nội dung */
+}

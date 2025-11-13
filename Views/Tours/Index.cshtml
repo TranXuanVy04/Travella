@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Trave.Models.Tour>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TenTour)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Gia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.trangthai)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ThoiGian)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NgayKhoiHanh)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhuongTien)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.anhmota)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.songuoi)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mota)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DanhMuc.TenDM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DiaDiem.TenDD)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TenTour)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Gia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.trangthai)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ThoiGian)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NgayKhoiHanh)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhuongTien)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.anhmota)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.songuoi)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mota)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DanhMuc.TenDM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DiaDiem.TenDD)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MaTour }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MaTour }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MaTour })
+        </td>
+    </tr>
+}
+
+</table>

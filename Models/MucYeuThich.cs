@@ -17,7 +17,5 @@ namespace Trave.Models
         public string MaMYT { get; set; }
         public string MaTour { get; set; }
         public int SoLuong { get; set; }
-    
-        public virtual Tour Tour { get; set; }
     }
 }

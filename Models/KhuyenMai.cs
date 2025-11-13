@@ -14,20 +14,11 @@ namespace Trave.Models
     
     public partial class KhuyenMai
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public KhuyenMai()
-        {
-            this.DatVes = new HashSet<DatVe>();
-        }
-    
         public string DieuKien { get; set; }
         public double SoTienGiam { get; set; }
         public string MoTa { get; set; }
         public string TenKM { get; set; }
         public string MaKM { get; set; }
         public string TrangThai { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DatVe> DatVes { get; set; }
     }
 }

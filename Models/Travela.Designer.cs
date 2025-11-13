@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Tuan\OneDrive - University Of Industry and Trade\Desktop\Đồ án cnpm\Models\Travella.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\Tuan\OneDrive - University Of Industry and Trade\Desktop\Đồ án cnpm\Models\Travela.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

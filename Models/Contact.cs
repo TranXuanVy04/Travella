@@ -12,18 +12,13 @@ namespace Trave.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class HoaDon
+    public partial class Contact
     {
-        public double TongTien { get; set; }
-        public string TrangThai { get; set; }
-        public string PhuongThucTT { get; set; }
-        public System.DateTime NgayLap { get; set; }
-        public string MaDatVe { get; set; }
-        public string MaHD { get; set; }
-        public string GhiChu { get; set; }
-        public string MaNV { get; set; }
-    
-        public virtual DatVe DatVe { get; set; }
-        public virtual NhanVien NhanVien { get; set; }
+        public int ContactID { get; set; }
+        public string YourName { get; set; }
+        public string YourEmail { get; set; }
+        public string Subject { get; set; }
+        public string Message { get; set; }
+        public Nullable<System.DateTime> SubmissionDate { get; set; }
     }
 }

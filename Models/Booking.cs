@@ -12,17 +12,21 @@ namespace Trave.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DanhGia
+    public partial class Booking
     {
-        public string MaDG { get; set; }
-        public string MaKH { get; set; }
+        public int BookingID { get; set; }
         public string MaTour { get; set; }
-        public System.DateTime NgayDanhGia { get; set; }
-        public int SoSao { get; set; }
-        public string NoiDung { get; set; }
-        public string TrangThai { get; set; }
+        public string HoTen { get; set; }
+        public string Email { get; set; }
+        public string SoDienThoai { get; set; }
+        public int SoNguoi { get; set; }
+        public System.DateTime NgayDi { get; set; }
+        public decimal TongTien { get; set; }
+        public string GhiChu { get; set; }
+        public string PaymentMethod { get; set; }
+        public Nullable<System.DateTime> NgayDat { get; set; }
+        public string PhuongTien { get; set; }
     
-        public virtual KhachHang KhachHang { get; set; }
         public virtual Tour Tour { get; set; }
     }
 }

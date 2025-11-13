@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Trave.Models.DanhMuc>
+
+@{
+    // Cập nhật Title cho trang
+    ViewBag.Title = "Danh sách Danh mục";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-light py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-dark">
+                <i class="fas fa-list-ul mr-2"></i>@ViewBag.Title
+            </h4>
+
+            
+        </div>
+    </div>
+
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.TenDM)
+                            </th>
+                            <th scope="col" class="text-center">
+                                @Html.DisplayNameFor(model => model.soluongsanpham)
+                            </th>
+                            <th scope="col" class="text-center" style="width: 150px;">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@Html.DisplayFor(modelItem => item.TenDM)</strong>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-primary" style="font-size: 0.9em;">
+                                        @Html.DisplayFor(modelItem => item.soluongsanpham)
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("DMEdit", "ADMIN" ,new { id = item.MaDM })" class="btn btn-warning btn-sm mx-1" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("DMDetails","ADMIN", new { id = item.MaDM })" class="btn btn-info btn-sm mx-1" title="Xem chi tiết">
+                                        <i class="fas fa-search"></i>
+                                    </a>
+                                    <a href="@Url.Action("DMDelete","ADMIN", new { id = item.MaDM })" class="btn btn-danger btn-sm mx-1" title="Xóa">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle mr-2"></i> Chưa có danh mục nào được tạo.
+            </div>
+        }
+    </div>
+</div>

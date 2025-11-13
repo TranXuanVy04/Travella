@@ -1,7 +1,15 @@
-﻿@model Trave.Models.HomeViewModel
+﻿@model  IEnumerable<Trave.Models.Tour>
+@using Trave.Models
+
+@{
+    var allDestinations = ViewBag.AllDestinations as List<Trave.Models.DiaDiem> ?? new List<Trave.Models.DiaDiem>();
+    var allCountries = ViewBag.AllCountries as List<string> ?? new List<string>();
+}
+
 @{
     ViewBag.Title = "Travela - Dream Destinations, Unforgettable Experiences";
 }
+
 
 <div class="container-fluid position-relative p-0">
     <!-- Carousel Start -->
@@ -71,15 +79,25 @@
     </div>
     <!-- Carousel End -->
 </div>
+<div class.="container pt-4">
 
-<div class="container-fluid search-bar position-relative" style="top: -50%; transform: translateY(-50%);">
-    <div class="container">
-        <div class="position-relative rounded-pill w-100 mx-auto p-5" style="background: rgba(19, 53, 123, 0.8);">
-            <input class="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Eg: Thailand">
-            <button type="button" class="btn btn-primary rounded-pill py-2 px-4 position-absolute me-2" style="top: 50%; right: 46px; transform: translateY(-50%);">Search</button>
+    @if (TempData["BookingSuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Thành công!</strong> @TempData["BookingSuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    </div>
+    }
+
+    @if (TempData["BookingErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Lỗi!</strong> @TempData["BookingErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 </div>
+
 <!-- Navbar & Hero End -->
 <!-- Destination Start -->
 <div class="container-fluid destination py-5">
@@ -89,59 +107,47 @@
             <h1 class="mb-0">Popular Destination</h1>
         </div>
         <div class="tab-class text-center">
-            <ul class="nav nav-pills d-inline-flex justify-content-center mb-5 position-relative" id="pills-tab" role="tablist">
+
+            <ul class="nav nav-pills elegant-filter-bar d-inline-flex justify-content-center" id="pills-tab" role="tablist">
+
                 <li class="nav-item" role="presentation">
-                    <a class="mx-3 py-2 px-4 border border-primary bg-light rounded-pill active text-dark"
-                       id="pill-tab-all"
-                       data-bs-toggle="pill"
-                       href="#pill-content-all"
-                       role="tab"
-                       aria-controls="pill-content-all"
-                       aria-selected="true">
-                        All
+                    <a class="nav-link active"
+                       id="pill-tab-all" data-bs-toggle="pill" href="#pill-content-all"
+                       role="tab" aria-controls="pill-content-all" aria-selected="true">
+                        All Countries
                     </a>
                 </li>
 
-                @foreach (var item in Model.DiaDiems.Take(4))
+                @foreach (var country in allCountries.Take(4))
                 {
+                    var countryId = country.Trim().Replace(" ", "-");
                     <li class="nav-item" role="presentation">
-                        <a class="mx-3 py-2 px-4 border border-primary bg-light rounded-pill text-dark"
-                           id="pill-tab-@item.MaDD"
-                           data-bs-toggle="pill"
-                           href="#pill-content-@item.MaDD"
-                           role="tab"
-                           aria-controls="pill-content-@item.MaDD"
-                           aria-selected="false">
-                            @item.QuocGia
+                        <a class="nav-link"
+                           id="pill-tab-@countryId" data-bs-toggle="pill" href="#pill-content-@countryId"
+                           role="tab" aria-controls="pill-content-@countryId" aria-selected="false">
+                            @country.Trim()
                         </a>
                     </li>
                 }
 
-                @if (Model.DiaDiems.Count() > 4)
+                @if (allCountries.Count() > 4)
                 {
                     <li class="nav-item dropdown position-static">
-                        <a class="mx-3 py-2 px-4 border border-primary bg-light rounded-pill dropdown-toggle text-dark"
-                           data-bs-toggle="dropdown"
-                           href="#"
-                           role="button"
-                           aria-expanded="false">
-                            More
+                        <a class="nav-link dropdown-toggle"
+                           data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                            More Destinations
                         </a>
-
-                        <div class="dropdown-menu w-100 p-2 mt-2">
-                            <div class="container-fluid">
-                                <div class="row g-2">
-                                    @foreach (var item in Model.DiaDiems.Skip(4))
+                        <div class="dropdown-menu mega-menu w-100">
+                            <div class="container">
+                                <div class="row g-3">
+                                    @foreach (var country in allCountries.Skip(4))
                                     {
-                                        <div class="col-4">
-                                            <a class="dropdown-item text-dark text-wrap rounded-2"
-                                               id="pill-tab-@item.MaDD"
-                                               data-bs-toggle="pill"
-                                               href="#pill-content-@item.MaDD"
-                                               role="tab"
-                                               aria-controls="pill-content-@item.MaDD"
-                                               aria-selected="false">
-                                                @item.QuocGia
+                                        var countryId = country.Trim().Replace(" ", "-");
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <a class="mega-menu-item text-center"
+                                               id="pill-tab-@countryId" data-bs-toggle="pill" href="#pill-content-@countryId"
+                                               role="tab" aria-controls="pill-content-@countryId" aria-selected="false">
+                                                @country.Trim()
                                             </a>
                                         </div>
                                     }
@@ -151,42 +157,64 @@
                     </li>
                 }
             </ul>
+
             <div class="tab-content" id="pills-tabContent">
 
-                <div class="tab-pane fade show active"
-                     id="pill-content-all"
-                     role="tabpanel"
-                     aria-labelledby="pill-tab-all">
+                <div class="tab-pane fade show active" id="pill-content-all" role="tabpanel" aria-labelledby="pill-tab-all">
                     <div class="row g-4">
-                        @foreach (var item in Model.DiaDiems.Take(6))
+                        @foreach (var dest in allDestinations.Take(6))
                         {
-                            <div class="col-lg-4">
-                                <div class="destination-img">
-                                    <img class="img-fluid rounded w-100 " style="object-fit: cover;" src="@Url.Content("~/img/Destination/"+item.HinhAnh)" alt="@item.ThanhPho">
-                                    <div class="destination-overlay p-4">
-                                        @*<a href="#" class="btn btn-primary text-white rounded-pill border py-2 px-3">20 Photos</a>*@
-                                        <h4 class="text-white mb-2 mt-3">@item.ThanhPho</h4>
-                                        <a href="#" class="btn-hover text-white">View This Place <i class="fa fa-arrow-right ms-2"></i></a>
+                            var tourCount = Model.Count(t => t.MaDD == dest.MaDD);
+
+                            <div class="col-lg-4 col-md-6 d-flex">
+
+                                <a class="destination-card d-block h-100 w-100"
+                                   href="@Url.Action("Tour", "Home", new { countryFilter = dest.QuocGia.Trim() })">
+
+                                    <img class="destination-card-img"
+                                         src="@Url.Content("~/img/Destination/" + dest.HinhAnh)"
+                                         alt="@dest.ThanhPho">
+
+                                    <div class="tour-count-badge">@tourCount Tours</div>
+
+                                    <div class="destination-card-overlay">
+                                        <h4 class="destination-card-title text-white">@dest.ThanhPho</h4>
+                                        <p class="destination-card-country text-white">@dest.QuocGia</p>
                                     </div>
-                                    <div class="search-icon">
-                                        <a href="@Url.Content("~/img/Destination/"+item.HinhAnh)" data-lightbox="destination-6"><i class="fa fa-plus-square fa-1x btn btn-light btn-lg-square text-primary"></i></a>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
                         }
                     </div>
-
                 </div>
 
-                @foreach (var item in Model.DiaDiems)
+                @foreach (var country in allCountries)
                 {
-                    <div class="tab-pane fade"
-                         id="pill-content-@item.MaDD"
-                         role="tabpanel"
-                         aria-labelledby="pill-tab-@item.MaDD">
+                    var countryId = country.Trim().Replace(" ", "-");
+                    <div class="tab-pane fade" id="pill-content-@countryId" role="tabpanel" aria-labelledby="pill-tab-@countryId">
+                        <div class="row g-4">
 
-                        <p>Hiển thị nội dung cho @item.QuocGia...</p>
+                            @foreach (var dest in allDestinations.Where(d =>
+                                d.QuocGia != null &&
+                                d.QuocGia.Trim().Equals(country.Trim(), StringComparison.OrdinalIgnoreCase)
+                            ))
+                            {
+                                var tourCount = Model.Count(t => t.MaDD == dest.MaDD);
 
+                                <div class="col-lg-4 col-md-6 d-flex">
+                                    <a class="destination-card d-block h-100 w-100"
+                                       href="@Url.Action("Tour", "Home", new { countryFilter = dest.QuocGia.Trim() })">
+
+                                        <img class="destination-card-img" src="@Url.Content("~/img/Destination/"+dest.HinhAnh)" alt="@dest.ThanhPho">
+                                        <div class="tour-count-badge">@tourCount Tours</div>
+
+                                        <div class="destination-card-overlay">
+                                            <h4 class="destination-card-title text-white">@dest.ThanhPho</h4>
+                                            <p class="destination-card-country text-white">@dest.QuocGia</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
                     </div>
                 }
             </div>
@@ -194,548 +222,67 @@
     </div>
 </div>
 <!-- Destination End -->
+<!-- Destination End -->
 <!-- Packages Start -->
 <div class="container-fluid packages py-5">
     <div class="container py-5">
-        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px">
             <h5 class="section-title px-3">Packages</h5>
             <h1 class="mb-0">Awesome Packages</h1>
         </div>
         <div class="packages-carousel owl-carousel">
-            <div class="packages-item">
-                <div class="packages-img">
-                    <img src="img/packages-4.jpg" class="img-fluid w-100 rounded-top" alt="Image">
-                    <div class="packages-info d-flex border border-start-0 border-end-0 position-absolute" style="width: 100%; bottom: 0; left: 0; z-index: 5;">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i>Venice - Italy</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt me-2"></i>3 days</small>
-                        <small class="flex-fill text-center py-2"><i class="fa fa-user me-2"></i>2 Person</small>
-                    </div>
-                    <div class="packages-price py-2 px-4">$349.00</div>
-                </div>
-                <div class="packages-content bg-light">
-                    <div class="p-4 pb-0">
-                        <h5 class="mb-0">Venice - Italy</h5>
-                        <small class="text-uppercase">Hotel Deals</small>
-                        <div class="mb-3">
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
+            @foreach (var item in Model)
+            {
+                <div class="packages-item p-2 h-100">
+                    <div class="card package-card h-100 rounded-3 shadow-sm border-0">
+
+                        <div class="package-img-wrapper rounded-top-3">
+                            <img src="@Url.Content("~/img/Destination/"+item.anhmota)" alt="@item.TenTour">
+                            <div class="category-badge shadow-sm">
+                                <i class="fa fa-tag me-1"></i> @item.DanhMuc.TenDM
+                            </div>
                         </div>
-                        <p class="mb-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt nemo quia quae illum aperiam fugiat voluptatem repellat</p>
-                    </div>
-                    <div class="row bg-primary rounded-bottom mx-0">
-                        <div class="col-6 text-start px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Read More</a>
-                        </div>
-                        <div class="col-6 text-end px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="packages-item">
-                <div class="packages-img">
-                    <img src="img/packages-2.jpg" class="img-fluid w-100 rounded-top" alt="Image">
-                    <div class="packages-info d-flex border border-start-0 border-end-0 position-absolute" style="width: 100%; bottom: 0; left: 0; z-index: 5;">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i>Venice - Italy</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt me-2"></i>3 days</small>
-                        <small class="flex-fill text-center py-2"><i class="fa fa-user me-2"></i>2 Person</small>
-                    </div>
-                    <div class="packages-price py-2 px-4">$449.00</div>
-                </div>
-                <div class="packages-content bg-light">
-                    <div class="p-4 pb-0">
-                        <h5 class="mb-0">The New California</h5>
-                        <small class="text-uppercase">Hotel Deals</small>
-                        <div class="mb-3">
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                        </div>
-                        <p class="mb-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt nemo quia quae illum aperiam fugiat voluptatem repellat</p>
-                    </div>
-                    <div class="row bg-primary rounded-bottom mx-0">
-                        <div class="col-6 text-start px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Read More</a>
-                        </div>
-                        <div class="col-6 text-end px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Book Now</a>
+
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between mb-3 package-meta">
+                                <small><i class="fa fa-map-marker-alt text-primary me-2"></i>@item.DiaDiem.ThanhPho</small>
+                                <small><i class="fa fa-clock text-primary me-2"></i>@item.ThoiGian </small>
+                            </div>
+
+                            <h5 class="card-title mb-3 fw-bold text-dark">@item.TenTour</h5>
+
+                            @*<div class="mb-3 text-warning">
+                                <small class="fa fa-star"></small>
+                                <small class="fa fa-star"></small>
+                                <small class="fa fa-star"></small>
+                                <small class="fa fa-star"></small>
+                                <small class="fa fa-star"></small>
+                            </div>*@
+
+                            <p class="card-text text-muted mb-4 text-clamp-3" style="font-size: 0.95rem; line-height: 1.6;">
+                                @item.mota
+                            </p>
+
+                            <hr class="text-muted opacity-25 mt-auto"> <div class="d-flex align-items-center justify-content-between mt-3">
+                                <div>
+                                    <small class="text-muted d-block" style="font-size: 0.8rem;">Giá chỉ từ</small>
+                                    <span class="price-tag">$@item.Gia</span>
+                                </div>
+                                <a class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm transition-hover"
+                                   href="@Url.Action("Details", "Home", new { id = item.MaTour.Trim() })">
+                                    Book Now
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="packages-item">
-                <div class="packages-img">
-                    <img src="img/packages-3.jpg" class="img-fluid w-100 rounded-top" alt="Image">
-                    <div class="packages-info d-flex border border-start-0 border-end-0 position-absolute" style="width: 100%; bottom: 0; left: 0; z-index: 5;">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i>Venice - Italy</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt me-2"></i>3 days</small>
-                        <small class="flex-fill text-center py-2"><i class="fa fa-user me-2"></i>2 Person</small>
-                    </div>
-                    <div class="packages-price py-2 px-4">$549.00</div>
-                </div>
-                <div class="packages-content bg-light">
-                    <div class="p-4 pb-0">
-                        <h5 class="mb-0">Discover Japan</h5>
-                        <small class="text-uppercase">Hotel Deals</small>
-                        <div class="mb-3">
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                        </div>
-                        <p class="mb-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt nemo quia quae illum aperiam fugiat voluptatem repellat</p>
-                    </div>
-                    <div class="row bg-primary rounded-bottom mx-0">
-                        <div class="col-6 text-start px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Read More</a>
-                        </div>
-                        <div class="col-6 text-end px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="packages-item">
-                <div class="packages-img">
-                    <img src="img/packages-1.jpg" class="img-fluid w-100 rounded-top" alt="Image">
-                    <div class="packages-info d-flex border border-start-0 border-end-0 position-absolute" style="width: 100%; bottom: 0; left: 0; z-index: 5;">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i>Thayland</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt me-2"></i>3 days</small>
-                        <small class="flex-fill text-center py-2"><i class="fa fa-user me-2"></i>2 Person</small>
-                    </div>
-                    <div class="packages-price py-2 px-4">$649.00</div>
-                </div>
-                <div class="packages-content bg-light">
-                    <div class="p-4 pb-0">
-                        <h5 class="mb-0">Thayland Trip</h5>
-                        <small class="text-uppercase">Hotel Deals</small>
-                        <div class="mb-3">
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                        </div>
-                        <p class="mb-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt nemo quia quae illum aperiam fugiat voluptatem repellat</p>
-                    </div>
-                    <div class="row bg-primary rounded-bottom mx-0">
-                        <div class="col-6 text-start px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Read More</a>
-                        </div>
-                        <div class="col-6 text-end px-0">
-                            <a href="#" class="btn-hover btn text-white py-2 px-4">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>
+
 <!-- Packages End -->
-<!-- Gallery Start -->
-<div class="container-fluid gallery py-5 my-5">
-    <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-        <h5 class="section-title px-3">Our Gallery</h5>
-        <h1 class="mb-4">Tourism & Traveling Gallery.</h1>
-        <p class="mb-0">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum tempore nam, architecto doloremque velit explicabo? Voluptate sunt eveniet fuga eligendi! Expedita laudantium fugiat corrupti eum cum repellat a laborum quasi.
-        </p>
-    </div>
-    <div class="tab-class text-center">
-        <ul class="nav nav-pills d-inline-flex justify-content-center mb-5">
-            <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill active" data-bs-toggle="pill" href="#GalleryTab-1">
-                    <span class="text-dark" style="width: 150px;">All</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="d-flex py-2 mx-3 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-2">
-                    <span class="text-dark" style="width: 150px;">World tour</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-3">
-                    <span class="text-dark" style="width: 150px;">Ocean Tour</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-4">
-                    <span class="text-dark" style="width: 150px;">Summer Tour</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-5">
-                    <span class="text-dark" style="width: 150px;">Sport Tour</span>
-                </a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div id="GalleryTab-1" class="tab-pane fade show p-0 active">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-1.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-1.jpg" data-lightbox="gallery-1" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-2.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-3.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-4.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-4.jpg" data-lightbox="gallery-4" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-5.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-5.jpg" data-lightbox="gallery-5" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-6.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-6.jpg" data-lightbox="gallery-6" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-7.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-7.jpg" data-lightbox="gallery-7" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-8.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-8.jpg" data-lightbox="gallery-8" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-9.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-9.jpg" data-lightbox="gallery-9" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-10.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-10.jpg" data-lightbox="gallery-10" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="GalleryTab-2" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-2.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-3.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="GalleryTab-3" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-2.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-3.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="GalleryTab-4" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-2.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-3.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="GalleryTab-5" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-2.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="img/gallery-3.jpg" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Gallery End -->
-<!-- Blog Start -->
-<div class="container-fluid blog py-5">
-    <div class="container py-5">
-        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-            <h5 class="section-title px-3">Our Blog</h5>
-            <h1 class="mb-4">Popular Travel Blogs</h1>
-            <p class="mb-0">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti deserunt tenetur sapiente atque. Magni non explicabo beatae sit, vel reiciendis consectetur numquam id similique sunt error obcaecati ducimus officia maiores.
-            </p>
-        </div>
-        <div class="row g-4 justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item">
-                    <div class="blog-img">
-                        <div class="blog-img-inner">
-                            <img class="img-fluid w-100 rounded-top" src="img/blog-1.jpg" alt="Image">
-                            <div class="blog-icon">
-                                <a href="#" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                        <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>28 Jan 2050</small>
-                            <a href="#" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>1.7K</a>
-                            <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>1K</a>
-                        </div>
-                    </div>
-                    <div class="blog-content border border-top-0 rounded-bottom p-4">
-                        <p class="mb-3">Posted By: Royal Hamblin </p>
-                        <a href="#" class="h4">Adventures Trip</a>
-                        <p class="my-3">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam eos</p>
-                        <a href="#" class="btn btn-primary rounded-pill py-2 px-4">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item">
-                    <div class="blog-img">
-                        <div class="blog-img-inner">
-                            <img class="img-fluid w-100 rounded-top" src="img/blog-2.jpg" alt="Image">
-                            <div class="blog-icon">
-                                <a href="#" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                        <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>28 Jan 2050</small>
-                            <a href="#" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>1.7K</a>
-                            <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>1K</a>
-                        </div>
-                    </div>
-                    <div class="blog-content border border-top-0 rounded-bottom p-4">
-                        <p class="mb-3">Posted By: Royal Hamblin </p>
-                        <a href="#" class="h4">Adventures Trip</a>
-                        <p class="my-3">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam eos</p>
-                        <a href="#" class="btn btn-primary rounded-pill py-2 px-4">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-item">
-                    <div class="blog-img">
-                        <div class="blog-img-inner">
-                            <img class="img-fluid w-100 rounded-top" src="img/blog-3.jpg" alt="Image">
-                            <div class="blog-icon">
-                                <a href="#" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
-                            </div>
-                        </div>
-                        <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>28 Jan 2050</small>
-                            <a href="#" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>1.7K</a>
-                            <a href="#" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>1K</a>
-                        </div>
-                    </div>
-                    <div class="blog-content border border-top-0 rounded-bottom p-4">
-                        <p class="mb-3">Posted By: Royal Hamblin </p>
-                        <a href="#" class="h4">Adventures Trip</a>
-                        <p class="my-3">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam eos</p>
-                        <a href="#" class="btn btn-primary rounded-pill py-2 px-4">Read More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Blog End -->
+
 <!-- Testimonial Start -->
 <div class="container-fluid testimonial py-5">
     <div class="container py-5">
@@ -832,20 +379,3 @@
     </div>
 </div>
 <!-- Testimonial End -->
-<!-- Subscribe Start -->
-<div class="container-fluid subscribe py-5">
-    <div class="container text-center py-5">
-        <div class="mx-auto text-center" style="max-width: 900px;">
-            <h5 class="subscribe-title px-3">Subscribe</h5>
-            <h1 class="text-white mb-4">Get Exclusive Travel Deals</h1>
-            <p class="text-white mb-5">
-                Sign up to receive our best promotions, new tour announcements, and insider travel tips sent straight to your inbox.
-            </p>
-            <div class="position-relative mx-auto">
-                <input class="form-control border-primary rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
-                <button type="button" class="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 px-4 mt-2 me-2">Subscribe</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Subscribe End -->

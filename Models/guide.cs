@@ -12,12 +12,12 @@ namespace Trave.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class LichSuDat
+    public partial class guide
     {
-        public string MaDatVe { get; set; }
-        public string TrangThai { get; set; }
-        public string MaLSD { get; set; }
-    
-        public virtual DatVe DatVe { get; set; }
+        public int maguide { get; set; }
+        public string anhguide { get; set; }
+        public string tenguide { get; set; }
+        public string quoctich { get; set; }
+        public Nullable<int> tuoi { get; set; }
     }
 }

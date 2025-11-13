@@ -17,31 +17,25 @@ namespace Trave.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Tour()
         {
-            this.DanhGias = new HashSet<DanhGia>();
-            this.DatVes = new HashSet<DatVe>();
-            this.MucYeuThiches = new HashSet<MucYeuThich>();
+            this.Bookings = new HashSet<Booking>();
         }
     
         public string MaTour { get; set; }
         public string TenTour { get; set; }
         public double Gia { get; set; }
-        public string Trạng_Thái { get; set; }
+        public string trangthai { get; set; }
         public string ThoiGian { get; set; }
         public System.DateTime NgayKhoiHanh { get; set; }
         public string MaDD { get; set; }
         public string MaDM { get; set; }
         public string PhuongTien { get; set; }
+        public string anhmota { get; set; }
         public Nullable<int> songuoi { get; set; }
-        public string Mota { get; set; }
-        public string Anh { get; set; }
+        public string mota { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DanhGia> DanhGias { get; set; }
+        public virtual ICollection<Booking> Bookings { get; set; }
         public virtual DanhMuc DanhMuc { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DatVe> DatVes { get; set; }
         public virtual DiaDiem DiaDiem { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MucYeuThich> MucYeuThiches { get; set; }
     }
 }

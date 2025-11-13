@@ -10,107 +10,116 @@ using Trave.Models;
 
 namespace Trave.Controllers
 {
-    public class DiaDiemsController : Controller
+    public class ToursController : Controller
     {
-        private DULICHEntities1 db = new DULICHEntities1();
+        private DULICHEntities db = new DULICHEntities();
 
-        // GET: DiaDiems
+        // GET: Tours
         public ActionResult Index()
         {
-            return View(db.DiaDiems.ToList());
+            var tours = db.Tours.Include(t => t.DanhMuc).Include(t => t.DiaDiem);
+            return View(tours.ToList());
         }
 
-        // GET: DiaDiems/Details/5
+        // GET: Tours/Details/5
         public ActionResult Details(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DiaDiem diaDiem = db.DiaDiems.Find(id);
-            if (diaDiem == null)
+            Tour tour = db.Tours.Find(id);
+            if (tour == null)
             {
                 return HttpNotFound();
             }
-            return View(diaDiem);
+            return View(tour);
         }
 
-        // GET: DiaDiems/Create
+        // GET: Tours/Create
         public ActionResult Create()
         {
+            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM");
+            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD");
             return View();
         }
 
-        // POST: DiaDiems/Create
+        // POST: Tours/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MaDD,TenDD,ThanhPho,QuocGia,MoTa,HinhAnh")] DiaDiem diaDiem)
+        public ActionResult Create([Bind(Include = "MaTour,TenTour,Gia,trangthai,ThoiGian,NgayKhoiHanh,MaDD,MaDM,PhuongTien,anhmota,songuoi,mota")] Tour tour)
         {
             if (ModelState.IsValid)
             {
-                db.DiaDiems.Add(diaDiem);
+                db.Tours.Add(tour);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(diaDiem);
+            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
+            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
+            return View(tour);
         }
 
-        // GET: DiaDiems/Edit/5
+        // GET: Tours/Edit/5
         public ActionResult Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DiaDiem diaDiem = db.DiaDiems.Find(id);
-            if (diaDiem == null)
+            Tour tour = db.Tours.Find(id);
+            if (tour == null)
             {
                 return HttpNotFound();
             }
-            return View(diaDiem);
+            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
+            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
+            return View(tour);
         }
 
-        // POST: DiaDiems/Edit/5
+        // POST: Tours/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MaDD,TenDD,ThanhPho,QuocGia,MoTa,HinhAnh")] DiaDiem diaDiem)
+        public ActionResult Edit([Bind(Include = "MaTour,TenTour,Gia,trangthai,ThoiGian,NgayKhoiHanh,MaDD,MaDM,PhuongTien,anhmota,songuoi,mota")] Tour tour)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(diaDiem).State = EntityState.Modified;
+                db.Entry(tour).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(diaDiem);
+            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
+            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
+            return View(tour);
         }
 
-        // GET: DiaDiems/Delete/5
+        // GET: Tours/Delete/5
         public ActionResult Delete(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DiaDiem diaDiem = db.DiaDiems.Find(id);
-            if (diaDiem == null)
+            Tour tour = db.Tours.Find(id);
+            if (tour == null)
             {
                 return HttpNotFound();
             }
-            return View(diaDiem);
+            return View(tour);
         }
 
-        // POST: DiaDiems/Delete/5
+        // POST: Tours/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            DiaDiem diaDiem = db.DiaDiems.Find(id);
-            db.DiaDiems.Remove(diaDiem);
+            Tour tour = db.Tours.Find(id);
+            db.Tours.Remove(tour);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

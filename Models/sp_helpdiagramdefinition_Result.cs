@@ -10,16 +10,10 @@
 namespace Trave.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class TaiKhoan
+    public partial class sp_helpdiagramdefinition_Result
     {
-        public string VaiTro { get; set; }
-        public string MatKhau { get; set; }
-        public string TenDangNhap { get; set; }
-        public string MaKH { get; set; }
-        public string MaNV { get; set; }
-    
-        public virtual KhachHang KhachHang { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

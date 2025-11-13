@@ -10,18 +10,13 @@
 namespace Trave.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class ThanhToan
+    public partial class sp_helpdiagrams_Result
     {
-        public string MaTT { get; set; }
-        public string MaNV { get; set; }
-        public System.DateTime NgayTT { get; set; }
-        public string PhuongThuc { get; set; }
-        public double SoTien { get; set; }
-        public string MaDatVe { get; set; }
-    
-        public virtual DatVe DatVe { get; set; }
-        public virtual NhanVien NhanVien { get; set; }
+        public string Database { get; set; }
+        public string Name { get; set; }
+        public int ID { get; set; }
+        public string Owner { get; set; }
+        public int OwnerID { get; set; }
     }
 }

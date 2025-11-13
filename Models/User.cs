@@ -12,19 +12,22 @@ namespace Trave.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DanhMuc
+    public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DanhMuc()
+        public User()
         {
-            this.Tours = new HashSet<Tour>();
+            this.KhachHangs = new HashSet<KhachHang>();
         }
     
-        public string MaDM { get; set; }
-        public string TenDM { get; set; }
-        public Nullable<int> soluongsanpham { get; set; }
+        public int UserID { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+        public string PasswordHash { get; set; }
+        public System.DateTime CreatedAt { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Tour> Tours { get; set; }
+        public virtual ICollection<KhachHang> KhachHangs { get; set; }
     }
 }

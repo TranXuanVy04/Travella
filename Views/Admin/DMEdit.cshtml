@@ -1,0 +1,52 @@
+﻿@model Trave.Models.DanhMuc
+
+@{
+    ViewBag.Title = "Chỉnh sửa Danh mục";
+    Layout = "~/Views/Shared/_Adminlayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-dark">@ViewBag.Title</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 fw-bold text-primary"><i class="fas fa-edit me-2"></i> Thông tin Danh mục</h6>
+            </div>
+            <div class="card-body p-4">
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    @Html.HiddenFor(model => model.MaDM)
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.MaDM, htmlAttributes: new { @class = "form-label fw-bold" })
+                            @Html.EditorFor(model => model.MaDM, new { htmlAttributes = new { @class = "form-control bg-light", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.MaDM, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.TenDM, htmlAttributes: new { @class = "form-label fw-bold" })
+                            @Html.EditorFor(model => model.TenDM, new { htmlAttributes = new { @class = "form-control", @autofocus = "autofocus" } })
+                            @Html.ValidationMessageFor(model => model.TenDM, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+
+                   
+
+                    <div class="mt-4 pt-3 border-top">
+                        <input type="submit" value="Lưu thay đổi" class="btn btn-primary rounded-pill py-2 px-4" />
+
+                        @Html.ActionLink("Quay lại Danh sách", "DMList", "Admin", null, new { @class = "btn btn-outline-secondary rounded-pill py-2 px-4 ms-2" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

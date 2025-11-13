@@ -1,0 +1,59 @@
+﻿/* Fix Flatpickr đè label */
+.form-floating .flatpickr-input {
+    padding-top: 1.625rem;
+    padding-bottom: .625rem;
+}
+
+/* CSS cho Tabs */
+.details-tab-nav {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1.5rem;
+}
+
+    .details-tab-nav .nav-link {
+        background: none !important;
+        border: none !important;
+        color: #6c757d;
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 1rem 0;
+        margin-right: 1.5rem;
+        border-bottom: 3px solid transparent;
+        border-radius: 0;
+    }
+
+        .details-tab-nav .nav-link.active,
+        .details-tab-nav .nav-link:hover {
+            color: #13357B;
+            border-bottom-color: #13357B;
+        }
+
+/* CSS cho Lịch trình (Accordion) */
+.itinerary-accordion .accordion-item {
+    border: none;
+    border-bottom: 1px solid #eee;
+    border-radius: 0;
+}
+
+.itinerary-accordion .accordion-button {
+    background: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    padding: 1.5rem 0;
+}
+
+    .itinerary-accordion .accordion-button:focus {
+        box-shadow: none;
+    }
+
+    .itinerary-accordion .accordion-button:not(.collapsed) {
+        color: #13357B;
+        background: none;
+    }
+
+.itinerary-accordion .accordion-body {
+    padding: 0 0 1.5rem 2rem;
+    border-left: 2px solid #13357B;
+    margin-left: 0.5rem;
+}
