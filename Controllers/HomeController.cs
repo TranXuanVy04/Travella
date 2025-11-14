@@ -233,6 +233,21 @@ namespace Trave.Controllers
             // Để thử nghiệm lỗi, bạn có thể đổi thành:
             // return false; 
         }
-
+        public ActionResult Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return HttpNotFound();
+            }
+            var tour = db.Tours
+                         .Where(t => t.MaTour.Trim() == id)
+                         .FirstOrDefault();
+        
+            if (tour == null)
+            {
+                return HttpNotFound();
+            }
+            return View(tour);
+        }
     }
 }
