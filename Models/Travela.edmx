@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DULICHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DULICHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Booking">
           <Key>
             <PropertyRef Name="BookingID" />
@@ -131,10 +131,8 @@
           <Property Name="Gia" Type="float" Nullable="false" />
           <Property Name="trangthai" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ThoiGian" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="NgayKhoiHanh" Type="date" Nullable="false" />
           <Property Name="MaDD" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="MaDM" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="PhuongTien" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="anhmota" Type="varchar" MaxLength="50" />
           <Property Name="songuoi" Type="int" />
           <Property Name="mota" Type="nvarchar(max)" />
@@ -260,8 +258,7 @@
             <End Role="Tour" EntitySet="Tour" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DULICHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -395,10 +392,8 @@
           <Property Name="Gia" Type="Double" Nullable="false" />
           <Property Name="trangthai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ThoiGian" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="NgayKhoiHanh" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="MaDD" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="MaDM" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="PhuongTien" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="anhmota" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="songuoi" Type="Int32" />
           <Property Name="mota" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -406,7 +401,7 @@
           <NavigationProperty Name="DanhMuc" Relationship="Self.FK__Tour__MaDM__65370702" FromRole="Tour" ToRole="DanhMuc" />
           <NavigationProperty Name="DiaDiem" Relationship="Self.FK__Tour__MaDD__6442E2C9" FromRole="Tour" ToRole="DiaDiem" />
         </EntityType>
-        <EntityType Name="User">
+        <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
@@ -455,7 +450,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__KhachHang__UserI__59C55456">
-          <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Users" Type="DULICHModel.Users" Multiplicity="0..1" />
           <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
@@ -479,7 +474,7 @@
           <EntitySet Name="Quyens" EntityType="Self.Quyen" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="Tours" EntityType="Self.Tour" />
-          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Users1" EntityType="DULICHModel.Users" />
           <AssociationSet Name="FK__Booking__MaTour__6CD828CA" Association="Self.FK__Booking__MaTour__6CD828CA">
             <End Role="Tour" EntitySet="Tours" />
             <End Role="Booking" EntitySet="Bookings" />
@@ -493,7 +488,7 @@
             <End Role="Tour" EntitySet="Tours" />
           </AssociationSet>
           <AssociationSet Name="FK__KhachHang__UserI__59C55456" Association="Self.FK__KhachHang__UserI__59C55456">
-            <End Role="Users" EntitySet="Users" />
+            <End Role="Users" EntitySet="Users1" />
             <End Role="KhachHang" EntitySet="KhachHangs" />
           </AssociationSet>
           <FunctionImport Name="sp_alterdiagram">
@@ -680,18 +675,16 @@
                 <ScalarProperty Name="Gia" ColumnName="Gia" />
                 <ScalarProperty Name="trangthai" ColumnName="trangthai" />
                 <ScalarProperty Name="ThoiGian" ColumnName="ThoiGian" />
-                <ScalarProperty Name="NgayKhoiHanh" ColumnName="NgayKhoiHanh" />
                 <ScalarProperty Name="MaDD" ColumnName="MaDD" />
                 <ScalarProperty Name="MaDM" ColumnName="MaDM" />
-                <ScalarProperty Name="PhuongTien" ColumnName="PhuongTien" />
                 <ScalarProperty Name="anhmota" ColumnName="anhmota" />
                 <ScalarProperty Name="songuoi" ColumnName="songuoi" />
                 <ScalarProperty Name="mota" ColumnName="mota" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="DULICHModel.User">
+          <EntitySetMapping Name="Users1">
+            <EntityTypeMapping TypeName="DULICHModel.Users">
               <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

@@ -10,116 +10,107 @@ using Trave.Models;
 
 namespace Trave.Controllers
 {
-    public class ToursController : Controller
+    public class UsersController : Controller
     {
         private DULICHEntities db = new DULICHEntities();
 
-        // GET: Tours
+        // GET: Users
         public ActionResult Index()
         {
-            var tours = db.Tours.Include(t => t.DanhMuc).Include(t => t.DiaDiem);
-            return View(tours.ToList());
+            return View(db.Users1.ToList());
         }
 
-        // GET: Tours/Details/5
-        public ActionResult Details(string id)
+        // GET: Users/Details/5
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Tour tour = db.Tours.Find(id);
-            if (tour == null)
+            Users users = db.Users1.Find(id);
+            if (users == null)
             {
                 return HttpNotFound();
             }
-            return View(tour);
+            return View(users);
         }
 
-        // GET: Tours/Create
+        // GET: Users/Create
         public ActionResult Create()
         {
-            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM");
-            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD");
             return View();
         }
 
-        // POST: Tours/Create
+        // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MaTour,TenTour,Gia,trangthai,ThoiGian,MaDD,MaDM,anhmota,songuoi,mota")] Tour tour)
+        public ActionResult Create([Bind(Include = "UserID,Name,Email,Role,PasswordHash,CreatedAt")] Users users)
         {
             if (ModelState.IsValid)
             {
-                db.Tours.Add(tour);
+                db.Users1.Add(users);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
-            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
-            return View(tour);
+            return View(users);
         }
 
-        // GET: Tours/Edit/5
-        public ActionResult Edit(string id)
+        // GET: Users/Edit/5
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Tour tour = db.Tours.Find(id);
-            if (tour == null)
+            Users users = db.Users1.Find(id);
+            if (users == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
-            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
-            return View(tour);
+            return View(users);
         }
 
-        // POST: Tours/Edit/5
+        // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MaTour,TenTour,Gia,trangthai,ThoiGian,MaDD,MaDM,anhmota,songuoi,mota")] Tour tour)
+        public ActionResult Edit([Bind(Include = "UserID,Name,Email,Role,PasswordHash,CreatedAt")] Users users)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(tour).State = EntityState.Modified;
+                db.Entry(users).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
-            ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
-            return View(tour);
+            return View(users);
         }
 
-        // GET: Tours/Delete/5
-        public ActionResult Delete(string id)
+        // GET: Users/Delete/5
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Tour tour = db.Tours.Find(id);
-            if (tour == null)
+            Users users = db.Users1.Find(id);
+            if (users == null)
             {
                 return HttpNotFound();
             }
-            return View(tour);
+            return View(users);
         }
 
-        // POST: Tours/Delete/5
+        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Tour tour = db.Tours.Find(id);
-            db.Tours.Remove(tour);
+            Users users = db.Users1.Find(id);
+            db.Users1.Remove(users);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

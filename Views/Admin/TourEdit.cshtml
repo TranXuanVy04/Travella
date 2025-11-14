@@ -1,24 +1,26 @@
 ﻿@model Trave.Models.Tour
 
 @{
-    ViewBag.Title = "Tạo Tour mới";
+    ViewBag.Title = "Chỉnh sửa Tour";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-dark">@ViewBag.Title</h1>
+    <h1 class="h3 mb-0 text-dark">@ViewBag.Title: @Model.TenTour</h1>
 </div>
 
-@using (Html.BeginForm("TourCreate", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.MaTour)
 
     <div class="row">
         <div class="col-lg-8">
             <div class="card shadow-sm border-0">
                 <div class="card-header py-3 bg-white">
                     <h6 class="m-0 fw-bold text-primary">
-                        <i class="fas fa-suitcase-rolling me-2"></i> Thông tin cơ bản
+                        <i class="fas fa-edit me-2"></i> Thông tin cơ bản
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -27,7 +29,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             @Html.LabelFor(model => model.MaTour, htmlAttributes: new { @class = "form-label fw-bold" })
-                            @Html.EditorFor(model => model.MaTour, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.MaTour, new { htmlAttributes = new { @class = "form-control bg-light", @readonly = "readonly" } })
                             @Html.ValidationMessageFor(model => model.MaTour, "", new { @class = "text-danger small" })
                         </div>
                         <div class="col-md-6 mb-3">
@@ -55,10 +57,18 @@
                 </div>
                 <div class="card-body p-4">
 
-                    <div class="mb-3">
-                        <label for="ImageFile" class="form-label fw-bold">Ảnh Tour</label>
-                        <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                    <div class="mb-3 text-center">
+                        <label class="form-label fw-bold">Ảnh hiện tại</label>
+                        <img src="@Url.Content(String.Format("~/img/Destination/{0}", Model.anhmota))"
+                             alt="Ảnh Tour"
+                             class="img-thumbnail mb-2"
+                             style="max-width: 100%; height: auto; object-fit: cover;"
+                             onerror="this.src='@Url.Content("~/Content/images/placeholder.png")'" />
+                    </div>
 
+                    <div class="mb-3">
+                        <label for="ImageFile" class="form-label fw-bold">Chọn ảnh mới (nếu cần)</label>
+                        <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
                         @Html.HiddenFor(model => model.anhmota)
                     </div>
 
@@ -82,6 +92,14 @@
                     </div>
 
                     <div class="mb-3">
+                        @Html.LabelFor(model => model.trangthai, htmlAttributes: new { @class = "form-label fw-bold" })
+                        @Html.EditorFor(model => model.trangthai, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.trangthai, "", new { @class = "text-danger small" })
+                    </div>
+
+                    
+
+                    <div class="mb-3">
                         @Html.LabelFor(model => model.MaDM, "Danh mục Tour", htmlAttributes: new { @class = "form-label fw-bold" })
                         @Html.DropDownList("MaDM", null, "--- Chọn Danh mục ---", htmlAttributes: new { @class = "form-select" })
                         @Html.ValidationMessageFor(model => model.MaDM, "", new { @class = "text-danger small" })
@@ -92,13 +110,14 @@
                         @Html.DropDownList("MaDD", null, "--- Chọn Địa điểm ---", htmlAttributes: new { @class = "form-select" })
                         @Html.ValidationMessageFor(model => model.MaDD, "", new { @class = "text-danger small" })
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
     <div class="mt-4">
-        <input type="submit" value="Tạo mới" class="btn btn-primary rounded-pill py-2 px-4" />
+        <input type="submit" value="Lưu thay đổi" class="btn btn-primary rounded-pill py-2 px-4" />
         @Html.ActionLink("Quay lại Danh sách", "Tourlist", null, new { @class = "btn btn-outline-secondary rounded-pill py-2 px-4 ms-2" })
     </div>
 }

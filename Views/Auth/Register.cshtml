@@ -1,0 +1,359 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/AuthView.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 20px 0;
+    }
+
+    .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        max-width: 850px;
+        width: 100%;
+        padding: 40px;
+        background: white;
+        margin: 20px auto;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+    .password-input {
+        padding-right: 45px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 75%;
+        transform: translateY(-50%);
+        color: #888;
+        cursor: pointer;
+        font-size: 1.1rem;
+        z-index: 10;
+    }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+    .alert {
+        border-radius: 12px;
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+
+    .form-check-label a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .text-primary {
+        color: #667eea !important;
+    }
+
+    .input-group-text {
+        background: white;
+        border: 1px solid #ddd;
+        border-right: none;
+        border-radius: 10px 0 0 10px;
+    }
+
+    .form-control.with-icon {
+        border-left: none;
+        border-radius: 0 10px 10px 0;
+    }
+</style>
+
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 px-3">
+    <div class="card">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Create Account
+            </h2>
+            <p class="text-muted">Join us today!</p>
+        </div>
+
+        <div id="alertMsg"></div>
+
+        <form id="registerForm" novalidate>
+            @Html.AntiForgeryToken()
+            <div class="row g-3">
+                <!-- Cột trái -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold">
+                            <i class="fas fa-user text-muted me-1"></i>Full Name <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               class="form-control"
+                               placeholder="Enter your full name"
+                               required
+                               autocomplete="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label fw-semibold">
+                            <i class="fas fa-phone text-muted me-1"></i>Phone Number <span class="text-danger">*</span>
+                        </label>
+                        <input type="tel"
+                               id="phone"
+                               name="phone"
+                               class="form-control"
+                               placeholder="0xxxxxxxxx"
+                               required
+                               pattern="^0[0-9]{9}$">
+                        <small class="text-muted">Format: 0xxxxxxxxx (10 số)</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthDate" class="form-label fw-semibold">
+                            <i class="fas fa-calendar text-muted me-1"></i>Birth Date
+                        </label>
+                        <input type="date"
+                               id="birthDate"
+                               name="birthDate"
+                               class="form-control"
+                               max="@DateTime.Today.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label fw-semibold">
+                            <i class="fas fa-venus-mars text-muted me-1"></i>Gender <span class="text-danger">*</span>
+                        </label>
+                        <select id="gender" name="gender" class="form-select" required>
+                            <option value="" disabled selected>Select gender</option>
+                            <option value="Nam">Male</option>
+                            <option value="Nữ">Female</option>
+                            <option value="Khác">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Cột phải -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-semibold">
+                            <i class="fas fa-user-tag text-muted me-1"></i>Username <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               id="username"
+                               name="username"
+                               class="form-control"
+                               placeholder="Enter your username"
+                               required
+                               minlength="3"
+                               autocomplete="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">
+                            <i class="fas fa-envelope text-muted me-1"></i>Email <span class="text-danger">*</span>
+                        </label>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               class="form-control"
+                               placeholder="your@email.com"
+                               required
+                               autocomplete="email">
+                    </div>
+                    <div class="mb-3 position-relative">
+                        <label for="password" class="form-label fw-semibold">
+                            <i class="fas fa-lock text-muted me-1"></i>Password <span class="text-danger">*</span>
+                        </label>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               class="form-control password-input"
+                               placeholder="Minimum 6 characters"
+                               required
+                               minlength="6"
+                               autocomplete="new-password">
+                        <i class="fa fa-eye password-toggle" id="togglePass" onclick="togglePassword('password', this)"></i>
+                    </div>
+                    <div class="mb-3 position-relative">
+                        <label for="confirmPassword" class="form-label fw-semibold">
+                            <i class="fas fa-lock text-muted me-1"></i>Confirm Password <span class="text-danger">*</span>
+                        </label>
+                        <input type="password"
+                               id="confirmPassword"
+                               name="confirmPassword"
+                               class="form-control password-input"
+                               placeholder="Re-enter your password"
+                               required
+                               minlength="6"
+                               autocomplete="new-password">
+                        <i class="fa fa-eye password-toggle" id="toggleConfirm" onclick="togglePassword('confirmPassword', this)"></i>
+                    </div>
+                </div>
+
+                <!-- Đồng ý điều khoản + Nút -->
+                <div class="col-12">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="agree" required>
+                        <label class="form-check-label small" for="agree">
+                            I agree to the <a href="#" target="_blank">Terms & Conditions</a> and <a href="#" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <button type="submit" id="submitBtn" class="btn btn-primary w-100 fw-bold">
+                        <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
+                        <span id="btnText">Sign Up</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                Already have an account?
+                <a href="@Url.Action("Login", "Auth")" class="fw-semibold text-decoration-none" style="color: #667eea;">Sign In</a>
+            </small>
+        </div>
+    </div>
+</div>
+
+
+
+    <script>
+    // Toggle password visibility
+    function togglePassword(id, icon) {
+        const input = document.getElementById(id);
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        icon.classList.toggle('fa-eye-slash', isPassword);
+        icon.classList.toggle('fa-eye', !isPassword);
+        icon.style.color = isPassword ? '#667eea' : '#888';
+    }
+
+    // Submit form
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const form = this;
+        const btn = document.getElementById('submitBtn');
+        const spinner = btn.querySelector('.spinner-border');
+        const btnText = document.getElementById('btnText');
+        const alertDiv = document.getElementById('alertMsg');
+
+        // Reset
+        alertDiv.innerHTML = '';
+        form.classList.remove('was-validated');
+
+        // HTML5 validation
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            return;
+        }
+
+        // Kiểm tra mật khẩu trùng
+        const pass = document.getElementById('password').value;
+        const confirm = document.getElementById('confirmPassword').value;
+        if (pass !== confirm) {
+            alertDiv.innerHTML = `<div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>Mật khẩu xác nhận không khớp!
+            </div>`;
+            return;
+        }
+
+        // Disable button
+        btn.disabled = true;
+        spinner.classList.remove('d-none');
+        btnText.textContent = 'Signing up...';
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        data.birthDate = data.birthDate || null; // Nếu rỗng → null
+
+        try {
+            const res = await fetch('@Url.Action("Register", "Auth")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': formData.get('__RequestVerificationToken')
+                },
+                body: new URLSearchParams(data)
+            });
+
+            const result = await res.json();
+
+            // Reset button
+            btn.disabled = false;
+            spinner.classList.add('d-none');
+            btnText.textContent = 'Sign Up';
+
+            if (result.success) {
+                alertDiv.innerHTML = `<div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>${result.message}
+                </div>`;
+                setTimeout(() => {
+                    window.location.href = '@Url.Action("Login", "Auth")';
+                }, 1500);
+            } else {
+                alertDiv.innerHTML = `<div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>${result.message}
+                </div>`;
+            }
+        } catch (err) {
+            console.error('Register error:', err);
+            btn.disabled = false;
+            spinner.classList.add('d-none');
+            btnText.textContent = 'Sign Up';
+            alertDiv.innerHTML = `<div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>Lỗi kết nối. Vui lòng thử lại!
+            </div>`;
+        }
+    });
+
+    // Auto hide alert after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            const alert = document.querySelector('#alertMsg .alert');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 5000);
+    });
+    </script>

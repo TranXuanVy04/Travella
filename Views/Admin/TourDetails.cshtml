@@ -1,8 +1,98 @@
-﻿
+﻿@model Trave.Models.Tour
+
 @{
-    ViewBag.Title = "TourDetails";
+    ViewBag.Title = "Chi tiết Tour";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>TourDetails</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-dark">
+        <i class="fas fa-search me-2"></i>@ViewBag.Title
+    </h1>
+    @Html.ActionLink("Quay lại Danh sách", "Tourlist", null, new { @class = "btn btn-outline-secondary" })
+</div>
 
+<div class="card shadow-sm border-0">
+    <div class="row g-0">
+        <div class="col-lg-8">
+            <img src="@Url.Content(String.Format("~/img/Destination/{0}", Model.anhmota))"
+                 class="card-img-top"
+                 alt="@Model.TenTour"
+                 style="width: 100%; max-height: 450px; object-fit: cover;"
+                 onerror="this.src='@Url.Content("~/Content/images/placeholder.png")'" />
+
+            <div class="card-body p-4">
+                <h2 class="card-title fw-bold text-primary">@Model.TenTour</h2>
+                <hr>
+                <h5 class="fw-bold">Mô tả chi tiết</h5>
+                <p class="text-muted" style="white-space: pre-wrap; font-size: 1.05rem;">
+                    @Html.DisplayFor(model => model.mota)
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 border-start">
+            <div class="card-body p-4">
+
+                <h3 class="fw-bold text-danger mb-3">
+                    @Model.Gia.ToString("N0") ₫
+                </h3>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>Mã Tour</strong>
+                        <code>@Model.MaTour</code>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                        @{
+                            // Khai báo biến mặc định.
+                            string statusClass = "bg-secondary";
+
+                            if (Model.trangthai != null)
+                            {
+                                // Kiểm tra trạng thái "Available" hoặc "còn"
+                                if (Model.trangthai.ToLower().Contains("available") || Model.trangthai.ToLower().Contains("còn"))
+                                {
+                                    statusClass = "bg-success"; // Màu xanh lá cây
+                                }
+                                // Kiểm tra trạng thái "Booked" hoặc "hết"
+                                else if (Model.trangthai.ToLower().Contains("booked") || Model.trangthai.ToLower().Contains("hết"))
+                                {
+                                    statusClass = "bg-danger"; // Màu đỏ
+                                }
+                                // Lưu ý: Mọi dòng C# phải kết thúc bằng dấu chấm phẩy (;).
+                            }
+                        }
+
+                        <td class="text-center">
+                            <span class="badge @statusClass" style="font-size: 0.8em;">
+                                @Html.DisplayFor(modelItem => modelItem.trangthai)
+                            </span>
+                        </td>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>Danh mục</strong>
+                        <span>@Model.DanhMuc.TenDM</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>Địa điểm</strong>
+                        <span>@Model.DiaDiem.TenDD</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>Thời gian</strong>
+                        <span>@Model.ThoiGian</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>Số người</strong>
+                        <span>@Model.songuoi</span>
+                    </li>
+                </ul>
+
+                <div class="mt-4 pt-3 border-top">
+                    @Html.ActionLink("Chỉnh sửa", "TourEdit", new { id = Model.MaTour }, new { @class = "btn btn-warning rounded-pill py-2 px-4" })
+                    @Html.ActionLink("Xóa Tour", "TourDelete", new { id = Model.MaTour }, new { @class = "btn btn-danger rounded-pill py-2 px-4 ms-2" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

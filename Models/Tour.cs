@@ -25,10 +25,8 @@ namespace Trave.Models
         public double Gia { get; set; }
         public string trangthai { get; set; }
         public string ThoiGian { get; set; }
-        public System.DateTime NgayKhoiHanh { get; set; }
         public string MaDD { get; set; }
         public string MaDM { get; set; }
-        public string PhuongTien { get; set; }
         public string anhmota { get; set; }
         public Nullable<int> songuoi { get; set; }
         public string mota { get; set; }

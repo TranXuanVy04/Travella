@@ -1,0 +1,75 @@
+﻿@model Trave.Models.Tour
+
+@{
+    ViewBag.Title = "Xác nhận Xóa Tour";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-dark">
+        <i class="fas fa-trash-alt me-2"></i>@ViewBag.Title
+    </h1>
+    @Html.ActionLink("Quay lại Danh sách", "Tourlist", null, new { @class = "btn btn-outline-secondary" })
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i> Bạn có chắc chắn muốn xóa Tour này?
+        </h6>
+    </div>
+
+    <div class="card-body p-4">
+
+        <div class="alert alert-danger" role="alert">
+            <h5 class="alert-heading">Hành động Nguy hiểm!</h5>
+            <p>Việc xóa Tour **@Model.TenTour** sẽ xóa vĩnh viễn dữ liệu này và có thể ảnh hưởng đến các đơn đặt Tour liên quan (nếu có). Vui lòng kiểm tra kỹ.</p>
+        </div>
+
+        <h5 class="mt-4">Thông tin chi tiết Tour:</h5>
+        <hr />
+
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                <strong>Mã Tour</strong>
+                <code>@Model.MaTour</code>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                <strong>Tên Tour</strong>
+                <span class="fs-6 fw-bold text-dark">@Model.TenTour</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                <strong>Giá</strong>
+                <span class="fs-6 text-danger">@Model.Gia.ToString("N0") ₫</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                <strong>Danh mục</strong>
+                <span>@Model.DanhMuc.TenDM</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                <strong>Địa điểm</strong>
+                <span>@Model.DiaDiem.TenDD</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                <strong>Trạng thái</strong>
+                @{
+                    string statusClass = Model.trangthai != null && (Model.trangthai.ToLower().Contains("available") || Model.trangthai.ToLower().Contains("còn")) ? "bg-success" : "bg-danger";
+                }
+                <span class="badge @statusClass fs-6">@Model.trangthai</span>
+            </li>
+        </ul>
+
+        @using (Html.BeginForm("TourDelete", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(model => model.MaTour)
+
+            <div class="mt-4 pt-3 border-top">
+                <input type="submit" value="Xác nhận Xóa" class="btn btn-danger rounded-pill py-2 px-4" />
+
+                @Html.ActionLink("Hủy (Quay lại)", "Tourlist", null, new { @class = "btn btn-outline-secondary rounded-pill py-2 px-4 ms-2" })
+            </div>
+        }
+    </div>
+</div>

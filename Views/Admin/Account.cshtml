@@ -1,0 +1,96 @@
+﻿@model IEnumerable<Trave.Models.Users>
+
+@{
+    ViewBag.Title = "Quản lý Tài khoản";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-light py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-dark">
+                <i class="fas fa-users me-2"></i>@ViewBag.Title
+            </h4>
+
+            
+        </div>
+    </div>
+
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered align-middle">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Name)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Email)</th>
+                            <th scope="col" class="text-center">@Html.DisplayNameFor(model => model.Role)</th>
+                            <th scope="col" style="width: 150px;">Thời gian tạo</th>
+                            <th scope="col" class="text-center" style="width: 150px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                           
+                                // Khai báo biến mặc định.
+                                string roleClass = "bg-secondary";
+
+                                if (item.Role != null)
+                                {
+                                    // SỬA: Thêm dấu đóng ngoặc đơn ')' và dấu mở ngoặc nhọn '{'
+                                    if (item.Role.ToLower() == "admin")
+                                    {
+                                        roleClass = "bg-danger";
+                                    }
+                                    else if (item.Role.ToLower() == "customer")
+                                    {
+                                        roleClass = "bg-primary";
+                                    }
+                                    else if (item.Role.ToLower() == "employee")
+                                    {
+                                        roleClass = "bg-info";
+                                    }
+                                }
+                            
+                            <tr>
+                                <td>
+                                    <strong>@Html.DisplayFor(modelItem => item.Name)</strong>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge @roleClass" style="font-size: 0.85em;">
+                                        @Html.DisplayFor(modelItem => item.Role)
+                                    </span>
+                                </td>
+                                <td>
+                                    @item.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("AccountEdit", new { id = item.UserID })" class="btn btn-warning btn-sm mx-1" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("AccountDetails", new { id = item.UserID })" class="btn btn-info btn-sm mx-1" title="Xem chi tiết">
+                                        <i class="fas fa-search"></i>
+                                    </a>
+                                    <a href="@Url.Action("AccountDelete", new { id = item.UserID })" class="btn btn-danger btn-sm mx-1" title="Xóa">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle me-2"></i> Chưa có tài khoản nào được tạo.
+            </div>
+        }
+    </div>
+</div>

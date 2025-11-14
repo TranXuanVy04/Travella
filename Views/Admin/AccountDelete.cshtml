@@ -1,0 +1,84 @@
+﻿@model Trave.Models.Users
+
+@{
+    ViewBag.Title = "Xác nhận Xóa Tài khoản";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-dark">
+        <i class="fas fa-trash-alt me-2"></i>@ViewBag.Title
+    </h1>
+    @Html.ActionLink("Quay lại Danh sách", "account", null, new { @class = "btn btn-outline-secondary" })
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 fw-bold text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Bạn có chắc chắn muốn xóa tài khoản này?
+                </h6>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="alert alert-danger" role="alert">
+                    <h5 class="alert-heading">Hành động Nguy hiểm!</h5>
+                    <p>Việc xóa tài khoản **@Model.Name** sẽ xóa vĩnh viễn dữ liệu User khỏi hệ thống. Vui lòng kiểm tra kỹ trước khi xác nhận.</p>
+                </div>
+
+                <h5 class="mt-4">Thông tin chi tiết User:</h5>
+                <hr />
+
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>Mã User</strong>
+                        <code>@Model.UserID</code>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.Name)</strong>
+                        <span class="fs-6 fw-bold">@Html.DisplayFor(model => model.Name)</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.Email)</strong>
+                        <span>@Html.DisplayFor(model => model.Email)</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.Role)</strong>
+                        @{
+                            string roleClass = Model.Role != null && Model.Role.ToLower() == "admin" ? "bg-danger" : "bg-primary";
+                        }
+                        <span class="badge @roleClass fs-6">@Html.DisplayFor(model => model.Role)</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.PasswordHash)</strong>
+                        <span class="text-muted">
+                            [Đã mã hóa]
+                        </span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.CreatedAt)</strong>
+                        <span>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                    </li>
+                </ul>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(model => model.UserID)
+
+                    <div class="mt-4 pt-3 border-top">
+                        <input type="submit" value="Xác nhận Xóa" class="btn btn-danger rounded-pill py-2 px-4" />
+
+                        @Html.ActionLink("Hủy (Quay lại)", "account", null, new { @class = "btn btn-outline-secondary rounded-pill py-2 px-4 ms-2" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

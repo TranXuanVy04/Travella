@@ -1,0 +1,84 @@
+﻿@model Trave.Models.Users
+
+@{
+    ViewBag.Title = "Chi tiết Tài khoản";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-dark">
+        <i class="fas fa-search me-2"></i>@ViewBag.Title
+    </h1>
+    @Html.ActionLink("Quay lại Danh sách", "account", null, new { @class = "btn btn-outline-secondary" })
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 fw-bold text-primary">Thông tin chi tiết User</h6>
+            </div>
+
+            <div class="card-body p-4">
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>Mã User</strong>
+                        <code>@Model.UserID</code>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.Name)</strong>
+                        <span class="fs-6 fw-bold">@Html.DisplayFor(model => model.Name)</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.Email)</strong>
+                        <span>@Html.DisplayFor(model => model.Email)</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.Role)</strong>
+                        @{
+                            // Khai báo biến mặc định.
+                            string roleClass = "bg-secondary";
+
+                            if (Model.Role != null)
+                            {
+                                // SỬA: Thêm dấu đóng ngoặc đơn ')' và dấu mở ngoặc nhọn '{'
+                                if (Model.Role.ToLower() == "admin")
+                                {
+                                    roleClass = "bg-danger";
+                                }
+                                else if (Model.Role.ToLower() == "customer")
+                                {
+                                    roleClass = "bg-primary";
+                                }
+                                else if (Model.Role.ToLower() == "employee")
+                                {
+                                    roleClass = "bg-info";
+                                }
+                            }
+                        }
+                        <span class="badge @roleClass fs-6">@Html.DisplayFor(model => model.Role)</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.PasswordHash)</strong>
+                        <span class="text-muted">
+                            [Đã mã hóa]
+                        </span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2">
+                        <strong>@Html.DisplayNameFor(model => model.CreatedAt)</strong>
+                        <span>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                    </li>
+                </ul>
+
+                <div class="mt-4 pt-3 border-top">
+                    @Html.ActionLink("Chỉnh sửa", "AccountEdit", new { id = Model.UserID }, new { @class = "btn btn-warning rounded-pill py-2 px-4" })
+                    @Html.ActionLink("Xóa tài khoản", "AccountDelete", new { id = Model.UserID }, new { @class = "btn btn-danger rounded-pill py-2 px-4 ms-2" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

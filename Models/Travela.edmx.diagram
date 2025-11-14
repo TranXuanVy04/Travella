@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="888c97cd11874066afdafaf54cdb01dc" Name="Diagram1">
+      <Diagram DiagramId="01d202c331934369994b20e27ebe966b" Name="Diagram1">
         <EntityTypeShape EntityType="DULICHModel.Booking" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="DULICHModel.Contact" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DULICHModel.DanhMuc" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
@@ -17,7 +17,7 @@
         <EntityTypeShape EntityType="DULICHModel.Quyen" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DULICHModel.sysdiagram" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DULICHModel.Tour" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.User" Width="1.5" PointX="2.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.Users" Width="1.5" PointX="2.75" PointY="6" IsExpanded="true" />
         <AssociationConnector Association="DULICHModel.FK__Booking__MaTour__6CD828CA" ManuallyRouted="false" />
         <AssociationConnector Association="DULICHModel.FK__Tour__MaDM__65370702" ManuallyRouted="false" />
         <AssociationConnector Association="DULICHModel.FK__Tour__MaDD__6442E2C9" ManuallyRouted="false" />

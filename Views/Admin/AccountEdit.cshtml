@@ -1,0 +1,104 @@
+﻿@model Trave.Models.Users
+
+@{
+    ViewBag.Title = "Chỉnh sửa Tài khoản";
+    // Giả định bạn có danh sách Roles hợp lệ
+    List<string> RolesList = new List<string> { "Admin", "Customer", "Employee" };
+    ViewBag.Roles = new SelectList(RolesList, Model.Role); // Chọn Role hiện tại
+
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-dark">
+        <i class="fas fa-user-edit me-2"></i>@ViewBag.Title: @Model.Name
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 fw-bold text-primary">Thông tin cơ bản</h6>
+            </div>
+            <div class="card-body p-4">
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    @Html.HiddenFor(model => model.UserID)
+
+                    @Html.HiddenFor(model => model.CreatedAt)
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(model => model.UserID, "Mã User", htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.EditorFor(model => model.UserID, new { htmlAttributes = new { @class = "form-control bg-light", @readonly = "readonly" } })
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @autofocus = "autofocus" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger small" })
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", type = "email" } })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.DropDownList("Role", (SelectList)ViewBag.Roles, htmlAttributes: new { @class = "form-select" })
+                                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger small" })
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="NewPassword" class="form-label fw-bold">Mật khẩu mới (Bỏ trống nếu không đổi)</label>
+                                <div class="position-relative">
+                                    <input type="password" name="NewPassword" id="NewPassword" class="form-control" placeholder="Nhập mật khẩu mới" />
+                                    <i class="fas fa-eye password-toggle-icon" id="togglePass" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info small mt-3">
+                                <i class="fas fa-lock me-2"></i> Mật khẩu đã được mã hóa. Chỉ thay đổi khi cần.
+                            </div>
+
+                            @Html.HiddenFor(model => model.PasswordHash)
+
+                            <div class="mb-3">
+                                @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.TextBoxFor(model => model.CreatedAt, new { @class = "form-control bg-light", @readonly = "readonly", @Value = Model.CreatedAt.ToString("dd/MM/yyyy HH:mm") })
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top">
+                        <input type="submit" value="Lưu thay đổi" class="btn btn-primary rounded-pill py-2 px-4" />
+                        @Html.ActionLink("Quay lại Danh sách", "account", null, new { @class = "btn btn-outline-secondary rounded-pill py-2 px-4 ms-2" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm JavaScript cho chức năng ẩn/hiện mật khẩu
+    document.getElementById('togglePass').addEventListener('click', function (e) {
+        const passwordField = document.getElementById('NewPassword'); // Trỏ đến ô NewPassword
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+        this.classList.toggle('fa-eye');
+    });
+</script>
+

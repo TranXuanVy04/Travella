@@ -1,8 +1,106 @@
-﻿    
+﻿@model IEnumerable<Trave.Models.Tour>
+
 @{
-    ViewBag.Title = "Tourlist";
+    ViewBag.Title = "Quản lý Tour";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Tourlist</h2>
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-light py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-dark">
+                <i class="fas fa-suitcase-rolling me-2"></i>@ViewBag.Title
+            </h4>
 
+            
+        </div>
+    </div>
+
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered align-middle">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th style="width: 100px;">Ảnh</th>
+                            <th scope="col">Tên Tour</th>
+                            <th scope="col">Danh mục</th>
+                            <th scope="col">Địa điểm</th>
+                            <th scope="col" class="text-end">Giá (VNĐ)</th>
+                            <th scope="col" class="text-center">Thời gian</th>
+                            <th scope="col" class="text-center">Trạng thái</th>
+                            <th scope="col" class="text-center" style="width: 150px;">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            string statusClass = "bg-secondary"; // Mặc định
+                            if (item.trangthai != null)
+                            {
+                                if (item.trangthai.ToLower() == "available" || item.trangthai.ToLower() == "còn")
+                                {
+                                    statusClass = "bg-success"; // Xanh
+                                }
+                                else if (item.trangthai.ToLower() == "booked" || item.trangthai.ToLower() == "hết")
+                                {
+                                    statusClass = "bg-danger"; // Đỏ
+                                }
+                            }
+
+                            <tr>
+                                <td>
+                                    <img src="@Url.Content(String.Format("~/img/Destination/{0}", item.anhmota))"
+                                         alt="@item.TenTour"
+                                         class="img-thumbnail"
+                                         style="width: 90px; height: 60px; object-fit: cover;"
+                                         onerror="this.src='@Url.Content("~/Content/images/placeholder.png")'" />
+                                </td>
+                                <td>
+                                    <strong>@Html.DisplayFor(modelItem => item.TenTour)</strong>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DanhMuc.TenDM)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DiaDiem.TenDD)
+                                </td>
+                                <td class="text-end fw-bold text-danger">
+                                    @item.Gia.ToString("N0") ₫
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.ThoiGian)
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge @statusClass" style="font-size: 0.8em;">
+                                        @Html.DisplayFor(modelItem => item.trangthai)
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("TourEdit", "admin",new { id = item.MaTour })" class="btn btn-warning btn-sm mx-1" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("TourDetails","admin", new { id = item.MaTour })" class="btn btn-info btn-sm mx-1" title="Xem chi tiết">
+                                        <i class="fas fa-search"></i>
+                                    </a>
+                                    <a href="@Url.Action("TourDelete", "admin",new { id = item.MaTour })" class="btn btn-danger btn-sm mx-1" title="Xóa">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle me-2"></i> Chưa có Tour nào được tạo.
+            </div>
+        }
+    </div>
+</div>

@@ -141,14 +141,14 @@
                 </li>
                 <li class="nav-item mb-1">
                     <a class="nav-link"
-                       href="#tour-submenu"
+                       href="#dm-submenu"
                        data-bs-toggle="collapse"
                        role="button"
                        aria-expanded="false"
-                       aria-controls="tour-submenu">
+                       aria-controls="dm-submenu">
                         <i class="fa-solid fa-suitcase-rolling me-2"></i> Quản lý Danh Mục
                     </a>
-                    <div class="collapse" id="tour-submenu">
+                    <div class="collapse" id="dm-submenu">
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("DMList", "Admin")">
@@ -176,12 +176,12 @@
                     <div class="collapse" id="tour-submenu">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("ManageTours", "Admin")">
+                                <a class="nav-link" href="@Url.Action("Tourlist", "Admin")">
                                     <i class="fa-solid fa-caret-right me-2"></i> Danh sách Tour
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("CreateTour", "Admin")">
+                                <a class="nav-link" href="@Url.Action("TourCreate", "Admin")">
                                     <i class="fa-solid fa-caret-right me-2"></i> Thêm Tour mới
                                 </a>
                             </li>
@@ -189,25 +189,6 @@
                     </div>
                 </li>
 
-                <li class="nav-item mb-1">
-                    <a class="nav-link"
-                       href="#booking-submenu"
-                       data-bs-toggle="collapse"
-                       role="button"
-                       aria-expanded="false"
-                       aria-controls="booking-submenu">
-                        <i class="fa-solid fa-clipboard-list me-2"></i> Quản lý Đơn hàng
-                    </a>
-                    <div class="collapse" id="booking-submenu">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("ManageBookings", "Admin")">
-                                    <i class="fa-solid fa-caret-right me-2"></i> Danh sách Đơn hàng
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
 
                 <li class="nav-item mb-1">
                     <a class="nav-link"
@@ -221,12 +202,12 @@
                     <div class="collapse" id="account-submenu">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("ManageUsers", "Admin")">
+                                <a class="nav-link" href="@Url.Action("Account", "Admin")">
                                     <i class="fa-solid fa-caret-right me-2"></i> Danh sách
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="@Url.Action("AccountCreate","Admin")">
                                     <i class="fa-solid fa-caret-right me-2"></i> Thêm mới
                                 </a>
                             </li>
