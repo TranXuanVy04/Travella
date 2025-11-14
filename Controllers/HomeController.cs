@@ -53,6 +53,21 @@ namespace Trave.Controllers
 
             return View();
         }
-
+        public ActionResult Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return HttpNotFound();
+            }
+            var tour = db.Tours
+                         .Where(t => t.MaTour.Trim() == id)
+                         .FirstOrDefault();
+        
+            if (tour == null)
+            {
+                return HttpNotFound();
+            }
+            return View(tour);
+        }
     }
 }
