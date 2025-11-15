@@ -29,6 +29,7 @@ namespace Trave.Models
     
         public virtual DbSet<Booking> Bookings { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<DanhGia> DanhGias { get; set; }
         public virtual DbSet<DanhMuc> DanhMucs { get; set; }
         public virtual DbSet<DiaDiem> DiaDiems { get; set; }
         public virtual DbSet<guide> guides { get; set; }

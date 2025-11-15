@@ -14,6 +14,13 @@ namespace Trave.Models
     
     public partial class KhachHang
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public KhachHang()
+        {
+            this.Bookings = new HashSet<Booking>();
+            this.DanhGias = new HashSet<DanhGia>();
+        }
+    
         public int MaKH { get; set; }
         public string TenKH { get; set; }
         public string Email { get; set; }
@@ -22,6 +29,10 @@ namespace Trave.Models
         public Nullable<int> UserId { get; set; }
         public string GioiTinhKH { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Booking> Bookings { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DanhGia> DanhGias { get; set; }
         public virtual Users User { get; set; }
     }
 }

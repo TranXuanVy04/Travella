@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <style>
-    
 </style>
 
 <div class="container-fluid bg-breadcrumb">
@@ -28,7 +27,7 @@
 
             <div class="col-lg-8">
                 <div class="mb-4">
-                    <img src="@Url.Content("~/img/Tour/" + Model.anhmota)"
+                    <img src="@Url.Content("~/img/destination/" + Model.anhmota)"
                          class="img-fluid w-100 rounded-3 shadow-lg"
                          style="height: 500px; object-fit: cover;"
                          alt="@Model.TenTour">
@@ -48,6 +47,12 @@
                     </span>
                     <span class="badge bg-light text-dark rounded-pill fs-6 py-2 px-3 me-2 mb-2 shadow-sm border">
                         <i class="fa fa-users text-primary me-2"></i>Tối đa @Model.songuoi người
+                    </span>
+                    <span class="badge bg-light rounded-pill fs-6 py-2 px-3 me-2 mb-2 shadow-sm border">
+                        <i class="fa fa-route text-primary  me-2"></i>@Model.PhuongTien
+                    </span>
+                    <span class="badge bg-light rounded-pill fs-6 py-2 px-3 me-2 mb-2 shadow-sm border">
+                        <i class="fa fa-user-tie text-primary  me-2"></i>@(Model.guide?.tenguide ?? "")
                     </span>
                 </div>
 
@@ -130,7 +135,8 @@
                         <h4 class="mb-2">Đặt Tour Này</h4>
                         <h2 class="text-primary fw-bold mb-4">$@Model.Gia <small class="text-muted fs-6 fw-normal">/ người</small></h2>
 
-                        @using (Html.BeginForm("BookTour", "Home", FormMethod.Get))
+                        @* 1. Thêm id="bookTourForm" cho form *@
+                        @using (Html.BeginForm("BookTour", "Home", FormMethod.Get, new { id = "bookTourForm" }))
                         {
                             @Html.Hidden("id", Model.MaTour.Trim())
 
@@ -159,8 +165,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm" type="submit">
+                                <div class="col-12 d-flex justify-content-center">
+                                    @* 2. Thay <a> bằng <button type="button"> *@
+                                    <button type="button" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm transition-hover"
+                                            onclick="handleBookNow(@Request.IsAuthenticated.ToString().ToLower())">
                                         Book Now
                                     </button>
                                 </div>
@@ -184,7 +192,7 @@
                         <div class="card package-card h-100 rounded-3 shadow-sm border-0">
 
                             <div class="package-img-wrapper rounded-top-3">
-                                <img src="@Url.Content("~/img/Tour/"+item.anhmota)" alt="@item.TenTour">
+                                <img src="@Url.Content("~/img/Destination/"+item.anhmota)" alt="@item.TenTour">
                                 <div class="category-badge shadow-sm">
                                     <i class="fa fa-tag me-1"></i> @item.DanhMuc.TenDM
                                 </div>
@@ -230,14 +238,61 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     flatpickr("#datepicker", {
+        minDate: "today",
         dateFormat: "Y-m-d", // Format chuẩn C# (hoặc MM/dd/yyyy)
         altInput: true,      // Input ảo cho người dùng
         altFormat: "d/m/Y",  // Format người dùng thấy: ngày/tháng/năm
         disableMobile: "true"
     });
 });
+</script>
+
+<script>
+    // (Giả sử thư viện SweetAlert đã được tải)
+    const loginUrl = '@Url.Action("Login", "Auth")';
+
+    function handleBookNow(isAuthenticated) {
+        // 1. Tìm form
+        const form = document.getElementById('bookTourForm');
+
+        if (isAuthenticated) {
+            // 2. ĐÃ ĐĂNG NHẬP: Gửi form
+            form.submit();
+        } else {
+            // 3. CHƯA ĐĂNG NHẬP: Hiển thị thông báo
+            Swal.fire({
+                title: 'Yêu cầu đăng nhập',
+                text: "Bạn phải đăng nhập để thực hiện chức năng này!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đến trang đăng nhập',
+                cancelButtonText: 'Huỷ bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // --- ĐÃ SỬA LỖI Ở ĐÂY ---
+                    // Sử dụng .getAttribute('action') để chỉ lấy đường dẫn tương đối (vd: "/Home/BookTour")
+                    const bookTourUrl = form.getAttribute('action');
+
+                    // Lấy tất cả dữ liệu form (id, date, persons)
+                    const formData = new FormData(form);
+                    const queryString = new URLSearchParams(formData).toString();
+
+                    // URL trả về bây giờ sẽ là: "/Home/BookTour?id=...&date=..."
+                    const returnUrl = bookTourUrl + "?" + queryString;
+
+                    // 5. Chuyển hướng đến trang Login
+                    window.location.href = loginUrl + "?ReturnUrl=" + encodeURIComponent(returnUrl);
+                }
+            });
+        }
+    }
 </script>

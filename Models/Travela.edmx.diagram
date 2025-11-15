@@ -4,24 +4,29 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="01d202c331934369994b20e27ebe966b" Name="Diagram1">
-        <EntityTypeShape EntityType="DULICHModel.Booking" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.Contact" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.DanhMuc" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.DiaDiem" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.guide" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.KhachHang" Width="1.5" PointX="5" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.KhuyenMai" Width="1.5" PointX="7.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.MucYeuThich" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.NhanVien" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.Quyen" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.sysdiagram" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.Tour" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="DULICHModel.Users" Width="1.5" PointX="2.75" PointY="6" IsExpanded="true" />
-        <AssociationConnector Association="DULICHModel.FK__Booking__MaTour__6CD828CA" ManuallyRouted="false" />
+      <Diagram DiagramId="9416ac13a1e4460293d7d653154a2a77" Name="Diagram1">
+        <EntityTypeShape EntityType="DULICHModel.Booking" Width="1.5" PointX="5.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.Contact" Width="1.5" PointX="5.75" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.DanhGia" Width="1.5" PointX="8.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.DanhMuc" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.DiaDiem" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.guide" Width="1.5" PointX="7.75" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.KhachHang" Width="1.5" PointX="3" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.KhuyenMai" Width="1.5" PointX="5.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.MucYeuThich" Width="1.5" PointX="9.75" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.NhanVien" Width="1.5" PointX="7.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.Quyen" Width="1.5" PointX="9.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.sysdiagram" Width="1.5" PointX="10.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.Tour" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DULICHModel.Users" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <AssociationConnector Association="DULICHModel.FK_Booking_KhachHang" ManuallyRouted="false" />
+        <AssociationConnector Association="DULICHModel.FK_Booking_Tours" ManuallyRouted="false" />
+        <AssociationConnector Association="DULICHModel.FK_DanhGia_KhachHang" ManuallyRouted="false" />
+        <AssociationConnector Association="DULICHModel.FK_DanhGia_Tour" ManuallyRouted="false" />
         <AssociationConnector Association="DULICHModel.FK__Tour__MaDM__65370702" ManuallyRouted="false" />
         <AssociationConnector Association="DULICHModel.FK__Tour__MaDD__6442E2C9" ManuallyRouted="false" />
         <AssociationConnector Association="DULICHModel.FK__KhachHang__UserI__59C55456" ManuallyRouted="false" />
+        <AssociationConnector Association="DULICHModel.FK_Tours_Guide" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

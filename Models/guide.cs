@@ -14,10 +14,19 @@ namespace Trave.Models
     
     public partial class guide
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public guide()
+        {
+            this.Tours = new HashSet<Tour>();
+        }
+    
         public int maguide { get; set; }
         public string anhguide { get; set; }
         public string tenguide { get; set; }
         public string quoctich { get; set; }
         public Nullable<int> tuoi { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tour> Tours { get; set; }
     }
 }

@@ -1,0 +1,91 @@
+﻿@model Trave.Models.Booking
+@{
+    ViewBag.Title = "Đặt tour thành công";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h1 class="text-white display-3 mb-4">
+            Thank you for your booking!
+        </h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("index","home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item active text-white">@Model.Tour.MaTour</li>
+        </ol>
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5 text-center">
+
+                    <div style="font-size: 4rem; color: #198754;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+
+                    <h1 class="mt-3">Đặt tour thành công!</h1>
+                    <p class="lead text-muted">Mã đơn hàng của bạn là: <strong>#@Model.MaBooking</strong></p>
+                    <p>Cảm ơn bạn, @Model.KhachHang.TenKH, đã tin tưởng dịch vụ của chúng tôi.</p>
+
+                    <hr class="my-4">
+
+                    @if (Model.TrangThai == "Chờ xác nhận (Chuyển khoản)")
+                    {
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">Hướng dẫn Chuyển khoản</h5>
+                            <p>Vui lòng chuyển khoản tổng số tiền <strong>@Model.TongGia.Value.ToString("N0") VNĐ</strong> vào thông tin tài khoản dưới đây:</p>
+                            <ul class="list-unstyled text-start" style="max-width: 400px; margin: auto;">
+                                <li><strong>Ngân hàng:</strong> Vietcombank</li>
+                                <li><strong>Chủ tài khoản:</strong> CTY TNHH DU LỊCH TRAVELA</li>
+                                <li><strong>Số tài khoản:</strong> 0123456789</li>
+                                <li><strong>Nội dung:</strong> Thanh toan don hang #@Model.MaBooking</li>
+                            </ul>
+                            <hr>
+                            <p class="mb-0">Chúng tôi sẽ xác nhận đơn hàng của bạn ngay sau khi nhận được thanh toán.</p>
+                        </div>
+                    }
+                    else if (Model.TrangThai == "Chờ thanh toán VNPay")
+                    {
+                        <div class="alert alert-warning">
+                            Đơn hàng của bạn đang chờ thanh toán qua VNPay.
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Chúng tôi sẽ liên hệ với bạn qua Email (@Model.KhachHang.Email) hoặc SĐT (@Model.KhachHang.SoDT) để xác nhận trong thời gian sớm nhất.</p>
+                    }
+
+                    <h5 class="mt-4">Tóm tắt chuyến đi</h5>
+                    <ul class="list-group list-group-flush mt-3">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Tour:</strong>
+                            <span>@Model.Tour.TenTour</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Ngày đi:</strong>
+                            <span>@Model.NgayDi.ToString("dd/MM/yyyy")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Số người:</strong>
+                            <span>@Model.SoNguoi</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between fs-5">
+                            <strong>Tổng cộng:</strong>
+                            <span class="fw-bold text-primary">@Model.TongGia.Value.ToString("N0") VNĐ</span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-4">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary">Về Trang chủ</a>
+                        <a href="@Url.Action("profile", "home")" class="btn btn-primary">Xem Lịch sử Đặt tour</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

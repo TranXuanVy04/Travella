@@ -1,0 +1,146 @@
+﻿:root {
+    --admin-sidebar-width-lg: 280px;
+    --admin-sidebar-width-md: 250px;
+    --admin-primary-color: #13357B; /* Màu xanh chủ đạo của bạn */
+}
+
+body {
+    background-color: #f4f7f6;
+}
+
+/* --- 1. Sidebar --- */
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    max-width: var(--admin-sidebar-width-md);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%); /* Ẩn trên di động */
+}
+
+    .admin-sidebar.show {
+        transform: translateX(0); /* Hiện trên di động khi bấm nút */
+    }
+
+@@media (min-width: 768px) {
+    .admin-sidebar {
+        height: 100vh;
+        transform: translateX(0);
+    }
+}
+
+@@media (min-width: 992px) {
+    .admin-sidebar {
+        max-width: var(--admin-sidebar-width-lg);
+    }
+}
+
+/* --- 2. Nội dung chính --- */
+.admin-main-content {
+    transition: margin-left 0.3s ease-in-out;
+    padding: 0;
+}
+
+@@media (min-width: 768px) {
+    .admin-main-content {
+        margin-left: var(--admin-sidebar-width-md);
+    }
+}
+
+@@media (min-width: 992px) {
+    .admin-main-content {
+        margin-left: var(--admin-sidebar-width-lg);
+    }
+}
+
+/* Logo */
+.admin-sidebar .logo {
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .admin-sidebar .logo h4 {
+        color: #fff;
+    }
+
+/* --- 3. Links Menu --- */
+.admin-sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    transition: all 0.2s ease;
+}
+
+    .admin-sidebar .nav-link:hover {
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .admin-sidebar .nav-link.active {
+        color: #fff;
+        background-color: var(--admin-primary-color);
+        border-radius: 8px;
+    }
+
+    /* --- 4. Submenu (Menu con) --- */
+    .admin-sidebar .nav-link[data-bs-toggle="collapse"]::after {
+        content: "\f078"; /* Font Awesome chevron-down */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        float: right;
+        transition: transform 0.2s;
+        transform: rotate(0deg);
+    }
+
+    .admin-sidebar .nav-link[data-bs-toggle="collapse"][aria-expanded="true"]::after {
+        transform: rotate(-180deg); /* Lật mũi tên */
+    }
+
+.admin-sidebar .collapse .nav {
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--admin-primary-color);
+    margin: 0.5rem 1rem;
+}
+
+.admin-sidebar .collapse .nav-link {
+    padding: .5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* --- 5. Header (Thanh trên cùng) --- */
+.admin-topbar {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+    .admin-topbar .nav-link {
+        color: #6c757d;
+    }
+
+        .admin-topbar .nav-link:hover {
+            color: #000;
+        }
+
+.admin-avatar {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.admin-content-area {
+    padding: 2rem;
+}
+
+@@media (max-width: 767px) {
+    .admin-content-area {
+        padding: 1.5rem;
+    }
+}

@@ -394,7 +394,7 @@
 
 /*** Single Page Hero Header Start ***/
 .bg-breadcrumb {
-    background: linear-gradient(rgba(19, 53, 123, 0.5), rgba(19, 53, 123, 0.5)), url(../img/breadcrumb-bg.jpg);
+    background: linear-gradient(rgba(19, 53, 123, 0.5), rgba(19, 53, 123, 0.5)), url(../img/Background/abc.png);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1249,29 +1249,29 @@
 /* === CSS CHO CÁC ẢNH NỀN BỊ MẤT === */
 
 /* 1. Ảnh nền cho Header (Breadcrumb) */
-.bg-breadcrumb {
+/*.bg-breadcrumb {*/
     /* Lớp phủ mờ + Đường dẫn ảnh */
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/breadcrumb-bg.jpg');
+    /*background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/breadcrumb-bg.png');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    padding: 8rem 0; /* (Bạn có thể đã có padding trong HTML rồi) */
-}
+    padding: 8rem 0;*/ /* (Bạn có thể đã có padding trong HTML rồi) */
+/*}*/
 
 /* 2. Ảnh nền cho khu vực Booking */
-.booking {
+/*.booking {*/
     /* Lớp phủ mờ + Đường dẫn ảnh */
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/booking-bg.jpg');
+    /*background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/booking-bg.jpg');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-}
+}*/
 
 /* 3. Ảnh nền cho khu vực Subscribe */
-.subscribe {
+/*.subscribe {*/
     /* Lớp phủ mờ + Đường dẫn ảnh */
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/subscribe-bg.jpg');
+    /*background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/subscribe-bg.jpg');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-}
+}*/

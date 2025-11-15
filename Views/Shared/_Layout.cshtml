@@ -29,6 +29,7 @@
     <link href="~/Content/css/destination.css" rel="stylesheet" />
     <link href="~/Content/css/detail.css" rel="stylesheet" />
     <link href="~/Content/css/Tour_Detail.css" rel="stylesheet" />
+    <link href="~/Content/css/Testimonial.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
@@ -59,17 +60,59 @@
                 </div>
             </div>
             <div class="col-lg-4 text-center text-lg-end">
-                <div class="d-inline-flex align-items-center" style="height: 45px;">
-                    <a href="@Url.Action("Register","Auth")"><small class="me-3 text-light"><i class="fa fa-user me-2"></i>Register</small></a>
-                    <a href="@Url.Action("Login","Auth")"><small class="me-3 text-light"><i class="fa fa-sign-in-alt me-2"></i>Login</small></a>
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle text-light" data-bs-toggle="dropdown"><small><i class="fa fa-home me-2"></i> My Dashboard</small></a>
-                        <div class="dropdown-menu rounded">
-                            <a href="#" class="dropdown-item"><i class="fas fa-user-alt me-2"></i> My Profile</a>
-                            <a href="#" class="dropdown-item"><i class="fas fa-power-off me-2"></i> Log Out</a>
-                        </div>
-                    </div>
+                @*<div class="d-inline-flex align-items-center" style="height: 45px;">
+            <a href="@Url.Action("Register","Auth")"><small class="me-3 text-light"><i class="fa fa-user me-2"></i>Register</small></a>
+            <a href="@Url.Action("Login","Auth")"><small class="me-3 text-light"><i class="fa fa-sign-in-alt me-2"></i>Login</small></a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle text-light" data-bs-toggle="dropdown"><small><i class="fa fa-home me-2"></i> My Dashboard</small></a>
+                <div class="dropdown-menu rounded">
+                    <a href="#" class="dropdown-item"><i class="fas fa-user-alt me-2"></i> My Profile</a>
+                    <a href="#" class="dropdown-item"><i class="fas fa-power-off me-2"></i> Log Out</a>
                 </div>
+            </div>
+        </div>*@
+                <div class="d-inline-flex align-items-center" style="height: 45px;">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <div class="dropdown">
+                            <a class="text-light d-flex align-items-center dropdown-toggle"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                <i class="fa fa-user me-2"></i>
+                                <small>
+                                    @Html.Encode(User.Identity.Name ?? Session["UserName"] ?? "Người dùng")
+                                </small>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Profile", "HOME")">
+                                        <i class="fas fa-user-alt me-2"></i> My Profile
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Logout", "Auth")">
+                                        <i class="fas fa-power-off me-2"></i> Log Out
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Register", "Auth")" class="me-3 text-light">
+                            <small><i class="fa fa-user me-2"></i> Register</small>
+                        </a>
+
+                        <a href="@Url.Action("Login", "Auth")" class="text-light">
+                            <small><i class="fa fa-sign-in-alt me-2"></i> Login</small>
+                        </a>
+                    }
+                </div>
+
             </div>
         </div>
     </div>
@@ -206,7 +249,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/Content/lib/easing/easing.min.js"></script>
     <script src="~/Content/lib/waypoints/waypoints.min.js"></script>
-    <script src="~/Content/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/Content/lib/owlcarousel/owl.carousel.min.js"></script>s
     <script src="~/Content/lib/lightbox/js/lightbox.min.js"></script>
 
 

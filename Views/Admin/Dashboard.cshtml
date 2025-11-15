@@ -12,7 +12,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0 text-dark">Dashboard</h1>
-    
+
 </div>
 
 <div class="row g-4">
@@ -25,12 +25,14 @@
                         <div class="text-xs fw-bold text-primary text-uppercase mb-1">
                             Tổng Doanh thu
                         </div>
-                        <div class="h5 mb-0 fw-bold text-gray-800">@totalRevenue.ToString("N0") ₫</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">
+                            @(((double?)ViewBag.TotalRevenue ?? 0).ToString("N0")) $
+                        </div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                     </div>
-                </div>
+                </div>  
             </div>
         </div>
     </div>
@@ -43,7 +45,9 @@
                         <div class="text-xs fw-bold text-success text-uppercase mb-1">
                             Tổng số Tour
                         </div>
-                        <div class="h5 mb-0 fw-bold text-gray-800">@totalTours</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">
+                            @ViewBag.TotalTours
+                        </div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-suitcase-rolling fa-2x text-gray-300"></i>
@@ -61,7 +65,9 @@
                         <div class="text-xs fw-bold text-info text-uppercase mb-1">
                             Tổng Đơn hàng
                         </div>
-                        <div class="h5 mb-0 fw-bold text-gray-800">@totalBookings</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">
+                            @ViewBag.TotalBookings
+                        </div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -79,7 +85,9 @@
                         <div class="text-xs fw-bold text-warning text-uppercase mb-1">
                             Tổng Khách hàng
                         </div>
-                        <div class="h5 mb-0 fw-bold text-gray-800">@totalUsers</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">
+                            @ViewBag.TotalUsers
+                        </div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -89,30 +97,31 @@
         </div>
     </div>
 </div>
+<div class="row">
 
-<div class="row g-4">
-    <div class="col-xl-8 col-lg-7">
+    <div class="col-lg-7">
         <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 fw-bold text-primary">Tổng quan Doanh thu</h6>
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold text-primary">Doanh thu theo Tháng (12 tháng qua)</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area">
+                <div class="chart-area" style="height: 300px;">
                     <canvas id="revenueChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-4 col-lg-5">
+    <div class="col-lg-5">
         <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 fw-bold text-primary">Tỷ lệ Danh mục Tour</h6>
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold text-primary">Tỉ lệ Tour được đặt</h6>
             </div>
             <div class="card-body">
-                <div class="chart-pie pt-4 pb-2">
-                    <canvas id="productPieChart"></canvas>
+                <div class="chart-pie" style="height: 300px;">
+                    <canvas id="tourPieChart"></canvas>
                 </div>
+
                 <div class="mt-4 text-center small">
                     <span class="me-2">
                         <i class="fas fa-circle text-primary"></i> Du lịch Biển
@@ -128,7 +137,6 @@
         </div>
     </div>
 </div>
-
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 fw-bold text-primary">Đơn hàng gần đây</h6>
@@ -153,16 +161,16 @@
                         foreach (var item in Model)
                         {
                             <tr>
-                                <td>#@item.BookingID</td>
-                                <td>@item.HoTen</td>
+                                <td>#@item.MaBooking</td>
+                                <td>@item.KhachHang.TenKH</td>
                                 <td>@(item.Tour != null ? item.Tour.TenTour : "N/A")</td>
-                                @*<td>@item.NgayDat.ToString("dd/MM/yyyy")</td>*@
-                                <td>@item.TongTien.ToString("N0") ₫</td>
+                                <td>@(item.NgayDat?.ToString("dd/MM/yyyy"))</td>
+                                <td>@(item.TongGia?.ToString("N0") )$</td>
                                 <td>
-                                    <span class="badge bg-success">Đã xác nhận</span>
+                                    <span class="badge bg-success">@item.TrangThai</span>
                                 </td>
                                 <td>
-                                    <a href="@Url.Action("BookingDetails", "Admin", new { id = item.BookingID })" class="btn btn-sm btn-info">
+                                    <a href="@Url.Action("BookingDetails", "Admin", new { id = item.MaBooking })" class="btn btn-sm btn-info">
                                         Xem
                                     </a>
                                 </td>
@@ -183,5 +191,62 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // 2. Lấy dữ liệu từ ViewBag và chuyển sang JavaScript
+            var revenueLabels = @Html.Raw(Json.Encode(ViewBag.ChartLabels_Revenue));
+            var revenueData = @Html.Raw(Json.Encode(ViewBag.ChartData_Revenue));
+
+            var tourLabels = @Html.Raw(Json.Encode(ViewBag.ChartLabels_Tour));
+            var tourData = @Html.Raw(Json.Encode(ViewBag.ChartData_Tour));
+
+            // 3. Vẽ Biểu đồ Doanh thu (Line Chart)
+            var ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+            var revenueChart = new Chart(ctxRevenue, {
+                type: 'line',
+                data: {
+                    labels: revenueLabels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: revenueData,
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // 4. Vẽ Biểu đồ Tỉ lệ Tour (Pie Chart)
+            var ctxTour = document.getElementById('tourPieChart').getContext('2d');
+            var tourPieChart = new Chart(ctxTour, {
+                type: 'doughnut', // 'pie' hoặc 'doughnut' (hình bánh rán)
+                data: {
+                    labels: tourLabels,
+                    datasets: [{
+                        label: 'Số lượng đặt',
+                        data: tourData,
+                        backgroundColor: [ // Thêm các màu khác nếu bạn có nhiều tour
+                            '#0d6efd',
+                            '#198754',
+                            '#ffc107',
+                            '#dc3545',
+                            '#6f42c1',
+                            '#fd7e14'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+    </script>
 }
