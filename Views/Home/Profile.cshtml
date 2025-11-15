@@ -1,0 +1,215 @@
+﻿@model Trave.Models.KhachHang
+@{
+    ViewBag.Title = "Hồ sơ Khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* --- Header của trang Profile (Nền ảnh) --- */
+    .profile-header {
+        background:  url('/img/Background/c.png'); /* Đảm bảo bạn có ảnh /img/carousel-1.jpg */
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 4rem 2rem;
+        border-radius: 0.5rem;
+    }
+
+    /* --- Ảnh đại diện (Avatar) --- */
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        object-fit: cover;
+    }
+
+    /* --- Tùy chỉnh các Tab (Bootstrap) --- */
+    .nav-tabs .nav-link {
+        font-weight: 600;
+        color: #555;
+        border: none;
+        border-bottom: 3px solid transparent;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: #0d6efd; /* Màu primary */
+            background-color: transparent;
+            border-bottom: 3px solid #0d6efd;
+        }
+
+    /* --- Thẻ hiển thị Đơn đặt hàng --- */
+    .order-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .order-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+
+    .order-card-header {
+        background-color: #f8f9fa; /* Màu xám nhạt */
+        border-bottom: 1px solid #e0e0e0;
+        padding: 0.75rem 1.25rem;
+    }
+
+    /* --- Màu sao đánh giá --- */
+    .star-rating .fa-star {
+        color: #ffc107; /* Màu vàng */
+    }
+
+    .profile-page-wrapper {
+        /* Đẩy nội dung trang xuống dưới thanh navbar */
+        padding-top: 80px;
+        /* (Bạn có thể cần điều chỉnh 80px thành 90px hoặc 70px
+           cho vừa khít với chiều cao navbar của bạn) */
+    }
+</style>
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h1 class="text-white display-3 mb-4">
+            Your Profile
+        </h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("index","home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item active text-white">Profile</li>
+        </ol>
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container py-5 profile-page-wrapper">
+
+    <div class="profile-header mb-4 text-center text-lg-start">
+        <div class="d-flex flex-column flex-lg-row align-items-center">
+            @*<img src="@(Model.AnhDaiDien ?? "/img/testimonial-1.jpg")" alt="Avatar" class="profile-avatar mb-3 mb-lg-0">*@
+            <div class="ms-lg-4">
+                <h1 class="h2 mb-0 text-white">@Model.TenKH</h1>
+                <p class="mb-1 text-white"><i class="fas fa-envelope me-2"></i>@Model.Email</p>
+                <p class="mb-0 text-white"><i class="fas fa-phone me-2"></i>@Model.SoDT</p>
+            </div>
+            <div class="ms-lg-auto mt-3 mt-lg-0">
+                <a href="#" class="btn btn-light"><i class="fas fa-edit me-2"></i> Chỉnh sửa Hồ sơ</a>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs nav-fill mb-4" id="profileTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="true">
+                <i class="fas fa-box me-2"></i> Lịch sử Đặt tour (@Model.Bookings.Count)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">
+                <i class="fas fa-star me-2"></i> Đánh giá của tôi (@Model.Bookings.SelectMany(b => b.Tour.DanhGias).Count())
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="profileTabContent">
+
+        <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
+            @if (!Model.Bookings.Any())
+            {
+                <div class="alert alert-info text-center">Bạn chưa đặt tour nào.</div>
+            }
+
+            @foreach (var item in Model.Bookings.OrderByDescending(b => b.NgayDat))
+            {
+                <div class="card shadow-sm mb-4 order-card">
+                    <div class="order-card-header d-flex justify-content-between align-items-center flex-wrap">
+                        <div>
+                            <span class="text-muted me-3">Mã đơn: <strong>#@item.MaBooking</strong></span>
+                            <span class="text-muted">Ngày đi: <strong>@item.NgayDi.ToString("dd/MM/yyyy")</strong></span>
+                        </div>
+                        <span class="badge
+                            @(item.TrangThai == "Đã hoàn thành" ? "bg-success" :
+                              item.TrangThai == "Đã hủy" ? "bg-danger" : "bg-warning text-dark") fs-6">
+                            @item.TrangThai
+                        </span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-5 d-flex">
+                                <img src="@Url.Content("~/img/destination/"+@item.Tour.anhmota)" alt="@item.Tour.TenTour" style="width: 100px; height: 100px; object-fit: cover; border-radius: 0.25rem; margin-right: 15px;">
+                                <div>
+                                    <h5 class="card-title mb-1">@item.Tour.TenTour</h5>
+                                    <h6 class="card-subtitle text-primary fw-bold">@item.TongGia.Value.ToString("N0") $</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-5 text-muted"><i class="fas fa-user-tie me-2"></i>HDV:</dt>
+                                    <dd class="col-sm-7">@(item.Tour.guide?.tenguide ?? "Chưa gán")</dd>
+
+                                    <dt class="col-sm-5 text-muted"><i class="fas fa-bus me-2"></i>Phương tiện:</dt>
+                                    <dd class="col-sm-7">@(item.Tour.PhuongTien ?? "N/A")</dd>
+                                </dl>
+                            </div>
+
+                            <div class="col-md-3 text-center text-md-end align-self-center">
+                                @{ bool daDanhGia = item.Tour.DanhGias.Any(); }
+
+                                @if (item.TrangThai == "Đã hoàn thành" && !daDanhGia)
+                                {
+                                    <a href="@Url.Action("DanhGia", "Booking", new { id = item.MaBooking })"
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fas fa-star me-1"></i> Viết Đánh Giá
+                                    </a>
+                                }
+                                @if (daDanhGia)
+                                {
+                                    <span class="btn btn-outline-success btn-sm disabled">Đã đánh giá</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+            @if (!Model.Bookings.SelectMany(b => b.Tour.DanhGias).Any())
+            {
+                <div class="alert alert-info text-center">Bạn chưa có đánh giá nào.</div>
+            }
+
+            @foreach (var item in Model.Bookings.SelectMany(b => b.Tour.DanhGias).OrderByDescending(dg => dg.NgayTao))
+            {
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <h5 class="card-title mb-0">@item.Tour.TenTour</h5>
+                            <span class="text-muted">@item.NgayTao</span>
+                        </div>
+                        <div class="star-rating mb-2">
+                            @for (int i = 0; i < item.SoSao; i++)
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                            @for (int i = 0; i < (5 - item.SoSao); i++)
+                            {
+                                <i class="far fa-star"></i>
+                            }
+                        </div>
+                        <p class="card-text">@item.NoiDung</p>
+                        @*@if (!item.DaDuyet)
+                            {
+                                <span class="badge bg-light text-dark">Chờ duyệt</span>
+                            }*@
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>

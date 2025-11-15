@@ -9,7 +9,10 @@ using System.Web.Helpers;
 using System.Web.Mvc;
 using Trave.Models;
 using BCrypt.Net;
+using System.Data.Entity;
+using System.Globalization;
 namespace Trave.Controllers
+
 {
     public class AdminController : Controller
     {
@@ -18,7 +21,66 @@ namespace Trave.Controllers
         // GET: Admin
         public ActionResult Dashboard()
         {
-            return View();
+            int totalTours = db.Tours.Count();
+            int totalBookings = db.Bookings.Count();
+            int totalUsers = db.KhachHangs.Count();
+
+            decimal totalRevenueDecimal = db.Bookings
+                .Where(b => b.TrangThai == "Đã thanh toán" )
+                .Sum(b => (decimal?)b.TongGia) ?? 0m;
+
+            ViewBag.TotalTours = totalTours;
+            ViewBag.TotalBookings = totalBookings;
+            ViewBag.TotalUsers = totalUsers;
+            ViewBag.TotalRevenue = (double)totalRevenueDecimal;
+
+            // --- 2. LẤY DỮ LIỆU BIỂU ĐỒ DOANH THU (Line Chart) ---
+            // Chỉ lấy các đơn đã thanh toán trong 12 tháng qua
+            DateTime oneYearAgo = DateTime.Now.AddYears(-1);
+            var revenueData = db.Bookings
+                .Where(b => (b.TrangThai == "Đã thanh toán" )
+                            && b.NgayDat >= oneYearAgo)
+               .GroupBy(b => new { Year = b.NgayDat.Value.Year, Month = b.NgayDat.Value.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Total = g.Sum(b => (decimal?)b.TongGia) ?? 0
+                })
+                .OrderBy(r => r.Year).ThenBy(r => r.Month)
+                .ToList();
+
+            // Gán vào ViewBag
+            ViewBag.ChartLabels_Revenue = revenueData.Select(r => $"T{r.Month}/{r.Year}").ToList();
+            ViewBag.ChartData_Revenue = revenueData.Select(r => r.Total).ToList();
+
+
+            // --- 3. LẤY DỮ LIỆU BIỂU ĐỒ TỈ LỆ TOUR (Pie Chart) ---
+            var tourPopularity = db.Bookings
+                .Include(b => b.Tour) // Join với bảng Tour để lấy Tên Tour
+                .GroupBy(b => b.Tour.TenTour)
+                .Select(g => new
+                {
+                    TourName = g.Key,
+                    Count = g.Count() // Đếm số lượng booking cho mỗi tour
+                })
+                .OrderByDescending(t => t.Count)
+                .ToList();
+
+            ViewBag.ChartLabels_Tour = tourPopularity.Select(t => t.TourName).ToList();
+            ViewBag.ChartData_Tour = tourPopularity.Select(t => t.Count).ToList();
+
+
+            // --- 4. LẤY MODEL CHO BẢNG (Mã cũ) ---
+            var model = db.Bookings
+                .Include(b => b.KhachHang)
+                .Include(b => b.Tour)
+                .OrderByDescending(b => b.NgayDat)
+                .Take(10)
+                .ToList();
+
+            // 5. Trả về View
+            return View(model);
         }
 
         // ==========DANH MỤC============

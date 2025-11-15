@@ -1,0 +1,82 @@
+﻿/* --- Thẻ Đánh giá Chi tiết (Thiết kế mới) --- */
+.review-card-detailed {
+    display: flex; /* BẮT BUỘC: Dùng Flexbox để chia cột */
+    flex-direction: column; /* Bố cục cho di động (xếp chồng) */
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    border: 1px solid #eee;
+}
+
+/* GIỚI HẠN KÍCH THƯỚC ẢNH */
+.review-card-img {
+    width: 100%; /* Full width trên di động */
+    height: 200px;
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+    flex-shrink: 0;
+}
+
+/* Phần nội dung (chữ) */
+.review-card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Tự động lấp đầy phần trống */
+}
+
+/* Các trường còn lại (bạn đã có) */
+.review-card-tour-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.review-card-metadata {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+    .review-card-metadata span {
+        margin-right: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+.star-rating .fa-star {
+    color: #ffc107;
+}
+
+.review-card-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #555;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.review-card-author {
+    text-align: right;
+    font-weight: 600;
+    color: #0d6efd;
+    font-style: italic;
+}
+
+/* Bố cục cho màn hình lớn (Desktop) */
+@media (min-width: 768px) {
+    .review-card-detailed {
+        flex-direction: row; /* Bố cục 2 cột trên desktop */
+    }
+
+    .review-card-img {
+        width: 250px; /* Chiều rộng cố định cho ảnh */
+        height: auto; /* Chiều cao tự động theo ảnh */
+    }
+}
+

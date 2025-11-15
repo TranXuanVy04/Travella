@@ -253,12 +253,12 @@
     </div>
 </div>
 
-
-
-    <script>
+<script>
     // Toggle password visibility
     function togglePassword(id, icon) {
         const input = document.getElementById(id);
+        if (!input) return;
+
         const isPassword = input.type === 'password';
         input.type = isPassword ? 'text' : 'password';
         icon.classList.toggle('fa-eye-slash', isPassword);
@@ -266,18 +266,41 @@
         icon.style.color = isPassword ? '#667eea' : '#888';
     }
 
-    // Submit form
-    document.getElementById('registerForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
+    // Hàm hiển thị thông báo
+    function showAlert(message, type = 'danger') {
+        const alertDiv = document.getElementById('alertMsg');
+        if (!alertDiv) return;
 
-        const form = this;
+        // Xóa thông báo cũ và tạo mới
+        alertDiv.innerHTML = '';
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.innerHTML = `<i class="fas ${icon} me-2"></i>${message}`;
+        alertDiv.appendChild(alert);
+
+        // Tự động ẩn sau 5 giây
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 500);
+        }, 5000);
+    }
+
+    // Submit form
+    document.getElementById('registerForm')?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const form = e.target;
         const btn = document.getElementById('submitBtn');
-        const spinner = btn.querySelector('.spinner-border');
+        const spinner = btn?.querySelector('.spinner-border');
         const btnText = document.getElementById('btnText');
         const alertDiv = document.getElementById('alertMsg');
 
-        // Reset
-        alertDiv.innerHTML = '';
+        if (!form || !btn || !spinner || !btnText || !alertDiv) return;
+
+        // Reset validation
+        showAlert('', 'success'); // Clear existing alerts cleanly
         form.classList.remove('was-validated');
 
         // HTML5 validation
@@ -286,13 +309,13 @@
             return;
         }
 
-        // Kiểm tra mật khẩu trùng
-        const pass = document.getElementById('password').value;
-        const confirm = document.getElementById('confirmPassword').value;
-        if (pass !== confirm) {
-            alertDiv.innerHTML = `<div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle me-2"></i>Mật khẩu xác nhận không khớp!
-            </div>`;
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirmPassword');
+        if (!passwordInput || !confirmInput) return;
+
+        // 1. Kiểm tra mật khẩu khớp (Client-side logic)
+        if (passwordInput.value !== confirmInput.value) {
+            showAlert('Mật khẩu xác nhận không khớp!', 'danger');
             return;
         }
 
@@ -302,58 +325,45 @@
         btnText.textContent = 'Signing up...';
 
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        data.birthDate = data.birthDate || null; // Nếu rỗng → null
+        const data = {};
+
+        // 2. CHỈ GỬI CÁC THAM SỐ CONTROLLER CẦN (Loại bỏ confirmPassword)
+        for (const [key, value] of formData.entries()) {
+            if (key === 'confirmPassword' || key === 'agree') continue; // Loại bỏ các trường chỉ dùng client
+            data[key] = value;
+        }
 
         try {
-            const res = await fetch('@Url.Action("Register", "Auth")', {
+            const response = await fetch('@Url.Action("Register", "Auth")', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': formData.get('__RequestVerificationToken')
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: new URLSearchParams(data)
+                body: new URLSearchParams(data) // Gửi dữ liệu đã lọc
             });
-
-            const result = await res.json();
 
             // Reset button
             btn.disabled = false;
             spinner.classList.add('d-none');
             btnText.textContent = 'Sign Up';
 
+            const result = await response.json();
+
             if (result.success) {
-                alertDiv.innerHTML = `<div class="alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>${result.message}
-                </div>`;
+                showAlert(result.message || 'Đăng ký thành công!', 'success');
                 setTimeout(() => {
-                    window.location.href = '@Url.Action("Login", "Auth")';
+                    window.location.href = '@Url.Action("Login", "Auth")'; // Chuyển hướng đến trang Login
                 }, 1500);
             } else {
-                alertDiv.innerHTML = `<div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle me-2"></i>${result.message}
-                </div>`;
+                showAlert(result.message || 'Đăng ký thất bại!', 'danger');
             }
         } catch (err) {
             console.error('Register error:', err);
-            btn.disabled = false;
+            btn.diasble = false;
             spinner.classList.add('d-none');
             btnText.textContent = 'Sign Up';
-            alertDiv.innerHTML = `<div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle me-2"></i>Lỗi kết nối. Vui lòng thử lại!
-            </div>`;
+            showAlert('Lỗi kết nối. Vui lòng thử lại!', 'danger');
         }
     });
+</script>
 
-    // Auto hide alert after 5 seconds
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(() => {
-            const alert = document.querySelector('#alertMsg .alert');
-            if (alert) {
-                alert.style.transition = 'opacity 0.5s';
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 500);
-            }
-        }, 5000);
-    });
-    </script>

@@ -1,6 +1,6 @@
 ﻿@model  IEnumerable<Trave.Models.Tour>
 @using Trave.Models
-
+@using System.Linq
 @{
     var allDestinations = ViewBag.AllDestinations as List<Trave.Models.DiaDiem> ?? new List<Trave.Models.DiaDiem>();
     var allCountries = ViewBag.AllCountries as List<string> ?? new List<string>();
@@ -222,7 +222,6 @@
     </div>
 </div>
 <!-- Destination End -->
-<!-- Destination End -->
 <!-- Packages Start -->
 <div class="container-fluid packages py-5">
     <div class="container py-5">
@@ -252,12 +251,12 @@
                             <h5 class="card-title mb-3 fw-bold text-dark">@item.TenTour</h5>
 
                             @*<div class="mb-3 text-warning">
-                                <small class="fa fa-star"></small>
-                                <small class="fa fa-star"></small>
-                                <small class="fa fa-star"></small>
-                                <small class="fa fa-star"></small>
-                                <small class="fa fa-star"></small>
-                            </div>*@
+                                    <small class="fa fa-star"></small>
+                                    <small class="fa fa-star"></small>
+                                    <small class="fa fa-star"></small>
+                                    <small class="fa fa-star"></small>
+                                    <small class="fa fa-star"></small>
+                                </div>*@
 
                             <p class="card-text text-muted mb-4 text-clamp-3" style="font-size: 0.95rem; line-height: 1.6;">
                                 @item.mota
@@ -282,100 +281,66 @@
 </div>
 
 <!-- Packages End -->
-
-<!-- Testimonial Start -->
 <div class="container-fluid testimonial py-5">
     <div class="container py-5">
         <div class="mx-auto text-center mb-5" style="max-width: 900px;">
             <h5 class="section-title px-3">Testimonial</h5>
-            <h1 class="mb-0">Our Clients Say!!!</h1>
+            <h1 class="mb-0" style="color: black;">Our Clients Say!!!</h1>
         </div>
+
         <div class="testimonial-carousel owl-carousel">
-            <div class="testimonial-item text-center rounded pb-4">
-                <div class="testimonial-comment bg-light rounded p-4">
-                    <p class="text-center mb-5">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis nostrum cupiditate, eligendi repellendus saepe illum earum architecto dicta quisquam quasi porro officiis. Vero reiciendis,
-                    </p>
-                </div>
-                <div class="testimonial-img p-1">
-                    <img src="img/testimonial-1.jpg" class="img-fluid rounded-circle" alt="Image">
-                </div>
-                <div style="margin-top: -35px;">
-                    <h5 class="mb-0">John Abraham</h5>
-                    <p class="mb-0">New York, USA</p>
-                    <div class="d-flex justify-content-center">
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
+            @foreach (var item in Model)
+            {
+                var review = item.DanhGias.FirstOrDefault();
+
+                @* 2. Chỉ hiển thị nếu tour này CÓ đánh giá *@
+                if (review != null)
+                {
+                    <div class="packages-item p-2 h-100">
+                        <div class="card package-card h-100 rounded-3 shadow-sm border-0">
+
+                            <div class="package-img-wrapper rounded-top-3">
+                                <img src="@Url.Content("~/img/Destination/" + item.anhmota)" alt="@item.TenTour">
+
+                                <div class="category-badge shadow-sm">
+                                    <i class="fa fa-user me-1"></i> Author: @(review.KhachHang?.TenKH)
+                                </div>
+                            </div>
+
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between mb-3 package-meta">
+                                    <small><i class="fa fa-calendar-alt text-primary me-2"></i>Ngày đi: @(item.Bookings.FirstOrDefault()?.NgayDi.ToString("dd/MM/yyyy"))</small>
+
+                                    <small><i class="fa fa-calendar-check text-primary me-2"></i>Ngày ĐG: @(review.NgayTao?.ToString("dd/MM/yyyy"))</small>
+                                </div>
+
+                                <h5 class="card-title mb-2 fw-bold text-dark">@item.TenTour</h5>
+
+                                <div class="mb-3 star-rating">
+                                    @for (int i = 0; i < review.SoSao; i++)
+                                    {<i class="fas fa-star text-warning"></i>}
+                                    @for (int i = 0; i < (5 - review.SoSao); i++)
+                                    {<i class="far fa-star text-warning"></i>}
+                                </div>
+
+                                <p class="card-text text-muted mb-4 text-clamp-3" style="font-size: 0.95rem; line-height: 1.6;">
+                                    "@review.NoiDung"
+                                </p>
+
+                                <hr class="text-muted opacity-25 mt-auto">
+                                <div class="text-end mt-3">
+                                    <a class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm transition-hover"
+                                       href="@Url.Action("Details", "Home", new { id = item.MaTour.Trim() })">
+                                        Xem Tour
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="testimonial-item text-center rounded pb-4">
-                <div class="testimonial-comment bg-light rounded p-4">
-                    <p class="text-center mb-5">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis nostrum cupiditate, eligendi repellendus saepe illum earum architecto dicta quisquam quasi porro officiis. Vero reiciendis,
-                    </p>
-                </div>
-                <div class="testimonial-img p-1">
-                    <img src="img/testimonial-2.jpg" class="img-fluid rounded-circle" alt="Image">
-                </div>
-                <div style="margin-top: -35px;">
-                    <h5 class="mb-0">John Abraham</h5>
-                    <p class="mb-0">New York, USA</p>
-                    <div class="d-flex justify-content-center">
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-item text-center rounded pb-4">
-                <div class="testimonial-comment bg-light rounded p-4">
-                    <p class="text-center mb-5">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis nostrum cupiditate, eligendi repellendus saepe illum earum architecto dicta quisquam quasi porro officiis. Vero reiciendis,
-                    </p>
-                </div>
-                <div class="testimonial-img p-1">
-                    <img src="img/testimonial-3.jpg" class="img-fluid rounded-circle" alt="Image">
-                </div>
-                <div style="margin-top: -35px;">
-                    <h5 class="mb-0">John Abraham</h5>
-                    <p class="mb-0">New York, USA</p>
-                    <div class="d-flex justify-content-center">
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-item text-center rounded pb-4">
-                <div class="testimonial-comment bg-light rounded p-4">
-                    <p class="text-center mb-5">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis nostrum cupiditate, eligendi repellendus saepe illum earum architecto dicta quisquam quasi porro officiis. Vero reiciendis,
-                    </p>
-                </div>
-                <div class="testimonial-img p-1">
-                    <img src="img/testimonial-4.jpg" class="img-fluid rounded-circle" alt="Image">
-                </div>
-                <div style="margin-top: -35px;">
-                    <h5 class="mb-0">John Abraham</h5>
-                    <p class="mb-0">New York, USA</p>
-                    <div class="d-flex justify-content-center">
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                        <i class="fas fa-star text-primary"></i>
-                    </div>
-                </div>
-            </div>
+                }
+            }
+
+
         </div>
     </div>
 </div>
-<!-- Testimonial End -->

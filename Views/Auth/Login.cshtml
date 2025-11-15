@@ -1,105 +1,333 @@
 ﻿@{
-    ViewBag.Title = "Login";
-    Layout = "~/Views/Shared/AuthView.cshtml";
-}
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-    body {
-        font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
+        ViewBag.Title = "Login";
+        Layout = "~/Views/Shared/AuthView.cshtml";
     }
 
-    .card {
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        max-width: 450px;
-        width: 100%;
-        padding: 40px;
-        background: white;
-    }
 
-    .form-control {
-        border-radius: 10px;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-    }
-
-        .form-control:focus {
-            border-color: #2575fc;
-            box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.25);
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
-    .password-input {
-        padding-right: 45px;
-    }
-
-    .password-toggle {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #888;
-        cursor: pointer;
-        font-size: 1.1rem;
-        z-index: 10;
-    }
-
-        .password-toggle:hover {
-            color: #2575fc;
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+            background: white;
         }
 
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border: none;
-        padding: 12px;
-        font-weight: 600;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-    }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
         }
 
-    .alert {
-        border-radius: 12px;
-        font-size: 0.9rem;
-        padding: 12px 15px;
-    }
+            .form-control:focus {
+                border-color: #2575fc;
+                box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.25);
+            }
 
-    .form-label {
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 8px;
-    }
-
-    .divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 20px 0;
-    }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #ddd;
+        .password-input {
+            padding-right: 45px;
         }
 
-        .divider span {
-            padding: 0 10px;
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             color: #888;
-            font-size: 0.9rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            z-index: 10;
         }
-</style>
+
+            .password-toggle:hover {
+                color: #2575fc;
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+
+        .alert {
+            border-radius: 12px;
+            font-size: 0.9rem;
+            padding: 12px 15px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+            .divider::before,
+            .divider::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .divider span {
+                padding: 0 10px;
+                color: #888;
+                font-size: 0.9rem;
+            }
+    </style>
+
+    @*<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 px-3">
+        <div class="card">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Welcome Back
+                </h2>
+                <p class="text-muted">Sign in to continue</p>
+            </div>
+
+            <div id="alertMsg"></div>
+
+            <form id="loginForm" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px;">
+                            <i class="fas fa-envelope text-muted"></i>
+                        </span>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               class="form-control border-start-0"
+                               placeholder="your@email.com"
+                               required
+                               autocomplete="email"
+                               style="border-radius: 0 10px 10px 0;">
+                        <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="position-relative">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px;">
+                                <i class="fas fa-lock text-muted"></i>
+                            </span>
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   class="form-control border-start-0 password-input"
+                                   placeholder="Enter your password"
+                                   required
+                                   minlength="6"
+                                   autocomplete="current-password"
+                                   style="border-radius: 0 10px 10px 0;">
+                            <div class="invalid-feedback">Mật khẩu ít nhất 6 ký tự.</div>
+                        </div>
+                        <i class="fa fa-eye password-toggle" id="togglePass" onclick="togglePassword()"></i>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                        <label class="form-check-label small text-muted" for="remember">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="@Url.Action("ForgotPassword", "Auth")" class="small text-decoration-none" style="color: #667eea;">
+                        Forgot Password?
+                    </a>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary w-100 fw-bold">
+                    <span class="spinner-border spinner-border-sm d-none me-2" role="status" aria-hidden="true"></span>
+                    <span id="btnText">Sign In</span>
+                </button>
+            </form>
+
+            <div class="divider"><span>OR</span></div>
+
+            <div class="text-center">
+                <small class="text-muted">
+                    Don't have an account?
+                    <a href="@Url.Action("Register", "Auth")" class="fw-semibold text-decoration-none" style="color: #667eea;">
+                        Sign Up
+                    </a>
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL từ Razor (đảm bảo render đúng)
+        const loginUrl = '@Url.Action("Login", "Auth")';
+
+        // Toggle password
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('togglePass');
+            if (!input || !icon) return;
+
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            icon.classList.toggle('fa-eye-slash', isPassword);
+            icon.classList.toggle('fa-eye', !isPassword);
+            icon.style.color = isPassword ? '#667eea' : '#888';
+        }
+
+        // Submit form
+        document.getElementById('loginForm')?.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = e.currentTarget;
+            const btn = document.getElementById('submitBtn');
+            const spinner = btn?.querySelector('.spinner-border');
+            const btnText = document.getElementById('btnText');
+            const alertDiv = document.getElementById('alertMsg');
+
+            if (!btn || !spinner || !btnText || !alertDiv) return;
+
+            // Reset
+            alertDiv.innerHTML = '';
+            form.classList.remove('was-validated');
+
+            // HTML5 Validation
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // Loading
+            btn.disabled = true;
+            spinner.classList.remove('d-none');
+            btnText.textContent = 'Signing in...';
+
+            const formData = new FormData(form);
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            try {
+                const response = await fetch(loginUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': formData.get('__RequestVerificationToken')
+                    },
+                    body: new URLSearchParams(data)
+                });
+
+                const result = await response.json();
+
+                // Reset button
+                btn.disabled = false;
+                spinner.classList.add('d-none');
+                btnText.textContent = 'Sign In';
+
+                if (result.success) {
+                    alertDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            ${result.message}
+                        </div>`;
+
+                    // CHUYỂN HƯỚNG THEO redirectUrl TỪ SERVER
+                    setTimeout(() => {
+                        window.location.href = result.redirectUrl;
+                    }, 1000);
+                } else {
+                    alertDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            ${result.message}
+                        </div>`;
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                btn.disabled = false;
+                spinner.classList.add('d-none');
+                btnText.textContent = 'Sign In';
+                alertDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Lỗi kết nối. Vui lòng thử lại!
+                    </div>`;
+            }
+        });
+
+        // Tự động ẩn alert
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const alert = document.querySelector('#alertMsg .alert');
+                if (alert) {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                }
+            }, 5000);
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Bắt sự kiện gửi form
+            $('#loginForm').submit(function (e) {
+                e.preventDefault(); // Ngăn form gửi theo cách truyền thống
+
+                var form = $(this);
+                var url = form.attr('action');
+                var messageBox = $('#loginMessage');
+
+                messageBox.addClass('d-none').removeClass('alert-success').removeClass('alert-danger').text('');
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            // HIỂN THỊ THÔNG BÁO VÀ CHUYỂN HƯỚNG
+                            messageBox.removeClass('d-none').addClass('alert-success').text(response.message);
+
+                            // ** ĐÂY LÀ PHẦN LÀM CHO GIAO DIỆN CẬP NHẬT **
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            // Xử lý lỗi đăng nhập
+                            messageBox.removeClass('d-none').addClass('alert-danger').text(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Xử lý lỗi kết nối
+                        messageBox.removeClass('d-none').addClass('alert-danger').text("Lỗi kết nối Server. Vui lòng thử lại.");
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            });
+        });
+    </script>*@
+
+
 
 <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 px-3">
     <div class="card">
@@ -112,7 +340,7 @@
 
         <div id="alertMsg"></div>
 
-        <form id="loginForm" novalidate>
+        <form id="loginForm" class="needs-validation" novalidate>
             @Html.AntiForgeryToken()
 
             <div class="mb-3">
@@ -155,92 +383,104 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="remember">
+                    <input class="form-check-input" type="checkbox" id="remember" name="remember">
                     <label class="form-check-label small text-muted" for="remember">
                         Remember me
                     </label>
                 </div>
-                <a href="#" class="small text-decoration-none" style="color: #667eea;">Forgot Password?</a>
+                <a href="@Url.Action("ForgotPassword", "Auth")" class="small text-decoration-none" style="color: #667eea;">
+                    Forgot Password?
+                </a>
             </div>
 
             <button type="submit" id="submitBtn" class="btn btn-primary w-100 fw-bold">
-                <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
+                <span class="spinner-border spinner-border-sm d-none me-2" role="status" aria-hidden="true"></span>
                 <span id="btnText">Sign In</span>
             </button>
         </form>
 
-        <div class="divider">
-            <span>OR</span>
-        </div>
+        <div class="divider"><span>OR</span></div>
 
         <div class="text-center">
             <small class="text-muted">
                 Don't have an account?
-                <a href="@Url.Action("Register", "Auth")" class="fw-semibold text-decoration-none" style="color: #667eea;">Sign Up</a>
+                <a href="@Url.Action("Register", "Auth")" class="fw-semibold text-decoration-none" style="color: #667eea;">
+                    Sign Up
+                </a>
             </small>
         </div>
     </div>
 </div>
+<form id="loginForm" class="needs-validation" novalidate>
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="ReturnUrl" value="@Request.QueryString["ReturnUrl"]" />
+
+    <button type="submit" id="submitBtn" class="btn btn-primary w-100 fw-bold">
+    </button>
+</form>
 
 <script>
-    // Toggle password visibility
+    // URL từ Razor (đảm bảo render đúng)
+    const loginUrl = '@Url.Action("Login", "Auth")';
+
+    // Toggle password
     function togglePassword() {
         const input = document.getElementById('password');
         const icon = document.getElementById('togglePass');
+        if (!input || !icon) return;
+
         const isPassword = input.type === 'password';
         input.type = isPassword ? 'text' : 'password';
         icon.classList.toggle('fa-eye-slash', isPassword);
         icon.classList.toggle('fa-eye', !isPassword);
+        icon.style.color = isPassword ? '#667eea' : '#888';
     }
 
-    // Submit form
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    // Submit form bằng Fetch API (Hiện đại, giữ lại khối này)
+    document.getElementById('loginForm')?.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        const form = this;
+        const form = e.currentTarget;
         const btn = document.getElementById('submitBtn');
-        const spinner = btn.querySelector('.spinner-border');
+        const spinner = btn?.querySelector('.spinner-border');
         const btnText = document.getElementById('btnText');
         const alertDiv = document.getElementById('alertMsg');
+
+        if (!btn || !spinner || !btnText || !alertDiv) return;
 
         // Reset
         alertDiv.innerHTML = '';
         form.classList.remove('was-validated');
 
-        // HTML5 validation
+        // HTML5 Validation
         if (!form.checkValidity()) {
             form.classList.add('was-validated');
             return;
         }
 
-        // Disable button
+        // Loading
         btn.disabled = true;
         spinner.classList.remove('d-none');
         btnText.textContent = 'Signing in...';
 
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+        const data = {};
+        for (const [key, value] of formData.entries()) {
+            data[key] = value;
+        }
 
         try {
-            @*const res = await fetch('@Url.Action("Login", "Auth")', {
+            const response = await fetch(loginUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'RequestVerificationToken': formData.get('__RequestVerificationToken')
                 },
                 body: new URLSearchParams(data)
-            });*@
-            const res = await fetch('@Url.Action("Login", "Auth")', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                    // Token không cần ở đây
-                },
-                // Token đã nằm sẵn trong 'data' và được gửi đi trong body
-                body: new URLSearchParams(data)
             });
 
-            const result = await res.json();
+            const result = await response.json();
 
             // Reset button
             btn.disabled = false;
@@ -248,38 +488,52 @@
             btnText.textContent = 'Sign In';
 
             if (result.success) {
-                alertDiv.innerHTML = `<div class="alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>${result.message}
-                </div>`;
+                alertDiv.innerHTML = `
+                    <div class="alert alert-success mt-3">
+                        <i class="fas fa-check-circle me-2"></i>
+                        ${result.message}
+                    </div>`;
+
+                // ** PHẦN CHUYỂN HƯỚNG **
                 setTimeout(() => {
-                    // Chuyển hướng theo redirectUrl từ server
-                    window.location.href = result.redirectUrl || '@Url.Action("Index", "Home")';
-                }, 1000);
+                    window.location.href = result.redirectUrl;
+                }, 1000); // Chuyển hướng sau 1 giây để người dùng thấy thông báo
             } else {
-                alertDiv.innerHTML = `<div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle me-2"></i>${result.message}
-                </div>`;
+                alertDiv.innerHTML = `
+                    <div class="alert alert-danger mt-3">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        ${result.message}
+                    </div>`;
             }
-        } catch (err) {s
+        } catch (err) {
             console.error('Login error:', err);
             btn.disabled = false;
             spinner.classList.add('d-none');
             btnText.textContent = 'Sign In';
-            alertDiv.innerHTML = `<div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle me-2"></i>Lỗi kết nối. Vui lòng thử lại!
-            </div>`;
+            alertDiv.innerHTML = `
+                <div class="alert alert-danger mt-3">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Lỗi kết nối. Vui lòng thử lại!
+                </div>`;
         }
     });
 
-    // Auto hide alert after 5 seconds
-    document.addEventListener('DOMContentLoaded', function() {
+    // Tự động ẩn alert sau 5s (chỉ áp dụng cho lỗi)
+    document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
-            const alert = document.querySelector('#alertMsg .alert');
+            const alert = document.querySelector('#alertMsg .alert-danger'); // Chỉ ẩn alert-danger
             if (alert) {
-                alert.style.transition = 'opacity 0.5s';
+                alert.style.transition = 'opacity 0.5s ease';
                 alert.style.opacity = '0';
                 setTimeout(() => alert.remove(), 500);
             }
         }, 5000);
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        // ... (Khối jQuery Ajax cũ đã bị loại bỏ)
+    });
+</script>
+--}}

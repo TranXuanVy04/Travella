@@ -244,20 +244,45 @@
                     </form>
 
                     <ul class="navbar-nav ms-auto flex-row align-items-center">
+
                         <li class="nav-item me-3">
                             <a class="nav-link" href="#">
                                 <i class="fa-solid fa-bell"></i>
                             </a>
                         </li>
+
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://via.placeholder.com/35" alt="Avatar" class="admin-avatar">
-                                <span class="d-none d-sm-inline fw-bold">Admin</span>
+
+                            <a class="nav-link dropdown-toggle d-flex align-items-center"
+                               href="#"
+                               id="navbarUserDropdown"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+
+                                <i class="fa fa-user me-2"></i>
+                                <span class="d-none d-sm-inline">
+                                    @Html.Encode(User.Identity.Name ?? Session["UserName"] ?? "Người dùng")
+                                </span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="@Url.Action("Profile", "Account")"><i class="fa-solid fa-user me-2"></i>Hồ sơ</a></li>
+
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("MyProfile", "Account")">
+                                        <i class="fas fa-user-circle me-2"></i> Hồ sơ của tôi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("MyBookings", "Booking")">
+                                        <i class="fas fa-box me-2"></i> Đơn đặt tour
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="fa-solid fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("LogOff", "Auth")">
+                                        <i class="fas fa-power-off me-2"></i> Đăng xuất
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -268,11 +293,13 @@
                 @RenderBody()
             </div>
 
-           
+
         </main>
     </div>
 
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>

@@ -151,8 +151,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ToursController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -160,6 +158,9 @@
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Contact.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DanhGia.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DanhMuc.cs">
@@ -240,6 +241,7 @@
     <Content Include="Content\css\destination.css" />
     <Content Include="Content\css\detail.css" />
     <Content Include="Content\css\guide.css" />
+    <Content Include="Content\css\Testimonial.css" />
     <Content Include="Content\css\Tour_Detail.css" />
     <Content Include="Content\lib\easing\easing.js" />
     <Content Include="Content\lib\easing\easing.min.js" />
@@ -269,11 +271,14 @@
     <Content Include="img\about-img-1.png" />
     <Content Include="img\about-img.jpg" />
     <Content Include="img\About\Travel.png" />
+    <Content Include="img\Background\abc.png" />
+    <Content Include="img\Background\Backgroung_Profile.png" />
     <Content Include="img\Background\Login_Background.png" />
     <Content Include="img\blog-1.jpg" />
     <Content Include="img\blog-2.jpg" />
     <Content Include="img\blog-3.jpg" />
     <Content Include="img\breadcrumb-bg.jpg" />
+    <Content Include="img\breadcrumb-bg.png" />
     <Content Include="img\carousel-1.jpg" />
     <Content Include="img\carousel-2.jpg" />
     <Content Include="img\carousel-3.jpg" />
@@ -474,11 +479,9 @@
     <Content Include="Views\Admin\AccountCreate.cshtml" />
     <Content Include="Views\Admin\AccountEdit.cshtml" />
     <Content Include="Views\Admin\AccountDelete.cshtml" />
-    <Content Include="Views\Tours\Create.cshtml" />
-    <Content Include="Views\Tours\Delete.cshtml" />
-    <Content Include="Views\Tours\Details.cshtml" />
-    <Content Include="Views\Tours\Edit.cshtml" />
-    <Content Include="Views\Tours\Index.cshtml" />
+    <Content Include="Views\Shared\AuthView.cshtml" />
+    <Content Include="Views\Home\BookingConfirmation.cshtml" />
+    <Content Include="Views\Home\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
