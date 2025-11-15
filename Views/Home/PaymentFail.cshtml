@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "Thanh toán thất bại";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Animation rung */
+    @@keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        50% {
+            transform: translateX(5px);
+        }
+
+        75% {
+            transform: translateX(-5px);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .fail-icon-wrapper {
+        animation: shake 0.5s ease-in-out 0.5s;
+    }
+
+    .card-fail {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .fail-header {
+        background-color: #ffebee;
+        padding: 40px 0;
+        text-align: center;
+    }
+
+    .btn-retry {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+        .btn-retry:hover {
+            background-color: #bb2d3b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+    /* CSS cho giao diện nổi đẹp hơn */
+    .header-extended {
+        padding-bottom: 6rem !important;
+    }
+
+    .floating-content {
+        margin-top: -100px;
+        position: relative;
+        z-index: 10;
+    }
+</style>
+
+<div class="container-fluid bg-breadcrumb header-extended">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h1 class="text-white display-3 mb-4">Kết quả Thanh toán</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Home</a></li>
+            <li class="breadcrumb-item active text-white">Thất bại</li>
+        </ol>
+    </div>
+</div>
+
+<div class="container floating-content pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card card-fail bg-white">
+
+                <div class="fail-header">
+                    <div class="fail-icon-wrapper mb-3">
+                        <i class="fas fa-times-circle text-danger" style="font-size: 80px;"></i>
+                    </div>
+                    <h2 class="h3 fw-bold text-danger mb-0">Thanh toán Thất bại!</h2>
+                </div>
+
+                <div class="card-body p-4 text-center">
+                    <p class="text-muted mb-4">
+                        Rất tiếc, quá trình thanh toán của bạn chưa được hoàn tất.
+                        <br>
+                        Đừng lo lắng, tài khoản của bạn chưa bị trừ tiền.
+                    </p>
+
+                    <div class="alert alert-light border border-danger text-danger small d-inline-block px-4 py-2 mb-4 rounded-pill">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        @(ViewBag.ErrorMessage ?? "Giao dịch thất bại")
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        @if (ViewBag.LastTourId != null)
+                        {
+                            <a href="@Url.Action("BookTour", "Home", new { id = ViewBag.LastTourId, date = ViewBag.LastDate, persons = ViewBag.LastPersons })"
+                               class="btn btn-retry text-white btn-lg rounded-pill">
+                                <i class="fas fa-redo-alt me-2"></i> Thử thanh toán lại
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-retry text-white btn-lg rounded-pill">
+                                <i class="fas fa-search me-2"></i> Tìm Tour khác
+                            </a>
+                        }
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary rounded-pill py-2 mt-2">
+                            <i class="fas fa-home me-2"></i> Về trang chủ
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="text-center text-muted small">
+                        <p class="mb-1">Cần hỗ trợ ngay lập tức?</p>
+                        <p class="fw-bold text-dark mb-0">
+                            <i class="fas fa-phone-alt me-2 text-primary"></i> 1900 1234
+                            <span class="mx-2">|</span>
+                            <i class="fas fa-envelope me-2 text-primary"></i> support@travela.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

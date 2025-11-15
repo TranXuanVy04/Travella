@@ -38,7 +38,7 @@
                     {
                         <div class="alert alert-info">
                             <h5 class="alert-heading">Hướng dẫn Chuyển khoản</h5>
-                            <p>Vui lòng chuyển khoản tổng số tiền <strong>@Model.TongGia.Value.ToString("N0") VNĐ</strong> vào thông tin tài khoản dưới đây:</p>
+                            <p>Vui lòng chuyển khoản tổng số tiền <strong>@Model.TongGia.Value.ToString("N0") $</strong> vào thông tin tài khoản dưới đây:</p>
                             <ul class="list-unstyled text-start" style="max-width: 400px; margin: auto;">
                                 <li><strong>Ngân hàng:</strong> Vietcombank</li>
                                 <li><strong>Chủ tài khoản:</strong> CTY TNHH DU LỊCH TRAVELA</li>
@@ -76,7 +76,8 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between fs-5">
                             <strong>Tổng cộng:</strong>
-                            <span class="fw-bold text-primary">@Model.TongGia.Value.ToString("N0") VNĐ</span>
+                            <span class="fw-bold text-primary">@Model.TongGia.Value.ToString("N0") $
+                            </span>
                         </li>
                     </ul>
 

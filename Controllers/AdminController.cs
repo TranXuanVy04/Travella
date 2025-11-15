@@ -9,7 +9,6 @@ using System.Web.Helpers;
 using System.Web.Mvc;
 using Trave.Models;
 using BCrypt.Net;
-using System.Data.Entity;
 using System.Globalization;
 namespace Trave.Controllers
 

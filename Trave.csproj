@@ -217,6 +217,7 @@
     <Compile Include="Models\Users.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\VnPay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +270,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="HtmlPage1.html" />
+    <Content Include="Icon.ico" />
     <Content Include="img\about-img-1.png" />
     <Content Include="img\about-img.jpg" />
     <Content Include="img\About\Travel.png" />
@@ -325,6 +327,7 @@
     <Content Include="img\testimonial-3.jpg" />
     <Content Include="img\testimonial-4.jpg" />
     <Content Include="img\tour-booking-bg.jpg" />
+    <Content Include="img\VnPayLogog.png" />
     <Content Include="Models\Travela.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Travela.edmx</DependentUpon>
@@ -483,6 +486,7 @@
     <Content Include="Views\Shared\AuthView.cshtml" />
     <Content Include="Views\Home\BookingConfirmation.cshtml" />
     <Content Include="Views\Home\Profile.cshtml" />
+    <Content Include="Views\Home\PaymentFail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,6 +9,30 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <style>
+    /* Ẩn nút tăng giảm mặc định của trình duyệt trong thẻ input */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield; /* Cho Firefox */
+    }
+
+    /* Hiệu ứng nút bấm */
+    .btn-white {
+        background-color: #ffffff;
+        border: 1px solid #eee;
+        transition: all 0.2s;
+    }
+
+        .btn-white:hover {
+            background-color: #0d6efd; /* Màu xanh Primary */
+            color: #fff !important;
+            border-color: #0d6efd;
+            transform: scale(1.1); /* Phóng to nhẹ */
+        }
 </style>
 
 <div class="container-fluid bg-breadcrumb">
@@ -147,21 +171,31 @@
                                                class="form-control bg-light border-0"
                                                id="datepicker"
                                                name="date" placeholder="Ngày đi"
-                                               required>
+                                               >
                                         <label for="datepicker">Ngày đi</label>
                                     </div>
                                 </div>
 
                                 <div class="col-12">
-                                    <div class="form-floating">
-                                        <select class="form-select bg-light border-0" id="SelectPerson" name="persons" required>
-                                            <option value="1">1 Người</option>
-                                            <option value="2">2 Người</option>
-                                            <option value="3">3 Người</option>
-                                            <option value="4">4 Người</option>
-                                            <option value="5">5+ Người</option>
-                                        </select>
-                                        <label for="SelectPerson">Số người</label>
+                                    <label class="form-label text-muted small fw-bold">Số lượng hành khách</label>
+                                    <div class="d-flex align-items-center justify-content-between p-2 border rounded-pill bg-light shadow-sm">
+
+                                        <button type="button" class="btn btn-white rounded-circle shadow-sm text-primary" id="btnMinus" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+
+                                        <input type="number"
+                                               class="form-control border-0 bg-transparent text-center fw-bold fs-5"
+                                               id="SelectPerson"
+                                               name="persons"
+                                               value="@(Request.QueryString["persons"] ?? "1")"
+                                               min="1"
+                                               readonly
+                                               style="max-width: 100px;">
+
+                                        <button type="button" class="btn btn-white rounded-circle shadow-sm text-primary" id="btnPlus" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -242,15 +276,17 @@
 
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
     flatpickr("#datepicker", {
         minDate: "today",
-        dateFormat: "Y-m-d", // Format chuẩn C# (hoặc MM/dd/yyyy)
-        altInput: true,      // Input ảo cho người dùng
-        altFormat: "d/m/Y",  // Format người dùng thấy: ngày/tháng/năm
-        disableMobile: "true"
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        disableMobile: true,
+        onReady: function (selectedDates, dateStr, instance) {
+            instance.altInput.setAttribute("required", "");
+        }
     });
-});
+
 </script>
 
 <script>
@@ -258,41 +294,76 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginUrl = '@Url.Action("Login", "Auth")';
 
     function handleBookNow(isAuthenticated) {
-        // 1. Tìm form
         const form = document.getElementById('bookTourForm');
+        const fp = document.querySelector("#datepicker")._flatpickr; // flatpickr instance
+        const dateValue = fp?.selectedDates.length > 0 ? fp.input.value : "";
+
+        if (!dateValue) {
+            Swal.fire("Lỗi", "Bạn phải chọn ngày đi!", "error");
+            return;
+        }
+
+        // copy altInput value về input thật để submit
+        document.getElementById("datepicker").value = dateValue;
 
         if (isAuthenticated) {
-            // 2. ĐÃ ĐĂNG NHẬP: Gửi form
             form.submit();
-        } else {
-            // 3. CHƯA ĐĂNG NHẬP: Hiển thị thông báo
-            Swal.fire({
-                title: 'Yêu cầu đăng nhập',
-                text: "Bạn phải đăng nhập để thực hiện chức năng này!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Đến trang đăng nhập',
-                cancelButtonText: 'Huỷ bỏ'
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    // --- ĐÃ SỬA LỖI Ở ĐÂY ---
-                    // Sử dụng .getAttribute('action') để chỉ lấy đường dẫn tương đối (vd: "/Home/BookTour")
-                    const bookTourUrl = form.getAttribute('action');
-
-                    // Lấy tất cả dữ liệu form (id, date, persons)
-                    const formData = new FormData(form);
-                    const queryString = new URLSearchParams(formData).toString();
-
-                    // URL trả về bây giờ sẽ là: "/Home/BookTour?id=...&date=..."
-                    const returnUrl = bookTourUrl + "?" + queryString;
-
-                    // 5. Chuyển hướng đến trang Login
-                    window.location.href = loginUrl + "?ReturnUrl=" + encodeURIComponent(returnUrl);
-                }
-            });
+            return;
         }
+
+        // Chưa đăng nhập
+        Swal.fire({
+            title: 'Yêu cầu đăng nhập',
+            text: "Bạn phải đăng nhập để thực hiện chức năng này!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đến trang đăng nhập',
+            cancelButtonText: 'Huỷ bỏ'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const bookTourUrl = form.getAttribute('action');
+                const formData = new FormData(form);
+                const queryString = new URLSearchParams(formData).toString();
+                const returnUrl = bookTourUrl + "?" + queryString;
+                window.location.href = loginUrl + "?ReturnUrl=" + encodeURIComponent(returnUrl);
+            }
+        });
     }
+
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btnMinus = document.getElementById("btnMinus");
+        const btnPlus = document.getElementById("btnPlus");
+        const inputPersons = document.getElementById("SelectPerson");
+
+        // Sự kiện nút Giảm (-)
+        btnMinus.addEventListener("click", function () {
+            let currentValue = parseInt(inputPersons.value) || 1;
+            if (currentValue > 1) {
+                inputPersons.value = currentValue - 1;
+                updateTotalPrice(); // Gọi hàm cập nhật giá (nếu có)
+            }
+        });
+
+        // Sự kiện nút Tăng (+)
+        btnPlus.addEventListener("click", function () {
+            let currentValue = parseInt(inputPersons.value) || 1;
+            inputPersons.value = currentValue + 1;
+            updateTotalPrice(); // Gọi hàm cập nhật giá (nếu có)
+        });
+
+        // Hàm giả lập cập nhật giá (Bạn có thể thay bằng logic thực của bạn)
+        function updateTotalPrice() {
+            // Kích hoạt sự kiện 'change' để các script khác biết số lượng đã đổi
+            inputPersons.dispatchEvent(new Event('change'));
+
+            // Ví dụ: Nếu bạn có script tính tổng tiền, nó sẽ chạy ở đây
+            // console.log("Số người mới: " + inputPersons.value);
+        }
+    });
 </script>

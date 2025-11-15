@@ -27,14 +27,14 @@ body {
         transform: translateX(0); /* Hiện trên di động khi bấm nút */
     }
 
-@@media (min-width: 768px) {
+@media (min-width: 768px) {
     .admin-sidebar {
         height: 100vh;
         transform: translateX(0);
     }
 }
 
-@@media (min-width: 992px) {
+@media (min-width: 992px) {
     .admin-sidebar {
         max-width: var(--admin-sidebar-width-lg);
     }
@@ -46,13 +46,13 @@ body {
     padding: 0;
 }
 
-@@media (min-width: 768px) {
+@media (min-width: 768px) {
     .admin-main-content {
         margin-left: var(--admin-sidebar-width-md);
     }
 }
 
-@@media (min-width: 992px) {
+@media (min-width: 992px) {
     .admin-main-content {
         margin-left: var(--admin-sidebar-width-lg);
     }
@@ -139,7 +139,7 @@ body {
     padding: 2rem;
 }
 
-@@media (max-width: 767px) {
+@media (max-width: 767px) {
     .admin-content-area {
         padding: 1.5rem;
     }
