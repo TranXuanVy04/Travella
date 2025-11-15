@@ -11,7 +11,7 @@ using System.Web.Security;
 using Trave.Models;
 
 namespace Trave.Controllers
-{
+{ 
     //[AllowAnonymous] /// Cho phép truy cập không cần đăng nhập
     //[Authorize(Roles = "Customer")]
     public class HomeController : Controller
