@@ -1,0 +1,215 @@
+﻿
+/* 1. NÚT CHAT */
+.chat-widget-btn {
+    position: fixed !important;
+    bottom: 150px !important;
+    right: 23px !important;
+    z-index: 2147483647 !important;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    color: white;
+    border: none;
+    font-size: 28px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+}
+
+.chat-widget-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Hiệu ứng rung khi có tin nhắn mới */
+@keyframes shake {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(10deg);
+    }
+
+    50% {
+        transform: rotate(0deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.chat-notification {
+    animation: shake 0.5s ease infinite;
+}
+
+/* Badge đếm số tin nhắn chưa đọc */
+.chat-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff4757;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: none; /* Mặc định ẩn */
+}
+
+/* 2. KHUNG CHAT */
+.chat-window {
+    position: fixed !important;
+    bottom: 100px !important;
+    right: 25px !important;
+    z-index: 2147483647 !important;
+    width: 350px;
+    height: 500px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    border: 1px solid #ddd;
+}
+
+/* Header, Body, Footer (Giữ nguyên giao diện đẹp) */
+.chat-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 15px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-avatar-header {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255,255,255,0.5);
+}
+
+.chat-body {
+    flex: 1;
+    padding: 15px;
+    background: #f8f9fa;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.message-row {
+    display: flex;
+    align-items: flex-end;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.msg-admin {
+    justify-content: flex-start;
+}
+
+    .msg-admin .avatar-tiny {
+        width: 30px;
+        height: 30px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+        color: #667eea;
+        border: 1px solid #eee;
+    }
+
+    .msg-admin .bubble {
+        background: #fff;
+        color: #333;
+        padding: 10px 14px;
+        border-radius: 15px 15px 15px 2px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        max-width: 75%;
+        font-size: 14px;
+    }
+
+.msg-user {
+    justify-content: flex-end;
+}
+
+    .msg-user .bubble {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 14px;
+        border-radius: 15px 15px 2px 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        max-width: 75%;
+        font-size: 14px;
+    }
+
+.msg-time {
+    font-size: 10px;
+    color: #999;
+    margin-top: 3px;
+}
+
+.chat-footer {
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.btn-send {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+}
+

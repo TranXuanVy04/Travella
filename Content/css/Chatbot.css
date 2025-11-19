@@ -17,8 +17,8 @@
 /* Nút Bong Bóng Chat */
 #travela-bubble {
     position: fixed;
-    bottom: 110px;
-    right: 30px;
+    bottom: 80px;
+    right: 22px;
     width: 60px;
     height: 60px;
     background: var(--primary-color);
@@ -199,6 +199,7 @@
     border-top: 1px solid #e9ecef;
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 #travela-input {
@@ -331,3 +332,8 @@
         box-shadow: 0 2px 5px rgba(102, 126, 234, 0.4);
     }
 
+body.chat-open #travela-bubble {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0);
+}

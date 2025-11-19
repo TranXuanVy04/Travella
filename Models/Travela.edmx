@@ -33,6 +33,18 @@
           <Property Name="TrangThai" Type="nvarchar" MaxLength="50" />
           <Property Name="ghichu" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="ChatMessages">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SenderId" Type="nvarchar" MaxLength="128" />
+          <Property Name="ReceiverId" Type="nvarchar" MaxLength="128" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="Timestamp" Type="datetime" />
+          <Property Name="IsRead" Type="bit" />
+          <Property Name="MaKH" Type="int" />
+        </EntityType>
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="ContactID" />
@@ -222,6 +234,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ChatMessages_KhachHang">
+          <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ChatMessages" Type="Self.ChatMessages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KhachHang">
+              <PropertyRef Name="MaKH" />
+            </Principal>
+            <Dependent Role="ChatMessages">
+              <PropertyRef Name="MaKH" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DanhGia_Booking">
           <End Role="Booking" Type="Self.Booking" Multiplicity="0..1" />
           <End Role="DanhGia" Type="Self.DanhGia" Multiplicity="*" />
@@ -297,6 +323,7 @@
         <EntityContainer Name="DULICHModelStoreContainer">
           <EntitySet Name="BaiViet" EntityType="Self.BaiViet" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Booking" EntityType="Self.Booking" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChatMessages" EntityType="Self.ChatMessages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DanhGia" EntityType="Self.DanhGia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DanhMuc" EntityType="Self.DanhMuc" Schema="dbo" store:Type="Tables" />
@@ -331,6 +358,10 @@
           <AssociationSet Name="FK_Booking_Tours" Association="Self.FK_Booking_Tours">
             <End Role="Tour" EntitySet="Tour" />
             <End Role="Booking" EntitySet="Booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessages_KhachHang" Association="Self.FK_ChatMessages_KhachHang">
+            <End Role="KhachHang" EntitySet="KhachHang" />
+            <End Role="ChatMessages" EntitySet="ChatMessages" />
           </AssociationSet>
           <AssociationSet Name="FK_DanhGia_Booking" Association="Self.FK_DanhGia_Booking">
             <End Role="Booking" EntitySet="Booking" />
@@ -434,6 +465,7 @@
           <Property Name="GioiTinhKH" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Bookings" Relationship="Self.FK_Booking_KhachHang" FromRole="KhachHang" ToRole="Booking" />
           <NavigationProperty Name="User" Relationship="Self.FK__KhachHang__UserI__59C55456" FromRole="KhachHang" ToRole="Users" />
+          <NavigationProperty Name="ChatMessages" Relationship="DULICHModel.FK_ChatMessages_KhachHang" FromRole="KhachHang" ToRole="ChatMessage" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -663,6 +695,11 @@
             <End Role="DanhMucBlog" EntitySet="DanhMucBlogs" />
             <End Role="BaiViet" EntitySet="BaiViets" />
           </AssociationSet>
+          <EntitySet Name="ChatMessages" EntityType="DULICHModel.ChatMessage" />
+          <AssociationSet Name="FK_ChatMessages_KhachHang" Association="DULICHModel.FK_ChatMessages_KhachHang">
+            <End Role="KhachHang" EntitySet="KhachHangs" />
+            <End Role="ChatMessage" EntitySet="ChatMessages" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -709,6 +746,33 @@
             </Principal>
             <Dependent Role="BaiViet">
               <PropertyRef Name="MaDanhMucBlog" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChatMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SenderId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiverId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Timestamp" Type="DateTime" Precision="3" />
+          <Property Name="IsRead" Type="Boolean" />
+          <Property Name="MaKH" Type="Int32" />
+          <NavigationProperty Name="KhachHang" Relationship="DULICHModel.FK_ChatMessages_KhachHang" FromRole="ChatMessage" ToRole="KhachHang" />
+        </EntityType>
+        <Association Name="FK_ChatMessages_KhachHang">
+          <End Type="DULICHModel.KhachHang" Role="KhachHang" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DULICHModel.ChatMessage" Role="ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KhachHang">
+              <PropertyRef Name="MaKH" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="MaKH" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -897,6 +961,19 @@
                 <ScalarProperty Name="Slug" ColumnName="Slug" />
                 <ScalarProperty Name="TenDanhMuc" ColumnName="TenDanhMuc" />
                 <ScalarProperty Name="MaDanhMucBlog" ColumnName="MaDanhMucBlog" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatMessages">
+            <EntityTypeMapping TypeName="DULICHModel.ChatMessage">
+              <MappingFragment StoreEntitySet="ChatMessages">
+                <ScalarProperty Name="MaKH" ColumnName="MaKH" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="ReceiverId" ColumnName="ReceiverId" />
+                <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

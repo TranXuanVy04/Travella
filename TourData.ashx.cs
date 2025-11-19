@@ -25,6 +25,7 @@ namespace Trave
                         PhuongTien = t.PhuongTien ?? "Tự túc",
                         MoTa = t.mota ?? "",
                         guide = t.guide == null ? "" : t.guide.tenguide ?? "",
+                        thoigian = t.ThoiGian ?? "",
 
                     }).ToList();
 

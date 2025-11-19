@@ -27,6 +27,8 @@
         <EntityTypeShape EntityType="DULICHModel.BaiViet" Width="1.5" PointX="6.875" PointY="12.5" />
         <EntityTypeShape EntityType="DULICHModel.DanhMucBlog" Width="1.5" PointX="3" PointY="15.5" />
         <AssociationConnector Association="DULICHModel.FK__BaiViet__MaDanhM__4959E263" />
+        <EntityTypeShape EntityType="DULICHModel.ChatMessage" Width="1.5" PointX="5.25" PointY="16.25" />
+        <AssociationConnector Association="DULICHModel.FK_ChatMessages_KhachHang" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

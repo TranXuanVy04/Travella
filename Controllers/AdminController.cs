@@ -13,11 +13,14 @@ using System.Globalization;
 namespace Trave.Controllers
 
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private DULICHEntities db = new DULICHEntities();
 
         // GET: Admin
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult Dashboard()
         {
             int totalTours = db.Tours.Count();
@@ -84,12 +87,16 @@ namespace Trave.Controllers
 
         // ==========DANH MỤC============
         // GET: DanhMucs
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult DMList()
         {
             return View(db.DanhMucs.ToList());
         }
 
         // GET: DanhMucs/Details/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult DMDetails(string id)
         {
             if (id == null)
@@ -185,7 +192,8 @@ namespace Trave.Controllers
         }
 
         // ========== TOUR ============
-
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult Tourlist()
         {
             var tours = db.Tours.Include(t => t.DanhMuc).Include(t => t.DiaDiem);
@@ -193,6 +201,8 @@ namespace Trave.Controllers
         }
 
         // GET: Tours/Details/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult TourDetails(string id)
         {
             if (id == null)
@@ -561,7 +571,8 @@ namespace Trave.Controllers
             return RedirectToAction("TTTourList");
         }
         // ========== BLOG ===========
-
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult BlogList()
         {
             // Tải Danh sách bài viết, bao gồm Danh mục đi kèm để hiển thị (Eager Loading)
@@ -571,6 +582,8 @@ namespace Trave.Controllers
 
         // GET: Blog/Details/5
         // POST: Blog/Details/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult BlogDetails(int? id)
         {
             if (id == null)
@@ -625,6 +638,8 @@ namespace Trave.Controllers
         }
 
         // GET: Blog/Create
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult BlogCreate()
         {
             // Chỉ cần tải Danh mục Blog (đã loại bỏ MaKH)
@@ -636,6 +651,9 @@ namespace Trave.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
+
         // Chỉ bind các trường cần nhập thủ công. NgayDang, LuotXem sẽ được gán trong code.
         public ActionResult BlogCreate([Bind(Include = "TieuDe,TomTat,NoiDung,HinhAnh,Tacgia,MaDanhMucBlog")] BaiViet baiViet,HttpPostedFileBase HinhAnhFile) // Tham số nhận file upload
         {
@@ -702,6 +720,8 @@ namespace Trave.Controllers
 
         // GET: Blog/Edit/5
         // GET: Blog/Edit/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult BlogEdit(int? id)
         {
             if (id == null)
@@ -730,6 +750,8 @@ namespace Trave.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)] // Cho phép nội dung HTML
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult BlogEdit(
             [Bind(Include = "MaBaiViet,TieuDe,TomTat,NoiDung,HinhAnh,Tacgia,NgayDang,LuotXem,MaDanhMucBlog")] BaiViet baiViet,
             HttpPostedFileBase HinhAnhFile)
@@ -795,6 +817,8 @@ namespace Trave.Controllers
         }
 
         // GET: Blog/Delete/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult BlogDelete(int? id)
         {
             if (id == null)
@@ -815,6 +839,8 @@ namespace Trave.Controllers
         // POST: Blog/Delete/5
         [HttpPost, ActionName("BlogDelete")]
         [ValidateAntiForgeryToken]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult BlogDeleteConfirmed(int id)
         {
             BaiViet baiViet = db.BaiViets.Find(id);
@@ -840,7 +866,93 @@ namespace Trave.Controllers
 
             return RedirectToAction("BlogList");
         }
+        [Authorize(Roles = "Admin, Employee")]
+        public ActionResult ChatCenter()
+        {
+            return View();
+        }
+        [HttpGet] // Chỉ cho phép method GET
+        public JsonResult GetChatUsers()
+        {
+            try
+            {
+                // 1. Lấy TẤT CẢ tin nhắn liên quan đến Admin (Gửi đi hoặc Nhận về)
+                var allMessages = db.ChatMessages
+                    .Where(m => m.ReceiverId == "Admin" || m.SenderId == "Admin")
+                    .OrderByDescending(m => m.Timestamp)
+                    .ToList();
 
+                // 2. Lọc ra danh sách Khách hàng duy nhất
+                var users = allMessages
+                    .Select(m => new
+                    {
+                        // Nếu người gửi là Admin -> Thì đối phương là Khách (Receiver)
+                        // Ngược lại -> Đối phương là Khách (Sender)
+                        CustomerEmail = (m.SenderId == "Admin" || m.SenderId == User.Identity.Name) ? m.ReceiverId : m.SenderId
+                    })
+                    .Where(x => x.CustomerEmail != "Admin" && x.CustomerEmail != User.Identity.Name) // Loại bỏ chính mình
+                    .Distinct() // Lấy duy nhất
+                    .ToList();
+
+                // 3. Tổng hợp dữ liệu trả về (Kèm tin nhắn cuối cùng)
+                var result = new List<object>();
+
+                foreach (var user in users)
+                {
+                    // Tìm tin nhắn mới nhất giữa 2 người
+                    var lastMsg = allMessages.FirstOrDefault(m =>
+                        (m.SenderId == user.CustomerEmail && m.ReceiverId == "Admin") ||
+                        (m.SenderId == "Admin" && m.ReceiverId == user.CustomerEmail));
+
+                    if (lastMsg != null)
+                    {
+                        result.Add(new
+                        {
+                            Email = user.CustomerEmail,
+                            LastMsg = (lastMsg.Message.Length > 30) ? lastMsg.Message.Substring(0, 30) + "..." : lastMsg.Message,
+                            Time = lastMsg.Timestamp.HasValue ? lastMsg.Timestamp.Value.ToString("HH:mm dd/MM") : "",
+                            // Thêm Timestamp thô để sắp xếp nếu cần
+                            RawTime = lastMsg.Timestamp
+                        });
+                    }
+                }
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần thiết
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // ============================================================
+        // API CHAT: Lấy lịch sử chi tiết với 1 khách
+        // ============================================================
+        [HttpGet]
+        public JsonResult GetChatHistory(string customerEmail)
+        {
+            try
+            {
+                var history = db.ChatMessages
+                    .Where(m => (m.SenderId == customerEmail && m.ReceiverId == "Admin") ||
+                                (m.SenderId == "Admin" && m.ReceiverId == customerEmail))
+                    .OrderBy(m => m.Timestamp) // Sắp xếp tin nhắn cũ lên trước
+                    .ToList()
+                    .Select(m => new
+                    {
+                        type = (m.SenderId == customerEmail) ? "received" : "sent", // received = Khách nói, sent = Admin nói
+                        msg = m.Message,
+                        time = m.Timestamp.HasValue ? m.Timestamp.Value.ToString("HH:mm") : ""
+                    });
+
+                return Json(history, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

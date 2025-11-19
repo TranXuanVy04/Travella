@@ -106,15 +106,24 @@
 
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a href="@Url.Action("TourEdit", "admin", new { id = item.MaTour })" class="btn btn-outline-warning btn-sm" title="Sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="@Url.Action("TourDetails", "admin", new { id = item.MaTour })" class="btn btn-outline-info btn-sm" title="Chi tiết">
-                                            <i class="fas fa-info-circle"></i>
-                                        </a>
-                                        <a href="@Url.Action("TourDelete", "admin", new { id = item.MaTour })" class="btn btn-outline-danger btn-sm" title="Xóa">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
+                                        @if (User.IsInRole("Admin"))
+                    {
+                          <a href="@Url.Action("TourEdit", "admin", new { id = item.MaTour })" class="btn btn-outline-warning btn-sm" title="Sửa">
+      <i class="fas fa-edit"></i>
+  </a>
+  <a href="@Url.Action("TourDetails", "admin", new { id = item.MaTour })" class="btn btn-outline-info btn-sm" title="Chi tiết">
+      <i class="fas fa-info-circle"></i>
+  </a>
+  <a href="@Url.Action("TourDelete", "admin", new { id = item.MaTour })" class="btn btn-outline-danger btn-sm" title="Xóa">
+      <i class="fas fa-trash-alt"></i>
+  </a>
+}
+else
+                    {
+<a href="@Url.Action("TourDetails", "admin", new { id = item.MaTour })" class="btn btn-outline-info btn-sm" title="Chi tiết">
+    <i class="fas fa-info-circle"></i>
+</a>
+                    }
                                     </div>
                                 </td>
                             </tr>

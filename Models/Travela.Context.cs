@@ -40,6 +40,7 @@ namespace Trave.Models
         public virtual DbSet<Users> Users1 { get; set; }
         public virtual DbSet<BaiViet> BaiViets { get; set; }
         public virtual DbSet<DanhMucBlog> DanhMucBlogs { get; set; }
+        public virtual DbSet<ChatMessage> ChatMessages { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

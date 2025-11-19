@@ -31,6 +31,7 @@
     <link href="~/Content/css/Tour_Detail.css" rel="stylesheet" />
     <link href="~/Content/css/Testimonial.css" rel="stylesheet" />
     <link href="~/Content/css/Chatbot.css" rel="stylesheet" />
+    <link href="~/Content/css/Chat.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
@@ -253,385 +254,549 @@
 
 
 
-    <div class="travela-chat-container">
-        <div id="travela-bubble"></div>
-        <div id="travela-chatbox">
-            <div class="chat-header">
-                <div class="avatar">✈️</div>
-                <div class="info">
-                    <h3>Tư Vấn Viên Travela AI</h3>
-                    <div class="status online">Sẵn sàng tư vấn</div>
+    @if (User.Identity.IsAuthenticated)
+    {
+
+        <div class="travela-chat-container">
+            <div id="travela-bubble"></div>
+            <div id="travela-chatbox">
+                <div class="chat-header">
+                    <div class="avatar">✈️</div>
+                    <div class="info">
+                        <h3>Tư Vấn Viên Travela AI</h3>
+                        <div class="status online">Sẵn sàng tư vấn</div>
+                    </div>
                 </div>
-            </div>
-            <div id="travela-messages">
-                <div class="typing-indicator" id="typing">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div id="travela-messages">
+                    <div class="typing-indicator" id="typing">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="travela-input" placeholder="Nhập câu hỏi của bạn...">
-                <button class="send-btn" onclick="sendMsg()"></button>
+                <div class="chat-input-area">
+                    <input type="text" id="travela-input" placeholder="Nhập câu hỏi của bạn...">
+                    <button class="send-btn" onclick="sendMsg()"></button>
+                </div>
             </div>
         </div>
-    </div>
-
-    <script>
-        // ===== QUẢN LÝ UI =====
-        const bubble = document.getElementById('travela-bubble');
-        const chatbox = document.getElementById('travela-chatbox');
-        const messages = document.getElementById('travela-messages');
-        const input = document.getElementById('travela-input');
-        const typing = document.getElementById('typing');
-
-        bubble.onclick = () => {
-            chatbox.classList.toggle('active');
-            if (chatbox.classList.contains('active') && conversationHistory.length === 0) {
-                showWelcomeMessage();
-            }
-        };
-
-        // ===== QUẢN LÝ DỮ LIỆU & HỘI THOẠI =====
-        let conversationHistory = [];
-        let tourCache = null;
-        let lastFetchTime = 0;
-        const CACHE_DURATION = 5 * 60 * 1000; // 5 phút
-        const API_ENDPOINT = '/TourData.ashx';
-
-        function addToHistory(role, content) {
-            conversationHistory.push({ role, content });
-            if (conversationHistory.length > 10) {
-                conversationHistory = conversationHistory.slice(-10);
-            }
-        }
-
-        // ===== LẤY DỮ LIỆU TOUR TỪ API =====
-        async function getTours() {
-            const now = Date.now();
-
-            if (tourCache && (now - lastFetchTime < CACHE_DURATION)) {
-                console.log('✅ Sử dụng cache');
-                return tourCache;
-            }
-
-            try {
-                console.log('🔄 Đang fetch dữ liệu từ API...');
-                const res = await fetch(API_ENDPOINT);
-
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-
-                if (!Array.isArray(data) || data.length === 0) throw new Error('Dữ liệu không hợp lệ');
-
-                tourCache = data;
-                lastFetchTime = now;
-                console.log(`✅ Đã tải ${data.length} tour`);
-                return tourCache;
-
-            } catch (err) {
-                console.error('❌ Lỗi API:', err);
-                if (!tourCache) {
-                    console.log('⚠️ Dùng dữ liệu mẫu dự phòng');
-                    tourCache = FALLBACK_TOURS;
-                }
-                return tourCache;
-            }
-        }
-
-        // ===== DỮ LIỆU MẪU =====
-        const FALLBACK_TOURS = [
-            { "MaTour": "TOUR001", "TenTour": "Luxury Honeymoon Paris 7N6Đ", "Gia": 35000, "SoChoCon": 10, "PhuongTien": "Máy bay", "MoTa": "Chuyến đi lãng mạn cao cấp, bao gồm du thuyền trên sông Seine và khách sạn 5 sao.", "guide": "Alex Turner" },
-            { "MaTour": "TOUR002", "TenTour": "Kyoto Cổ Kính & Văn Hóa 8 Ngày", "Gia": 1850.50, "SoChoCon": 20, "PhuongTien": "Máy bay", "MoTa": "Khám phá các đền thờ cổ, trà đạo truyền thống và khu phố Gion.", "guide": "" },
-            { "MaTour": "TOUR003", "TenTour": "Ẩm Thực Phục Hưng Florence 6 Ngày", "Gia": 1200.00, "SoChoCon": 15, "PhuongTien": "Máy bay", "MoTa": "Học làm Pasta, nếm rượu vang Chianti và thăm chợ trung tâm.", "guide": "Maria Rossi" },
-            { "MaTour": "TOUR007", "TenTour": "New York Gia Đình 5 Ngày", "Gia": 980.50, "SoChoCon": 40, "PhuongTien": "Máy bay", "MoTa": "Tượng Nữ thần Tự do, Times Square và Bảo tàng Lịch sử Tự nhiên.", "guide": "Jason Lee" },
-            { "MaTour": "TOUR015", "TenTour": "Honeymoon Santorini 7 Ngày", "Gia": 2900.00, "SoChoCon": 5, "PhuongTien": "Máy bay", "MoTa": "Tour trăng mật sang trọng, ngắm hoàng hôn và biệt thự riêng.", "guide": "" },
-            { "MaTour": "TOUR019", "TenTour": "Trekking Fansipan 3 Ngày", "Gia": 250.00, "SoChoCon": 12, "PhuongTien": "Ô tô/Đi bộ", "MoTa": "Thử thách chinh phục nóc nhà Đông Dương, cảnh quan hùng vĩ, phù hợp với du khách mạo hiểm.", "guide": "Trần Văn Dũng" },
-            { "MaTour": "TOUR021", "TenTour": "Hà Nội - Phố Cổ Ẩm Thực 2 Ngày", "Gia": 150.00, "SoChoCon": 30, "PhuongTien": "Xe máy/Đi bộ", "MoTa": "Khám phá các món ăn đường phố nổi tiếng: Phở, Bún chả, Cà phê trứng.", "guide": "Nguyễn Thu Hương" }
-        ];
-
-        // ===== HIỂN THỊ TIN NHẮN =====
-        function botReply(text, isHTML = false, showQuickReplies = false) {
-            typing.classList.remove('active');
-            const msg = document.createElement('div');
-            msg.className = 'message bot-msg';
-            if (isHTML) msg.innerHTML = text;
-            else msg.textContent = text;
-
-            if (showQuickReplies) {
-                const quickReplies = document.createElement('div');
-                quickReplies.className = 'quick-replies';
-                quickReplies.innerHTML = `
-                    <button class="quick-reply-btn" onclick="testMessage('Tour lãng mạn')">💑 Lãng mạn</button>
-                    <button class="quick-reply-btn" onclick="testMessage('Tour gia đình')">👨‍👩‍👧 Gia đình</button>
-                    <button class="quick-reply-btn" onclick="testMessage('Tour mạo hiểm')">⛰️ Mạo hiểm</button>
-                    <button class="quick-reply-btn" onclick="testMessage('Tour ẩm thực')">🍜 Ẩm thực</button>
-                `;
-                msg.appendChild(quickReplies);
-            }
-
-            messages.insertBefore(msg, typing);
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        function userReply(text) {
-            const msg = document.createElement('div');
-            msg.className = 'message user-msg';
-            msg.textContent = text;
-            messages.insertBefore(msg, typing);
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        function showTyping() {
-            typing.classList.add('active');
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        // ===== XỬ LÝ THÔNG MINH =====
-        //function extractBudget(text) {
-        //    text = text.toLowerCase();
-        //    let match = text.match(/(?:dưới|thấp hơn|tối đa|max)?\s*(\d+(?:[.,]\d+)?)(k)?\s*(usd|\$|đô|dollar)?/i);
-        //    if (match) {
-        //        let value = parseFloat(match[1].replace(/[.]/g, ''));
-        //        if (match[2]) value *= 1000;
-        //        return value;
-        //    }
-        //    return null;
-        //}
-        function extractBudget(text) {
-            text = text.toLowerCase();
-
-            // tìm số + k(optional) + đơn vị(optional)
-            const match = text.match(/(?:<|<=|dưới|thấp hơn|max|tối đa)?\s*(\d+(?:[.,]\d+)?)(\s*k)?\s*(usd|\$|đô|dollar)?/i);
-
-            if (!match) return null;
-
-            let number = match[1].replace(/,/g, '.');     // đổi , thành .
-            let value = parseFloat(number);
-
-            if (isNaN(value)) return null;
-
-            // nếu có chữ K → nhân 1000
-            if (match[2]) value *= 1000;
-
-            return value;
-        }
 
 
-        function findRelevantTours(userText, tours) {
-            const text = userText.toLowerCase();
-            let filtered = [...tours];
-
-            // Lọc ngân sách
-            const budgetLimit = extractBudget(userText);
-            if (budgetLimit !== null) filtered = filtered.filter(t => parseFloat(t.Gia) <= budgetLimit);
-
-            // Lọc từ khóa
-            const keywords = {
-                // Paris & Pháp
-                'paris': ['paris', 'pháp', 'luxury', 'honeymoon', 'eiffel', 'disneyland', 'giáng sinh', 'lễ hội hoa'],
-                // Nhật Bản
-                'nhật': ['kyoto', 'tokyo', 'japan', 'nhật bản', 'meiji', 'onsen', 'kaiseki', 'shinjuku', 'shibuya', 'yoga'],
-                // Italy
-                'italy': ['florence', 'venice', 'rome', 'tuscany', 'italy', 'pasta', 'wine', 'culinary'],
-                // Mỹ
-                'mỹ': ['new york', 'ny', 'usa', 'america', 'fifth avenue', 'times square', 'museum', 'shopping'],
-                // Brazil
-                'brazil': ['rio', 'ipanema', 'brazil', 'copacabana', 'cristo', 'lướt sóng', 'beach'],
-                // Campuchia
-                'campuchia': ['angkor', 'siem reap', 'cambodia', 'ta prohm', 'chiêm bái', 'phật giáo'],
-                // Thổ Nhĩ Kỳ
-                'thổ nhĩ kỳ': ['istanbul', 'turkey', 'cappadocia', 'pamukkale', 'blue mosque', 'hagia sophia', 'coffee', 'culinary'],
-                // Hy Lạp / Santorini
-                'santorini': ['santorini', 'honeymoon', 'greece', 'hy lạp', 'sunset', 'villa'],
-                // Barcelona / Tây Ban Nha
-                'barcelona': ['barcelona', 'barca', 'catalonia', 'sagrada familia', 'gaudí', 'parc guell', 'lễ hội', 'team building'],
-                // Venice
-                'venice': ['venice', 'italy', 'gondola', 'canal', 'romantic'],
-                // Tokyo / Nhật Bản ẩm thực
-                'ẩm thực nhật': ['shinjuku', 'shibuya', 'culinary', 'food', 'ẩm thực', 'tokyo', 'street food', 'japanese cuisine'],
-                // Mạo hiểm / Adventure
-                'mạo hiểm': ['adventure', 'extreme', 'leo núi', 'trekking', 'himalaya', 'hang động', 'alps', 'fansipan', 'amazon', 'table mountain', 'scuba'],
-                // Gia đình / Family
-                'gia đình': ['family', 'children', 'kids', 'gia đình', 'disney', 'park', 'school trip', 'museum', 'team building'],
-                // Ẩm thực / Culinary
-                'ẩm thực': ['culinary', 'food', 'ẩm thực', 'đường phố', 'rượu vang', 'hải sản', 'cooking', 'khmer', 'local food'],
-                // Văn hóa / Cultural
-                'văn hóa': ['văn hóa', 'lịch sử', 'di sản', 'museum', 'bảo tàng', 'di tích', 'temple', 'religion', 'heritage'],
-                // Biển / Beach
-                'biển': ['beach', 'sea', 'ocean', 'coast', 'mediterranean', 'copacabana', 'ipanema', 'rio', 'summer'],
-                // Team Building / Corporate
-                'team building': ['team building', 'corporate', 'workshop', 'company', 'retreat', 'hoạt động nhóm', 'hội thảo'],
-                // Yoga / Wellness
-                'yoga': ['yoga', 'meditation', 'wellness', 'retreat', 'thiền', 'khóa tu']
+        <script>
+            // ===== 1. CẤU HÌNH & DATA =====
+            const CONFIG = {
+                apiEndpoint: '/TourData.ashx',
+                cacheDuration: 5 * 60 * 1000 // Cache dữ liệu 5 phút để đỡ gọi API liên tục
             };
 
+            const UI = {
+                bubble: document.getElementById('travela-bubble'),
+                chatbox: document.getElementById('travela-chatbox'),
+                messages: document.getElementById('travela-messages'),
+                input: document.getElementById('travela-input'),
+                typing: document.getElementById('typing')
+            };
 
-            let matchedCategory = null;
+            const STATE = {
+                lastFoundTours: [], // Bộ nhớ ngữ cảnh
+                tours: null,        // Dữ liệu tour
+                lastFetchTime: 0    // Thời điểm fetch cuối cùng
+            };
 
-            // Tìm nhóm keyword tương ứng với câu người dùng
-            for (const [key, patterns] of Object.entries(keywords)) {
-                if (patterns.some(p => text.includes(p))) {
-                    matchedCategory = patterns;
-                    break;
+            // DỮ LIỆU DỰ PHÒNG (FALLBACK) - Dùng khi API bị lỗi hoặc chưa có dữ liệu
+            const FALLBACK_TOURS = [
+                { "MaTour": "TOUR001", "TenTour": "Luxury Honeymoon Paris 7N6Đ", "Gia": 35000, "PhuongTien": "Tự túc", "MoTa": "Chuyến đi lãng mạn cao cấp, bao gồm du thuyền trên sông Seine và khách sạn 5 sao.", "guide": "", "thoigian": "7 Ngày" },
+                { "MaTour": "TOUR002", "TenTour": "Kyoto Cổ Kính & Văn Hóa 8 Ngày", "Gia": 1850.5, "PhuongTien": "Tự túc", "MoTa": "Khám phá các đền thờ cổ, trà đạo truyền thống và khu phố Gion.", "guide": "", "thoigian": "8 Ngày" },
+                { "MaTour": "TOUR003", "TenTour": "Ẩm Thực Phục Hưng Florence 6 Ngày", "Gia": 1200, "PhuongTien": "Tự túc", "MoTa": "Học làm Pasta, nếm rượu vang Chianti và thăm chợ trung tâm.", "guide": "", "thoigian": "6 Ngày" },
+                { "MaTour": "TOUR004", "TenTour": "Leo Núi Bàn Thử Thách 5 Ngày", "Gia": 950, "PhuongTien": "Tự túc", "MoTa": "Chinh phục Núi Table, lặn biển và khám phá mũi Hảo Vọng.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR005", "TenTour": "Lễ Hội Barcelona & Gaudí 7 Ngày", "Gia": 1600, "PhuongTien": "Tự túc", "MoTa": "Tham gia lễ hội địa phương, thăm Sagrada Familia và công viên Güell.", "guide": "", "thoigian": "7 Ngày" },
+                { "MaTour": "TOUR006", "TenTour": "Istanbul Lịch Sử 4 Ngày", "Gia": 800, "PhuongTien": "Tự túc", "MoTa": "Tham quan Hagia Sophia, Blue Mosque và Grand Bazaar.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR007", "TenTour": "New York Gia Đình 5 Ngày", "Gia": 980.5, "PhuongTien": "Tự túc", "MoTa": "Tượng Nữ thần Tự do, Times Square và Bảo tàng Lịch sử Tự nhiên.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR008", "TenTour": "Hành Hương Angkor Wat 4 Ngày", "Gia": 650, "PhuongTien": "Tự túc", "MoTa": "Ngắm bình minh tại Angkor Wat và khám phá Ta Prohm.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR009", "TenTour": "Yên Bình Meiji Tokyo 6 Ngày", "Gia": 1100, "PhuongTien": "Tự túc", "MoTa": "Thiền định tại Đền Meiji và khám phá các khu vườn truyền thống.", "guide": "", "thoigian": "6 Ngày" },
+                { "MaTour": "TOUR010", "TenTour": "Biển Rio & Bức Tượng Chúa Cứu Thế 9 Ngày", "Gia": 1500, "PhuongTien": "Tự túc", "MoTa": "Thăm Tượng Chúa Cứu Thế, bãi biển Copacabana và rừng Tijuca.", "guide": "", "thoigian": "9 Ngày" },
+                { "MaTour": "TOUR011", "TenTour": "Thư Giãn Bãi Biển Brazil 5 Ngày", "Gia": 850, "PhuongTien": "Tự túc", "MoTa": "Nghỉ dưỡng tại Ipanema, thưởng thức hải sản và thư giãn.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR012", "TenTour": "Trekking & Leo Núi Alps (Adventure)", "Gia": 1750, "PhuongTien": "Tự túc", "MoTa": "Chuyến đi dài ngày khám phá dãy Alps, yêu cầu thể lực tốt.", "guide": "", "thoigian": "10 Ngày" },
+                { "MaTour": "TOUR013", "TenTour": "Lịch Sử Roma Cổ Đại", "Gia": 990, "PhuongTien": "Tự túc", "MoTa": "Tập trung vào các di tích lịch sử La Mã, Đấu trường Colosseum.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR014", "TenTour": "Ẩm Thực Đường Phố Tokyo", "Gia": 720, "PhuongTien": "Tự túc", "MoTa": "Khám phá ẩm thực đường phố tại Shinjuku và Shibuya.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR015", "TenTour": "Honeymoon Santorini 7 Ngày", "Gia": 2900, "PhuongTien": "Tự túc", "MoTa": "Tour trăng mật sang trọng, ngắm hoàng hôn và biệt thự riêng.", "guide": "", "thoigian": "7 Ngày" },
+                { "MaTour": "TOUR016", "TenTour": "Khám Phá Hang Động (Extreme)", "Gia": 1100, "PhuongTien": "Tự túc", "MoTa": "Lặn khám phá các hang động ngầm, tour mạo hiểm cấp cao.", "guide": "", "thoigian": "3 Ngày" },
+                { "MaTour": "TOUR017", "TenTour": "Di Sản Thế Giới Thổ Nhĩ Kỳ", "Gia": 1350, "PhuongTien": "Tự túc", "MoTa": "Khám phá Cappadocia, Pamukkale và các di tích UNESCO.", "guide": "", "thoigian": "7 Ngày" },
+                { "MaTour": "TOUR018", "TenTour": "Chủ Đề Disney Land (Family)", "Gia": 1400, "PhuongTien": "Tự túc", "MoTa": "Gói tour bao gồm vé vào cửa công viên và các hoạt động gia đình.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR019", "TenTour": "Hành Trình Tâm Linh Campuchia", "Gia": 550, "PhuongTien": "Tự túc", "MoTa": "Chiêm bái các ngôi đền, cầu nguyện và tìm hiểu Phật giáo.", "guide": "", "thoigian": "3 Ngày" },
+                { "MaTour": "TOUR020", "TenTour": "Công Ty Retreat Team Building", "Gia": 1900, "PhuongTien": "Tự túc", "MoTa": "Hoạt động gắn kết đội nhóm, hội thảo và nghỉ dưỡng.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR021", "TenTour": "Lãng Mạn Venice 4 Ngày", "Gia": 1250, "PhuongTien": "Tự túc", "MoTa": "Du thuyền Gondola, ăn tối lãng mạn ven kênh Grand.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR022", "TenTour": "Ẩm Thực Đồ Biển Rio", "Gia": 750, "PhuongTien": "Tự túc", "MoTa": "Khám phá các nhà hàng hải sản nổi tiếng tại Rio.", "guide": "", "thoigian": "3 Ngày" },
+                { "MaTour": "TOUR023", "TenTour": "Kỳ Nghỉ Lễ Tạ Ơn New York", "Gia": 1550, "PhuongTien": "Tự túc", "MoTa": "Trải nghiệm lễ diễu hành và không khí lễ hội.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR024", "TenTour": "Tour Di Sản Madrid & Barcelona", "Gia": 1300, "PhuongTien": "Tự túc", "MoTa": "Khám phá cung điện Hoàng gia, Sagrada Familia và các bảo tàng nghệ thuật.", "guide": "", "thoigian": "8 Ngày" },
+                { "MaTour": "TOUR025", "TenTour": "Yoga Retreat Tokyo 5 Ngày", "Gia": 1450, "PhuongTien": "Tự túc", "MoTa": "Khóa tu yoga và thiền tại ngoại ô Tokyo, kết hợp ẩm thực chay.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR026", "TenTour": "Biển Mùa Hè Địa Trung Hải", "Gia": 2200, "PhuongTien": "Tự túc", "MoTa": "Du thuyền khám phá các hòn đảo Địa Trung Hải.", "guide": "", "thoigian": "9 Ngày" },
+                { "MaTour": "TOUR027", "TenTour": "Gia Đình Vui Chơi Paris", "Gia": 1700, "PhuongTien": "Tự túc", "MoTa": "Tham quan Disneyland Paris và tháp Eiffel.", "guide": "", "thoigian": "6 Ngày" },
+                { "MaTour": "TOUR028", "TenTour": "Khám Phá Rừng Amazon (Adventure)", "Gia": 2800, "PhuongTien": "Tự túc", "MoTa": "Sinh tồn trong rừng Amazon, gặp gỡ bộ lạc địa phương.", "guide": "", "thoigian": "12 Ngày" },
+                { "MaTour": "TOUR029", "TenTour": "Team Building Khám Phá Italy", "Gia": 1650, "PhuongTien": "Tự túc", "MoTa": "Hoạt động ẩm thực và thử thách nhóm tại Tuscany.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR030", "TenTour": "Thiên Đường Mua Sắm New York", "Gia": 900, "PhuongTien": "Tự túc", "MoTa": "Tour mua sắm tại Fifth Avenue và các trung tâm thương mại.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR031", "TenTour": "Lãng Mạn Barcelona (Couple)", "Gia": 1450, "PhuongTien": "Tự túc", "MoTa": "Ăn tối lãng mạn và tour riêng tư thăm Sagrada Familia.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR032", "TenTour": "Tour Lễ Hội Nhật Bản Mùa Hè", "Gia": 1350, "PhuongTien": "Tự túc", "MoTa": "Tham gia lễ hội Obon và ngắm pháo hoa truyền thống.", "guide": "", "thoigian": "7 Ngày" },
+                { "MaTour": "TOUR033", "TenTour": "Ẩm Thực Đa Văn Hóa Istanbul", "Gia": 890, "PhuongTien": "Tự túc", "MoTa": "Khám phá ẩm thực Thổ Nhĩ Kỳ và các món ăn đường phố.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR034", "TenTour": "Du Lịch Tâm Linh Đông Nam Á", "Gia": 780, "PhuongTien": "Tự túc", "MoTa": "Kết hợp chiêm bái ở Campuchia và Thái Lan.", "guide": "", "thoigian": "6 Ngày" },
+                { "MaTour": "TOUR035", "TenTour": "Chinh Phục 7 Kỳ Quan (Extreme)", "Gia": 3200, "PhuongTien": "Tự túc", "MoTa": "Tour mạo hiểm đa quốc gia, bao gồm lặn biển và leo núi.", "guide": "", "thoigian": "14 Ngày" },
+                { "MaTour": "TOUR036", "TenTour": "Kỳ Nghỉ Lễ Giáng Sinh Paris", "Gia": 1950, "PhuongTien": "Tự túc", "MoTa": "Trải nghiệm Giáng Sinh và năm mới tại thủ đô ánh sáng.", "guide": "", "thoigian": "7 Ngày" },
+                { "MaTour": "TOUR037", "TenTour": "Đền Thờ Thiêng Liêng Nhật Bản", "Gia": 1050, "PhuongTien": "Tự túc", "MoTa": "Tham quan các đền thờ Shinto và Phật giáo quan trọng.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR038", "TenTour": "Lướt Sóng Rio (Adventure)", "Gia": 680, "PhuongTien": "Tự túc", "MoTa": "Học lướt sóng tại Ipanema, khám phá bãi biển vắng.", "guide": "", "thoigian": "3 Ngày" },
+                { "MaTour": "TOUR039", "TenTour": "Gia Đình Khám Phá Thiên Nhiên Nam Phi", "Gia": 1850, "PhuongTien": "Tự túc", "MoTa": "Safari, vườn quốc gia và bãi biển chim cánh cụt.", "guide": "", "thoigian": "8 Ngày" },
+                { "MaTour": "TOUR040", "TenTour": "Di Sản Thế Giới Kyoto", "Gia": 1500, "PhuongTien": "Tự túc", "MoTa": "Tour tập trung vào các di sản UNESCO tại Kyoto.", "guide": "", "thoigian": "6 Ngày" },
+                { "MaTour": "TOUR041", "TenTour": "Tour Rượu Vang Tuscany (Culinary)", "Gia": 1150, "PhuongTien": "Tự túc", "MoTa": "Tham quan và nếm rượu vang tại các trang trại nổi tiếng.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR042", "TenTour": "Đảo Thư Giãn Istanbul", "Gia": 920, "PhuongTien": "Tự túc", "MoTa": "Nghỉ dưỡng tại các hòn đảo gần Istanbul, không gian yên tĩnh.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR043", "TenTour": "Team Building Nghệ Thuật Barcelona", "Gia": 1750, "PhuongTien": "Tự túc", "MoTa": "Hoạt động nhóm sáng tạo, thăm bảo tàng và kiến trúc.", "guide": "", "thoigian": "3 Ngày" },
+                { "MaTour": "TOUR044", "TenTour": "Gia Đình Tham Quan Viện Bảo Tàng NY", "Gia": 1200, "PhuongTien": "Tự túc", "MoTa": "Tour học tập tại MET, MoMA và Bảo tàng Lịch sử Tự nhiên.", "guide": "", "thoigian": "6 Ngày" },
+                { "MaTour": "TOUR045", "TenTour": "Lãng Mạn Nhật Bản Mùa Thu (Couple)", "Gia": 1990, "PhuongTien": "Tự túc", "MoTa": "Ngắm lá đỏ, onsen riêng và ẩm thực Kaiseki.", "guide": "", "thoigian": "7 Ngày" },
+                { "MaTour": "TOUR046", "TenTour": "Du Lịch Bốn Mùa Tokyo", "Gia": 880, "PhuongTien": "Tự túc", "MoTa": "Trải nghiệm văn hóa đại chúng và ẩm thực Tokyo.", "guide": "", "thoigian": "4 Ngày" },
+                { "MaTour": "TOUR047", "TenTour": "Văn Hóa Ẩm Thực Campuchia", "Gia": 590, "PhuongTien": "Tự túc", "MoTa": "Học nấu ăn Khmer, khám phá ẩm thực địa phương.", "guide": "", "thoigian": "3 Ngày" },
+                { "MaTour": "TOUR048", "TenTour": "Leo Núi Himalaya (Extreme)", "Gia": 4500, "PhuongTien": "Tự túc", "MoTa": "Chinh phục Everest Base Camp, tour thám hiểm cấp độ chuyên nghiệp.", "guide": "", "thoigian": "20 Ngày" },
+                { "MaTour": "TOUR049", "TenTour": "Lễ Hội Hoa Paris", "Gia": 1650, "PhuongTien": "Tự túc", "MoTa": "Tham gia lễ hội hoa và vườn tại Paris.", "guide": "", "thoigian": "5 Ngày" },
+                { "MaTour": "TOUR050", "TenTour": "Văn Hóa Cà Phê Istanbul", "Gia": 700, "PhuongTien": "Tự túc", "MoTa": "Khám phá lịch sử cà phê Thổ Nhĩ Kỳ và các quán cà phê cổ.", "guide": "", "thoigian": "3 Ngày" }
+            ];
+
+            // ===== 2. HÀM FETCH API (Đã Nâng Cấp) =====
+            async function getTours() {
+                const now = Date.now();
+
+                // Kiểm tra Cache (để tránh gọi API liên tục nếu vừa gọi xong)
+                if (STATE.tours && (now - STATE.lastFetchTime < CONFIG.cacheDuration)) {
+                    console.log('✅ Dùng cache');
+                    return STATE.tours;
+                }
+
+                try {
+                    console.log('🔄 Gọi API...');
+                    const res = await fetch(CONFIG.apiEndpoint);
+
+                    if (!res.ok) throw new Error(`API Error ${res.status}`);
+
+                    const data = await res.json();
+                    if (!Array.isArray(data) || data.length === 0) throw new Error('Empty Data');
+
+                    STATE.tours = data;
+                    STATE.lastFetchTime = now;
+                    console.log(`✅ Đã tải ${data.length} tour từ API`);
+                    return STATE.tours;
+
+                } catch (err) {
+                    console.warn('⚠️ API lỗi/chưa chạy -> Dùng dữ liệu dự phòng (Fallback)', err);
+                    STATE.tours = FALLBACK_TOURS; // Tự động chuyển sang dữ liệu mẫu
+                    return FALLBACK_TOURS;
                 }
             }
 
-            // Nếu tìm được nhóm → chỉ giữ tour thuộc nhóm đó
-            if (matchedCategory) {
-                filtered = filtered.filter(t => {
-                    const content = (t.TenTour + " " + t.MoTa).toLowerCase();
-                    return matchedCategory.some(p => content.includes(p));
-                });
+            // ===== 3. LOGIC BÓC TÁCH THÔNG MINH =====
+            function extractBudget(text) {
+                text = text.toLowerCase().replace(/,/g, '.');
+                const match = text.match(/(\d+(?:\.\d+)?)\s*(k|nghìn|tr|triệu|củ|usd|\$|đô)?/i);
+                if (!match) return null;
+                let value = parseFloat(match[1]);
+                const unit = match[2] || '';
+                if (['k', 'nghìn'].includes(unit)) value = value / 25;
+                else if (['tr', 'triệu', 'củ'].includes(unit)) value = (value * 1000000) / 25000;
+                return value;
             }
 
+            function extractUserDays(text) {
+                text = text.toLowerCase();
+                const weekMatch = text.match(/(\d+)\s*(tuần|week)/i);
+                if (weekMatch) return parseInt(weekMatch[1]) * 7;
 
+                let dayMatch = text.match(/(\d+)\s*(ngày|day|n|d)/i);
+                if (dayMatch) return parseInt(dayMatch[1]);
 
+                dayMatch = text.match(/(?:>|<|trên|dưới|hơn|khoảng)\s*(\d+)/i);
+                if (dayMatch) return parseInt(dayMatch[1]);
 
-            // === Lọc số ngày linh hoạt ===
-            function extractNumber(text) {
-                const match = text.match(/(\d+)\s*(ngày|day)/i);
-                return match ? parseInt(match[1]) : null;
+                return 0;
             }
 
-            const dayLimit = extractNumber(text);
-            if (dayLimit) {
-                filtered = filtered.filter(t => {
-                    const days = extractDays(t.TenTour);
+            // ===== 4. LOGIC TÌM KIẾM TRUNG TÂM =====
+            function findRelevantTours(userText, tours) {
+                const text = userText.toLowerCase();
+                let filtered = [...tours];
 
-                    if (!days) return false;
+                // A. So Sánh
+                const isCheapest = text.includes('rẻ nhất') || text.includes('thấp nhất');
+                const isMostExpensive = text.includes('đắt nhất') || text.includes('cao nhất');
 
-                    if (text.includes("hơn") || text.includes("trên")) {
-                        return days > dayLimit;
-                    }
-                    if (text.includes("dưới") || text.includes("ít hơn")) {
-                        return days < dayLimit;
-                    }
-
-                    return days === dayLimit;
-                });
-            }
-
-            return filtered.slice(0, 4);
-        }
-
-        function generateResponse(userText, relevantTours) {
-            const text = userText.toLowerCase();
-            let response = '';
-
-            if (relevantTours.length === 0) {
-                response = `Dạ em xin lỗi anh/chị 😢<br><br>Em chưa tìm thấy tour phù hợp với yêu cầu này. Anh/chị có thể:<br>
-                    • Thử tìm kiếm với từ khóa khác<br>
-                    • Điều chỉnh ngân sách<br>
-                    • Linh hoạt về điểm đến<br><br>
-                    Hoặc anh/chị nói rõ hơn để em tư vấn tốt hơn nha! ❤️`;
-            } else {
-                if (text.includes('lãng mạn') || text.includes('honeymoon')) {
-                    response = `Dạ em có những tour lãng mạn tuyệt vời cho anh/chị đây ạ! 💑✨<br><br>`;
-                } else if (text.includes('gia đình')) {
-                    response = `Dạ em gợi ý những tour phù hợp cho cả gia đình nè! 👨‍👩‍👧‍👦❤️<br><br>`;
-                } else if (text.includes('mạo hiểm')) {
-                    response = `Dạ tour mạo hiểm đầy kịch tính cho anh/chị đây! ⛰️🔥<br><br>`;
-                } else if (text.includes('ẩm thực')) {
-                    response = `Dạ tour ẩm thực tuyệt vời cho anh/chị sành ăn nè! 🍜😋<br><br>`;
-                } else {
-                    response = `Dạ em tìm được những tour phù hợp cho anh/chị đây ạ! ✈️😊<br><br>`;
+                if (isCheapest || isMostExpensive) {
+                    let targetTours = (STATE.lastFoundTours.length > 0) ? STATE.lastFoundTours : tours;
+                    targetTours.sort((a, b) => isCheapest ? (a.Gia - b.Gia) : (b.Gia - a.Gia));
+                    STATE.lastFoundTours = [targetTours[0]];
+                    return STATE.lastFoundTours;
                 }
+
+                // B. Bộ Lọc
+                const budgetLimit = extractBudget(userText);
+                if (budgetLimit !== null) filtered = filtered.filter(t => t.Gia <= budgetLimit);
+
+                const userDays = extractUserDays(userText);
+                if (userDays > 0) {
+                    filtered = filtered.filter(t => {
+                        const tourDays = parseInt(t.thoigian) || 0; // Đọc từ trường thoigian
+                        if (text.includes('>') || text.includes('trên') || text.includes('hơn')) return tourDays > userDays;
+                        if (text.includes('<') || text.includes('dưới') || text.includes('ít')) return tourDays < userDays;
+                        return tourDays >= userDays - 1 && tourDays <= userDays + 1;
+                    });
+                }
+
+                // C. Từ Khóa
+                const keywords = {
+                    'nhật': ['nhật', 'japan', 'tokyo', 'kyoto', 'osaka', 'fuji', 'meiji'],
+                    'pháp': ['pháp', 'paris', 'france', 'eiffel', 'seine'],
+                    'ý': ['ý', 'italy', 'rome', 'venice', 'florence', 'tuscany'],
+                    'mỹ': ['mỹ', 'usa', 'new york', 'ny', 'tượng nữ thần'],
+                    'tây ban nha': ['tây ban nha', 'spain', 'madrid', 'barcelona', 'gaudi'],
+                    'thổ nhĩ kỳ': ['thổ nhĩ kỳ', 'turkey', 'istanbul', 'cappadocia'],
+                    'brazil': ['brazil', 'rio', 'amazon', 'copacabana', 'nam mỹ'],
+                    'campuchia': ['campuchia', 'cambodia', 'angkor', 'siem reap'],
+                    'nam phi': ['nam phi', 'south africa', 'safari', 'hảo vọng'],
+                    'mạo hiểm': ['mạo hiểm', 'adventure', 'extreme', 'leo núi', 'trekking', 'lặn', 'himalaya', 'everest', 'amazon'],
+                    'nghỉ dưỡng': ['nghỉ dưỡng', 'thư giãn', 'biển', 'resort', 'yoga', 'thiền'],
+                    'gia đình': ['gia đình', 'family', 'trẻ em', 'disney', 'bảo tàng'],
+                    'lãng mạn': ['lãng mạn', 'romantic', 'honeymoon', 'trăng mật', 'cặp đôi'],
+                    'ẩm thực': ['ẩm thực', 'ăn', 'uống', 'food', 'rượu vang', 'cà phê', 'hải sản']
+                };
+
+                let matchedCategory = null;
+                for (const [key, patterns] of Object.entries(keywords)) {
+                    if (patterns.some(p => text.includes(p))) {
+                        matchedCategory = patterns;
+                        break;
+                    }
+                }
+
+                if (matchedCategory) {
+                    filtered = filtered.filter(t => {
+                        const content = (t.TenTour + " " + t.MoTa + " " + t.PhuongTien).toLowerCase();
+                        return matchedCategory.some(p => content.includes(p));
+                    });
+                }
+
+                if (filtered.length > 0) STATE.lastFoundTours = filtered;
+                return filtered.slice(0, 4);
+            }
+
+            // ===== 5. HIỂN THỊ UI =====
+            // ===== 5. HIỂN THỊ UI (CÓ LINK BẤM ĐƯỢC) =====
+            function generateResponse(userText, relevantTours) {
+                if (relevantTours.length === 0) {
+                    return `Dạ em chưa tìm thấy tour phù hợp ạ 😢.<br>Anh/chị thử đổi từ khóa (ví dụ: "đi biển", "mạo hiểm") xem sao nhé! ❤️`;
+                }
+
+                let response = relevantTours.length === 1
+                    ? `Dạ đây là tour "chân ái" cho anh/chị ạ! 👇<br><br>`
+                    : `Dạ em tìm thấy ${relevantTours.length} tour phù hợp đây ạ! ✈️<br><br>`;
 
                 relevantTours.forEach((tour) => {
-                    const price = parseFloat(tour.Gia);
-                    const priceFormatted = price.toLocaleString('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 2
-                    }).replace('$', '').trim() + ' USD';
+                    const price = parseFloat(tour.Gia).toLocaleString('en-US', { style: 'currency', currency: 'USD' }).replace('$', '') + ' USD';
+                    const timeDisplay = tour.thoigian ? tour.thoigian : "N/A";
 
-                    const guideStatus = tour.guide && tour.guide.trim() !== ""
-                        ? `🙋 HDV: <strong>${tour.guide}</strong>`
-                        : `💁 HDV: Đang sắp xếp`;
+                    // --- [SỬA Ở ĐÂY] TẠO ĐƯỜNG DẪN ---
+                    // Giả sử URL chi tiết của bạn là: /Tour/ChiTiet?id=TOUR001
+                    // Hãy đổi '/Tour/ChiTiet' thành đúng Controller/Action của bạn
+                    const link = `/Home/Details?id=${tour.MaTour}`;
 
-                    response += `<div class="tour-card">
-                        <div class="tour-header">
-                            <h4>${tour.TenTour}</h4>
-                            <span class="tour-code">Mã: ${tour.MaTour}</span>
-                        </div>
-                        <p class="tour-description">✨ ${tour.MoTa}</p>
-                        <div class="tour-details">
-                            <span class="detail-item">✈️ Phương tiện: <strong>${tour.PhuongTien}</strong></span>
-                            <span class="detail-item">${guideStatus}</span>
-                        </div>
-                        <p class="price">💰 Giá: <strong>${priceFormatted}</strong>/khách</p>
-                    </div>`;
+                    // Bọc toàn bộ card trong thẻ <a>
+                    // target="_blank": Để mở tab mới (người dùng không bị thoát khỏi chat)
+                    response += `
+                                                                                        <a href="${link}" target="_blank" class="tour-link-wrapper">
+                                                                                            <div class="tour-card clickable">
+                                                                                                <div class="tour-header">
+                                                                                                    <h4>${tour.TenTour}</h4>
+                                                                                                    <span class="tour-code">#${tour.MaTour}</span>
+                                                                                                </div>
+                                                                                                <p class="tour-description">✨ ${tour.MoTa}</p>
+                                                                                                <div class="tour-details">
+                                                                                                    <span class="detail-item">⏳ <strong>${timeDisplay}</strong></span>
+                                                                                                    <span class="detail-item">✈️ ${tour.PhuongTien}</span>
+                                                                                                </div>
+                                                                                                <div class="tour-footer">
+                                                                                                    <p class="price">💰 <strong>${price}</strong>/khách</p>
+                                                                                                    <span class="view-btn">Xem ngay 👉</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </a>`;
                 });
 
-                response += '<br>Anh/chị thích tour nào để em tư vấn chi tiết hơn nhé! 😊';
+                return response + `<br>Anh/chị bấm vào tour để xem lịch trình chi tiết nhé!`;
             }
 
-            return response;
-        }
-
-        async function sendMsg() {
-            const userText = input.value.trim();
-            if (!userText) return;
-
-            userReply(userText);
-            addToHistory('user', userText);
-            input.value = '';
-            showTyping();
-
-            const tours = await getTours();
-            if (!tours || tours.length === 0) {
-                botReply("Em xin lỗi 😢 Hiện không thể tải dữ liệu tour. Anh/chị thử lại sau nhé! ❤️");
-                return;
+            // ===== 6. TƯƠNG TÁC CHÍNH =====
+            function botReply(text, isHTML = false) {
+                UI.typing.classList.remove('active');
+                const msg = document.createElement('div');
+                msg.className = 'message bot-msg';
+                if (isHTML) msg.innerHTML = text; else msg.textContent = text;
+                UI.messages.insertBefore(msg, UI.typing);
+                UI.messages.scrollTop = UI.messages.scrollHeight;
             }
 
-            setTimeout(() => {
-                const relevantTours = findRelevantTours(userText, tours);
-                const response = generateResponse(userText, relevantTours);
-                addToHistory('assistant', response);
-                botReply(response, true);
-            }, 800 + Math.random() * 800);
-        }
+            async function sendMsg() {
+                const text = UI.input.value.trim();
+                if (!text) return;
 
-        function testMessage(msg) {
-            if (!chatbox.classList.contains('active')) {
-                chatbox.classList.add('active');
-                if (conversationHistory.length === 0) showWelcomeMessage();
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user-msg';
+                userMsg.textContent = text;
+                UI.messages.insertBefore(userMsg, UI.typing);
+                UI.input.value = '';
+                UI.messages.scrollTop = UI.messages.scrollHeight;
+                UI.typing.classList.add('active');
+
+                // --- [QUAN TRỌNG] GỌI API Ở ĐÂY ---
+                const tours = await getTours(); // Chờ lấy dữ liệu xong mới lọc
+
+                setTimeout(() => {
+                    const relevant = findRelevantTours(text, tours);
+                    const response = generateResponse(text, relevant);
+                    botReply(response, true);
+                }, 500);
             }
 
-            setTimeout(() => {
-                input.value = msg;
-                input.focus();
-                setTimeout(() => sendMsg(), 500);
-            }, 500);
-        }
-
-        function showWelcomeMessage() {
-            setTimeout(() => {
-                botReply(`Chào anh/chị! Em là AI Tư Vấn Viên Travela đây ạ! ❤️✈️<br><br>
-                    Em có thể giúp anh/chị:<br>
-                    • Tìm tour phù hợp với ngân sách<br>
-                    • Gợi ý điểm đến lãng mạn, gia đình, mạo hiểm...<br>
-                    • Kiểm tra chỗ trống và giá tour<br><br>
-                    Anh/chị muốn đi đâu, kiểu tour nào để em tư vấn nhé! 😊`, true, true);
-            }, 500);
-        }
-
-        input.addEventListener('keypress', e => { if (e.key === 'Enter') sendMsg(); });
-
-        const observer = new MutationObserver(() => { messages.scrollTop = messages.scrollHeight; });
-        observer.observe(messages, { childList: true });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                if (conversationHistory.length === 0 && chatbox && !chatbox.classList.contains('active')) {
-                    chatbox.classList.add('active');
-                    showWelcomeMessage();
+            // Events
+            UI.bubble.onclick = () => {
+                UI.chatbox.classList.toggle('active');
+                if (UI.chatbox.classList.contains('active')) {
+                    UI.bubble.style.opacity = '0';
+                    UI.bubble.style.pointerEvents = 'none';
+                } else {
+                    UI.bubble.style.opacity = '1';
+                    UI.bubble.style.pointerEvents = 'auto';
                 }
-            }, 1000);
+                if (UI.chatbox.classList.contains('active') && UI.messages.children.length <= 1) {
+                    setTimeout(() => {
+                        const welcomeMsg = `
+                                                                                            Chào anh/chị! Em là AI Travela đây ạ! ❤️✈️<br>
+                                                                                            Em có thể giúp tìm tour theo giá, số ngày, địa điểm...<br><br>
+                                                                                            Anh/chị có thể chọn nhanh các chủ đề bên dưới nhé: 👇
+
+                                                                                            <div class="quick-replies" style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+                                                                                                <button class="quick-reply-btn" onclick="testMessage('Tour lãng mạn')">💑 Lãng mạn</button>
+                                                                                                <button class="quick-reply-btn" onclick="testMessage('Tour gia đình')">👨‍👩‍👧 Gia đình</button>
+                                                                                                <button class="quick-reply-btn" onclick="testMessage('Tour mạo hiểm')">⛰️ Mạo hiểm</button>
+                                                                                                <button class="quick-reply-btn" onclick="testMessage('Tour 3 ngày')">⏳ Tour 3 ngày</button>
+                                                                                                <button class="quick-reply-btn" onclick="testMessage('Tour giá rẻ nhất')">💰 Rẻ nhất</button>
+                                                                                            </div>
+                                                                                        `;
+                        botReply(welcomeMsg, true);
+                    }, 500);
+                }
+            };
+            UI.input.addEventListener('keypress', e => { if (e.key === 'Enter') sendMsg(); });
+            window.testMessage = (msg) => { UI.input.value = msg; sendMsg(); }
+
+            // Auto Open
+            document.addEventListener('DOMContentLoaded', () => {
+                if (window.location.pathname === "/" || window.location.pathname.toLowerCase().includes("index")) {
+                    setTimeout(() => { if (!UI.chatbox.classList.contains('active')) UI.bubble.click(); }, 1500);
+                }
+            });
+            document.addEventListener('click', (e) => {
+                if (!UI.chatbox.contains(e.target) && !UI.bubble.contains(e.target) && UI.chatbox.classList.contains('active')) {
+                    UI.chatbox.classList.remove('active');
+                    // Hiện lại bong bóng khi đóng chat
+                    UI.bubble.style.opacity = '1';
+                    UI.bubble.style.pointerEvents = 'auto';
+                }
+            });
+        </script>
+
+
+    }
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- NÚT CHAT -->
+        <button id="btnOpenChat" class="chat-widget-btn" onclick="openChat(event)">
+            <i class="far fa-comments"></i>
+            <!-- Chấm đỏ thông báo -->
+            <span id="chatBadge" class="chat-badge">0</span>
+        </button>
+
+        <!-- KHUNG CHAT -->
+        <div class="chat-window" id="liveChatWindow">
+            <div class="chat-header">
+                <div class="header-info">
+                    <div class="admin-avatar-header"><i class="fas fa-robot"></i></div>
+                    <div><b>Trợ lý ảo</b><br><small>● Đang hoạt động</small></div>
+                </div>
+                <div style="cursor:pointer" onclick="closeChat()"><i class="fas fa-times"></i></div>
+            </div>
+
+            <div class="chat-body" id="chatContent">
+                <!-- Nội dung chat sẽ được JS nạp vào đây -->
+            </div>
+
+            <div class="chat-footer">
+                <input type="text" id="txtMessage" class="chat-input" placeholder="Nhập tin nhắn..." autocomplete="off">
+                <button class="btn-send" id="btnSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <!-- SCRIPT LOGIC -->
+        <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+        <script src="~/signalr/hubs"></script>
+
+        <script>
+        // --- QUẢN LÝ STORAGE (Bộ nhớ phiên làm việc) ---
+        const STORAGE_KEY = "Travela_Chat_State";
+
+        // Cấu trúc dữ liệu lưu trữ
+        let chatState = {
+            isOpen: false,
+            unreadCount: 0,
+            messages: [
+                // Tin nhắn mặc định ban đầu
+                { type: 'admin', msg: 'Xin chào @User.Identity.Name! 👋<br>Cần hỗ trợ gì không ạ?', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+            ]
+        };
+
+        // 1. KHỞI TẠO KHI LOAD TRANG
+        $(document).ready(function() {
+            // Load dữ liệu từ Storage (nếu có)
+            const savedState = sessionStorage.getItem(STORAGE_KEY);
+            if (savedState) {
+                chatState = JSON.parse(savedState);
+            }
+
+            // Render lại giao diện theo trạng thái cũ
+            renderMessages();
+            updateBadge();
+
+            if (chatState.isOpen) {
+                openChat(null); // Mở lại nếu trang trước đang mở
+            }
+
+            // Kết nối SignalR
+            connectSignalR();
         });
-    </script>
+
+        // 2. HÀM LƯU TRẠNG THÁI
+        function saveState() {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatState));
+        }
+
+        // 3. CÁC HÀM GIAO DIỆN
+        function openChat(e) {
+            if(e) e.stopPropagation();
+            $('#liveChatWindow').css('display', 'flex');
+            $('#btnOpenChat').hide();
+
+            // Reset thông báo chưa đọc
+            chatState.isOpen = true;
+            chatState.unreadCount = 0;
+            updateBadge();
+            saveState(); // Lưu lại là đang mở
+
+            // Scroll xuống đáy
+            scrollToBottom();
+            $('#txtMessage').focus();
+        }
+
+        function closeChat() {
+            $('#liveChatWindow').hide();
+            $('#btnOpenChat').css('display', 'flex');
+
+            chatState.isOpen = false;
+            saveState(); // Lưu lại là đang đóng
+        }
+
+        function updateBadge() {
+            const badge = $('#chatBadge');
+            const btn = $('#btnOpenChat');
+
+            if (chatState.unreadCount > 0) {
+                badge.text(chatState.unreadCount).show();
+                btn.addClass('chat-notification'); // Thêm hiệu ứng rung
+            } else {
+                badge.hide();
+                btn.removeClass('chat-notification');
+            }
+        }
+
+        function renderMessages() {
+            $('#chatContent').empty();
+            chatState.messages.forEach(item => {
+                appendHtml(item.type, item.msg, item.time);
+            });
+            scrollToBottom();
+        }
+
+        function appendHtml(type, msg, time) {
+            let html = '';
+            if (type === 'user') {
+                html = `<div class="message-row msg-user"><div class="bubble">${msg}</div></div><div class="msg-time" style="text-align:right">${time}</div>`;
+            } else {
+                html = `<div class="message-row msg-admin"><div class="avatar-tiny"><i class="fas fa-robot"></i></div><div class="bubble">${msg}</div></div><div class="msg-time">${time}</div>`;
+            }
+            $('#chatContent').append(html);
+        }
+
+        function scrollToBottom() {
+            var div = document.getElementById('chatContent');
+            div.scrollTop = div.scrollHeight;
+        }
+
+        // 4. LOGIC SIGNALR & GỬI TIN
+        function connectSignalR() {
+            var chat = $.connection.supportHub;
+
+            chat.client.addNewMessageToCustomer = function (name, message) {
+                var type = (name === "Tôi") ? 'user' : 'admin';
+                var time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                // 1. Thêm vào mảng dữ liệu
+                chatState.messages.push({ type: type, msg: message, time: time });
+
+                // 2. Cập nhật giao diện
+                appendHtml(type, message, time);
+                scrollToBottom();
+
+                // 3. Xử lý thông báo (nếu đang đóng chat và tin từ admin)
+                if (!chatState.isOpen && type === 'admin') {
+                    chatState.unreadCount++;
+                    updateBadge();
+
+                    // Phát âm thanh thông báo (Optional)
+                    // var audio = new Audio('/Content/sounds/ping.mp3'); audio.play();
+                }
+
+                // 4. Lưu trạng thái mới nhất
+                saveState();
+            };
+
+            $.connection.hub.start().done(function () {
+                $('#btnSend').click(send);
+                $('#txtMessage').keypress(function (e) { if (e.which == 13) send(); });
+            });
+        }
+
+        function send() {
+            var msg = $('#txtMessage').val();
+            if (msg.trim()) {
+                $.connection.supportHub.server.sendToAdmin(msg);
+                $('#txtMessage').val('').focus();
+            }
+        }
+
+        // Click ra ngoài để đóng
+        document.addEventListener('click', function(event) {
+            var chat = document.getElementById('liveChatWindow');
+            var btn = document.getElementById('btnOpenChat');
+            if (chat.style.display === 'flex') {
+                if (!chat.contains(event.target) && !btn.contains(event.target)) {
+                    closeChat();
+                }
+            }
+        });
+        </script>
+    }
+
 
 
 

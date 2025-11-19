@@ -18,6 +18,7 @@ namespace Trave.Models
         public KhachHang()
         {
             this.Bookings = new HashSet<Booking>();
+            this.ChatMessages = new HashSet<ChatMessage>();
         }
     
         public int MaKH { get; set; }
@@ -31,5 +32,7 @@ namespace Trave.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Booking> Bookings { get; set; }
         public virtual Users User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ChatMessage> ChatMessages { get; set; }
     }
 }

@@ -48,15 +48,25 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <a href="@Url.Action("DMEdit", "ADMIN" ,new { id = item.MaDM })" class="btn btn-warning btn-sm mx-1" title="Sửa">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="@Url.Action("DMDetails","ADMIN", new { id = item.MaDM })" class="btn btn-info btn-sm mx-1" title="Xem chi tiết">
-                                        <i class="fas fa-search"></i>
-                                    </a>
-                                    <a href="@Url.Action("DMDelete","ADMIN", new { id = item.MaDM })" class="btn btn-danger btn-sm mx-1" title="Xóa">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a href="@Url.Action("DMEdit", "ADMIN" ,new { id = item.MaDM })" class="btn btn-warning btn-sm mx-1" title="Sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("DMDetails","ADMIN", new { id = item.MaDM })" class="btn btn-info btn-sm mx-1" title="Xem chi tiết">
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                        <a href="@Url.Action("DMDelete","ADMIN", new { id = item.MaDM })" class="btn btn-danger btn-sm mx-1" title="Xóa">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("DMDetails","ADMIN", new { id = item.MaDM })" class="btn btn-info btn-sm mx-1" title="Xem chi tiết">
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                    }
+
                                 </td>
                             </tr>
                         }
