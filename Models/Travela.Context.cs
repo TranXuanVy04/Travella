@@ -34,13 +34,12 @@ namespace Trave.Models
         public virtual DbSet<DiaDiem> DiaDiems { get; set; }
         public virtual DbSet<guide> guides { get; set; }
         public virtual DbSet<KhachHang> KhachHangs { get; set; }
-        public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
-        public virtual DbSet<MucYeuThich> MucYeuThiches { get; set; }
-        public virtual DbSet<NhanVien> NhanViens { get; set; }
-        public virtual DbSet<Quyen> Quyens { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<TinhTrangTour> TinhTrangTours { get; set; }
         public virtual DbSet<Tour> Tours { get; set; }
         public virtual DbSet<Users> Users1 { get; set; }
+        public virtual DbSet<BaiViet> BaiViets { get; set; }
+        public virtual DbSet<DanhMucBlog> DanhMucBlogs { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

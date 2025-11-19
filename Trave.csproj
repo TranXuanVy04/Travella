@@ -150,9 +150,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BaiViet.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Booking.cs">
       <DependentUpon>Travela.tt</DependentUpon>
@@ -166,6 +170,9 @@
     <Compile Include="Models\DanhMuc.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DanhMucBlog.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DiaDiem.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
@@ -175,18 +182,6 @@
     <Compile Include="Models\KhachHang.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\KhuyenMai.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MucYeuThich.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\NhanVien.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Quyen.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
@@ -194,6 +189,9 @@
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TinhTrangTour.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tour.cs">
@@ -269,7 +267,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="HtmlPage1.html" />
     <Content Include="Icon.ico" />
     <Content Include="img\about-img-1.png" />
     <Content Include="img\about-img.jpg" />
@@ -487,9 +484,19 @@
     <Content Include="Views\Home\BookingConfirmation.cshtml" />
     <Content Include="Views\Home\Profile.cshtml" />
     <Content Include="Views\Home\PaymentFail.cshtml" />
+    <Content Include="Views\Admin\TTTourList.cshtml" />
+    <Content Include="Views\Admin\TTTourEdit.cshtml" />
+    <Content Include="Views\Admin\BlogList.cshtml" />
+    <Content Include="Views\Admin\BlogCreate.cshtml" />
+    <Content Include="Views\Blog\Details.cshtml" />
+    <Content Include="Views\Admin\BlogDetails.cshtml" />
+    <Content Include="Views\Admin\BlogEdit.cshtml" />
+    <Content Include="Views\Admin\BlogDelete.cshtml" />
+    <Content Include="Views\Blog\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="img\Blog\" />
     <Folder Include="img\Destination\" />
     <Folder Include="img\Tours\" />
   </ItemGroup>

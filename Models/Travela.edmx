@@ -5,6 +5,20 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="DULICHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BaiViet">
+          <Key>
+            <PropertyRef Name="MaBaiViet" />
+          </Key>
+          <Property Name="MaBaiViet" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TieuDe" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="TomTat" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="NoiDung" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="HinhAnh" Type="varchar" MaxLength="255" />
+          <Property Name="Tacgia" Type="nvarchar(max)" />
+          <Property Name="NgayDang" Type="datetime" />
+          <Property Name="LuotXem" Type="int" />
+          <Property Name="MaDanhMucBlog" Type="int" />
+        </EntityType>
         <EntityType Name="Booking">
           <Key>
             <PropertyRef Name="MaBooking" />
@@ -35,11 +49,10 @@
             <PropertyRef Name="IDDanhGia" />
           </Key>
           <Property Name="IDDanhGia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="MaKH" Type="int" Nullable="false" />
           <Property Name="NoiDung" Type="nvarchar(max)" Nullable="false" />
           <Property Name="SoSao" Type="int" Nullable="false" />
           <Property Name="NgayTao" Type="datetime" />
-          <Property Name="MaTour" Type="varchar" MaxLength="10" />
+          <Property Name="MaBooking" Type="int" />
         </EntityType>
         <EntityType Name="DanhMuc">
           <Key>
@@ -48,6 +61,15 @@
           <Property Name="MaDM" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="TenDM" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="soluongsanpham" Type="int" />
+        </EntityType>
+        <EntityType Name="DanhMucBlog">
+          <Key>
+            <PropertyRef Name="MaDanhMucBlog" />
+          </Key>
+          <Property Name="MaDanhMucBlog" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenDanhMuc" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Slug" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Mota" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="DiaDiem">
           <Key>
@@ -82,44 +104,6 @@
           <Property Name="UserId" Type="int" />
           <Property Name="GioiTinhKH" Type="nvarchar" MaxLength="10" />
         </EntityType>
-        <EntityType Name="KhuyenMai">
-          <Key>
-            <PropertyRef Name="MaKM" />
-          </Key>
-          <Property Name="DieuKien" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="SoTienGiam" Type="float" Nullable="false" />
-          <Property Name="MoTa" Type="varchar" MaxLength="250" Nullable="false" />
-          <Property Name="TenKM" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="MaKM" Type="char" MaxLength="10" Nullable="false" />
-          <Property Name="TrangThai" Type="varchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MucYeuThich">
-          <Key>
-            <PropertyRef Name="MaMYT" />
-          </Key>
-          <Property Name="MaMYT" Type="char" MaxLength="10" Nullable="false" />
-          <Property Name="MaTour" Type="char" MaxLength="10" Nullable="false" />
-          <Property Name="SoLuong" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="NhanVien">
-          <Key>
-            <PropertyRef Name="MaNV" />
-          </Key>
-          <Property Name="MaNV" Type="char" MaxLength="10" Nullable="false" />
-          <Property Name="HoTen" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="GioiTinh" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="SDT" Type="char" MaxLength="15" Nullable="false" />
-          <Property Name="DiaChi" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Email" Type="char" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Quyen">
-          <Key>
-            <PropertyRef Name="MaQuyen" />
-          </Key>
-          <Property Name="TenQuyen" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="MaQuyen" Type="char" MaxLength="10" Nullable="false" />
-          <Property Name="MoTa" Type="varchar" MaxLength="250" Nullable="false" />
-        </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
             <PropertyRef Name="diagram_id" />
@@ -129,6 +113,15 @@
           <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TinhTrangTour">
+          <Key>
+            <PropertyRef Name="Matinhtrang" />
+          </Key>
+          <Property Name="Matinhtrang" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tentinhtrang" Type="nvarchar" MaxLength="250" />
+          <Property Name="MaBooking" Type="int" />
+          <Property Name="TrangThai" Type="int" />
         </EntityType>
         <EntityType Name="Tour">
           <Key>
@@ -158,6 +151,18 @@
           <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
+        <Association Name="FK__BaiViet__MaDanhM__57A801BA">
+          <End Role="DanhMucBlog" Type="Self.DanhMucBlog" Multiplicity="0..1" />
+          <End Role="BaiViet" Type="Self.BaiViet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DanhMucBlog">
+              <PropertyRef Name="MaDanhMucBlog" />
+            </Principal>
+            <Dependent Role="BaiViet">
+              <PropertyRef Name="MaDanhMucBlog" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__KhachHang__UserI__59C55456">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="*" />
@@ -218,27 +223,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DanhGia_KhachHang">
-          <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="1" />
+        <Association Name="FK_DanhGia_Booking">
+          <End Role="Booking" Type="Self.Booking" Multiplicity="0..1" />
           <End Role="DanhGia" Type="Self.DanhGia" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="KhachHang">
-              <PropertyRef Name="MaKH" />
+            <Principal Role="Booking">
+              <PropertyRef Name="MaBooking" />
             </Principal>
             <Dependent Role="DanhGia">
-              <PropertyRef Name="MaKH" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DanhGia_Tour">
-          <End Role="Tour" Type="Self.Tour" Multiplicity="0..1" />
-          <End Role="DanhGia" Type="Self.DanhGia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tour">
-              <PropertyRef Name="MaTour" />
-            </Principal>
-            <Dependent Role="DanhGia">
-              <PropertyRef Name="MaTour" />
+              <PropertyRef Name="MaBooking" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -251,6 +244,20 @@
             </Principal>
             <Dependent Role="Tour">
               <PropertyRef Name="MaGuide" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ttt_bk">
+          <End Role="Booking" Type="Self.Booking" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TinhTrangTour" Type="Self.TinhTrangTour" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Booking">
+              <PropertyRef Name="MaBooking" />
+            </Principal>
+            <Dependent Role="TinhTrangTour">
+              <PropertyRef Name="MaBooking" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -289,20 +296,23 @@
         </Function>
         <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="DULICHModelStoreContainer">
+          <EntitySet Name="BaiViet" EntityType="Self.BaiViet" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Booking" EntityType="Self.Booking" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DanhGia" EntityType="Self.DanhGia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DanhMuc" EntityType="Self.DanhMuc" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DanhMucBlog" EntityType="Self.DanhMucBlog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiaDiem" EntityType="Self.DiaDiem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="guide" EntityType="Self.guide" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="KhachHang" EntityType="Self.KhachHang" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="KhuyenMai" EntityType="Self.KhuyenMai" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MucYeuThich" EntityType="Self.MucYeuThich" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="NhanVien" EntityType="Self.NhanVien" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Quyen" EntityType="Self.Quyen" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TinhTrangTour" EntityType="Self.TinhTrangTour" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tour" EntityType="Self.Tour" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__BaiViet__MaDanhM__57A801BA" Association="Self.FK__BaiViet__MaDanhM__57A801BA">
+            <End Role="DanhMucBlog" EntitySet="DanhMucBlog" />
+            <End Role="BaiViet" EntitySet="BaiViet" />
+          </AssociationSet>
           <AssociationSet Name="FK__KhachHang__UserI__59C55456" Association="Self.FK__KhachHang__UserI__59C55456">
             <End Role="Users" EntitySet="Users" />
             <End Role="KhachHang" EntitySet="KhachHang" />
@@ -323,17 +333,17 @@
             <End Role="Tour" EntitySet="Tour" />
             <End Role="Booking" EntitySet="Booking" />
           </AssociationSet>
-          <AssociationSet Name="FK_DanhGia_KhachHang" Association="Self.FK_DanhGia_KhachHang">
-            <End Role="KhachHang" EntitySet="KhachHang" />
-            <End Role="DanhGia" EntitySet="DanhGia" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DanhGia_Tour" Association="Self.FK_DanhGia_Tour">
-            <End Role="Tour" EntitySet="Tour" />
+          <AssociationSet Name="FK_DanhGia_Booking" Association="Self.FK_DanhGia_Booking">
+            <End Role="Booking" EntitySet="Booking" />
             <End Role="DanhGia" EntitySet="DanhGia" />
           </AssociationSet>
           <AssociationSet Name="FK_Tours_Guide" Association="Self.FK_Tours_Guide">
             <End Role="guide" EntitySet="guide" />
             <End Role="Tour" EntitySet="Tour" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ttt_bk" Association="Self.FK_ttt_bk">
+            <End Role="Booking" EntitySet="Booking" />
+            <End Role="TinhTrangTour" EntitySet="TinhTrangTour" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -352,9 +362,11 @@
           <Property Name="SoNguoi" Type="Int32" Nullable="false" />
           <Property Name="TongGia" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="TrangThai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ghichu" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="KhachHang" Relationship="Self.FK_Booking_KhachHang" FromRole="Booking" ToRole="KhachHang" />
           <NavigationProperty Name="Tour" Relationship="Self.FK_Booking_Tours" FromRole="Booking" ToRole="Tour" />
-          <Property Name="ghichu" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DanhGias" Relationship="Self.FK_DanhGia_Booking" FromRole="Booking" ToRole="DanhGia" />
+          <NavigationProperty Name="TinhTrangTours" Relationship="Self.FK_ttt_bk" FromRole="Booking" ToRole="TinhTrangTour" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -372,13 +384,11 @@
             <PropertyRef Name="IDDanhGia" />
           </Key>
           <Property Name="IDDanhGia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MaKH" Type="Int32" Nullable="false" />
           <Property Name="NoiDung" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SoSao" Type="Int32" Nullable="false" />
           <Property Name="NgayTao" Type="DateTime" Precision="3" />
-          <Property Name="MaTour" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="KhachHang" Relationship="Self.FK_DanhGia_KhachHang" FromRole="DanhGia" ToRole="KhachHang" />
-          <NavigationProperty Name="Tour" Relationship="Self.FK_DanhGia_Tour" FromRole="DanhGia" ToRole="Tour" />
+          <Property Name="MaBooking" Type="Int32" />
+          <NavigationProperty Name="Booking" Relationship="Self.FK_DanhGia_Booking" FromRole="DanhGia" ToRole="Booking" />
         </EntityType>
         <EntityType Name="DanhMuc">
           <Key>
@@ -410,7 +420,7 @@
           <Property Name="tenguide" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="quoctich" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="tuoi" Type="Int32" />
-          <NavigationProperty Name="Tours" Relationship="DULICHModel.FK_Tours_Guide" FromRole="guide" ToRole="Tour" />
+          <NavigationProperty Name="Tours" Relationship="Self.FK_Tours_Guide" FromRole="guide" ToRole="Tour" />
         </EntityType>
         <EntityType Name="KhachHang">
           <Key>
@@ -424,46 +434,7 @@
           <Property Name="UserId" Type="Int32" />
           <Property Name="GioiTinhKH" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Bookings" Relationship="Self.FK_Booking_KhachHang" FromRole="KhachHang" ToRole="Booking" />
-          <NavigationProperty Name="DanhGias" Relationship="Self.FK_DanhGia_KhachHang" FromRole="KhachHang" ToRole="DanhGia" />
           <NavigationProperty Name="User" Relationship="Self.FK__KhachHang__UserI__59C55456" FromRole="KhachHang" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="KhuyenMai">
-          <Key>
-            <PropertyRef Name="MaKM" />
-          </Key>
-          <Property Name="DieuKien" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="SoTienGiam" Type="Double" Nullable="false" />
-          <Property Name="MoTa" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TenKM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="MaKM" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="TrangThai" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MucYeuThich">
-          <Key>
-            <PropertyRef Name="MaMYT" />
-          </Key>
-          <Property Name="MaMYT" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="MaTour" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="SoLuong" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="NhanVien">
-          <Key>
-            <PropertyRef Name="MaNV" />
-          </Key>
-          <Property Name="MaNV" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="HoTen" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="GioiTinh" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="SDT" Type="String" MaxLength="15" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="DiaChi" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="true" Unicode="false" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Quyen">
-          <Key>
-            <PropertyRef Name="MaQuyen" />
-          </Key>
-          <Property Name="TenQuyen" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="MaQuyen" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="MoTa" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -474,6 +445,16 @@
           <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TinhTrangTour">
+          <Key>
+            <PropertyRef Name="Matinhtrang" />
+          </Key>
+          <Property Name="Matinhtrang" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tentinhtrang" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="MaBooking" Type="Int32" />
+          <Property Name="TrangThai" Type="Int32" />
+          <NavigationProperty Name="Booking" Relationship="Self.FK_ttt_bk" FromRole="TinhTrangTour" ToRole="Booking" />
         </EntityType>
         <EntityType Name="Tour">
           <Key>
@@ -489,13 +470,12 @@
           <Property Name="anhmota" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="songuoi" Type="Int32" />
           <Property Name="mota" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Bookings" Relationship="Self.FK_Booking_Tours" FromRole="Tour" ToRole="Booking" />
-          <NavigationProperty Name="DanhGias" Relationship="Self.FK_DanhGia_Tour" FromRole="Tour" ToRole="DanhGia" />
-          <NavigationProperty Name="DanhMuc" Relationship="Self.FK__Tour__MaDM__65370702" FromRole="Tour" ToRole="DanhMuc" />
-          <NavigationProperty Name="DiaDiem" Relationship="Self.FK__Tour__MaDD__6442E2C9" FromRole="Tour" ToRole="DiaDiem" />
           <Property Name="MaGuide" Type="Int32" />
           <Property Name="PhuongTien" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="guide" Relationship="DULICHModel.FK_Tours_Guide" FromRole="Tour" ToRole="guide" />
+          <NavigationProperty Name="Bookings" Relationship="Self.FK_Booking_Tours" FromRole="Tour" ToRole="Booking" />
+          <NavigationProperty Name="DanhMuc" Relationship="Self.FK__Tour__MaDM__65370702" FromRole="Tour" ToRole="DanhMuc" />
+          <NavigationProperty Name="DiaDiem" Relationship="Self.FK__Tour__MaDD__6442E2C9" FromRole="Tour" ToRole="DiaDiem" />
+          <NavigationProperty Name="guide" Relationship="Self.FK_Tours_Guide" FromRole="Tour" ToRole="guide" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -533,27 +513,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DanhGia_KhachHang">
-          <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="1" />
+        <Association Name="FK_DanhGia_Booking">
+          <End Role="Booking" Type="Self.Booking" Multiplicity="0..1" />
           <End Role="DanhGia" Type="Self.DanhGia" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="KhachHang">
-              <PropertyRef Name="MaKH" />
+            <Principal Role="Booking">
+              <PropertyRef Name="MaBooking" />
             </Principal>
             <Dependent Role="DanhGia">
-              <PropertyRef Name="MaKH" />
+              <PropertyRef Name="MaBooking" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DanhGia_Tour">
-          <End Role="Tour" Type="Self.Tour" Multiplicity="0..1" />
-          <End Role="DanhGia" Type="Self.DanhGia" Multiplicity="*" />
+        <Association Name="FK_ttt_bk">
+          <End Role="Booking" Type="Self.Booking" Multiplicity="0..1" />
+          <End Role="TinhTrangTour" Type="Self.TinhTrangTour" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Tour">
-              <PropertyRef Name="MaTour" />
+            <Principal Role="Booking">
+              <PropertyRef Name="MaBooking" />
             </Principal>
-            <Dependent Role="DanhGia">
-              <PropertyRef Name="MaTour" />
+            <Dependent Role="TinhTrangTour">
+              <PropertyRef Name="MaBooking" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -581,6 +561,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Tours_Guide">
+          <End Role="guide" Type="Self.guide" Multiplicity="0..1" />
+          <End Role="Tour" Type="Self.Tour" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="guide">
+              <PropertyRef Name="maguide" />
+            </Principal>
+            <Dependent Role="Tour">
+              <PropertyRef Name="MaGuide" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__KhachHang__UserI__59C55456">
           <End Role="Users" Type="DULICHModel.Users" Multiplicity="0..1" />
           <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="*" />
@@ -601,11 +593,8 @@
           <EntitySet Name="DiaDiems" EntityType="Self.DiaDiem" />
           <EntitySet Name="guides" EntityType="Self.guide" />
           <EntitySet Name="KhachHangs" EntityType="Self.KhachHang" />
-          <EntitySet Name="KhuyenMais" EntityType="Self.KhuyenMai" />
-          <EntitySet Name="MucYeuThiches" EntityType="Self.MucYeuThich" />
-          <EntitySet Name="NhanViens" EntityType="Self.NhanVien" />
-          <EntitySet Name="Quyens" EntityType="Self.Quyen" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="TinhTrangTours" EntityType="Self.TinhTrangTour" />
           <EntitySet Name="Tours" EntityType="Self.Tour" />
           <EntitySet Name="Users1" EntityType="DULICHModel.Users" />
           <AssociationSet Name="FK_Booking_KhachHang" Association="Self.FK_Booking_KhachHang">
@@ -616,13 +605,13 @@
             <End Role="Tour" EntitySet="Tours" />
             <End Role="Booking" EntitySet="Bookings" />
           </AssociationSet>
-          <AssociationSet Name="FK_DanhGia_KhachHang" Association="Self.FK_DanhGia_KhachHang">
-            <End Role="KhachHang" EntitySet="KhachHangs" />
+          <AssociationSet Name="FK_DanhGia_Booking" Association="Self.FK_DanhGia_Booking">
+            <End Role="Booking" EntitySet="Bookings" />
             <End Role="DanhGia" EntitySet="DanhGias" />
           </AssociationSet>
-          <AssociationSet Name="FK_DanhGia_Tour" Association="Self.FK_DanhGia_Tour">
-            <End Role="Tour" EntitySet="Tours" />
-            <End Role="DanhGia" EntitySet="DanhGias" />
+          <AssociationSet Name="FK_ttt_bk" Association="Self.FK_ttt_bk">
+            <End Role="Booking" EntitySet="Bookings" />
+            <End Role="TinhTrangTour" EntitySet="TinhTrangTours" />
           </AssociationSet>
           <AssociationSet Name="FK__Tour__MaDM__65370702" Association="Self.FK__Tour__MaDM__65370702">
             <End Role="DanhMuc" EntitySet="DanhMucs" />
@@ -630,6 +619,10 @@
           </AssociationSet>
           <AssociationSet Name="FK__Tour__MaDD__6442E2C9" Association="Self.FK__Tour__MaDD__6442E2C9">
             <End Role="DiaDiem" EntitySet="DiaDiems" />
+            <End Role="Tour" EntitySet="Tours" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tours_Guide" Association="Self.FK_Tours_Guide">
+            <End Role="guide" EntitySet="guides" />
             <End Role="Tour" EntitySet="Tours" />
           </AssociationSet>
           <AssociationSet Name="FK__KhachHang__UserI__59C55456" Association="Self.FK__KhachHang__UserI__59C55456">
@@ -666,9 +659,11 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
-          <AssociationSet Name="FK_Tours_Guide" Association="DULICHModel.FK_Tours_Guide">
-            <End Role="guide" EntitySet="guides" />
-            <End Role="Tour" EntitySet="Tours" />
+          <EntitySet Name="BaiViets" EntityType="DULICHModel.BaiViet" />
+          <EntitySet Name="DanhMucBlogs" EntityType="DULICHModel.DanhMucBlog" />
+          <AssociationSet Name="FK__BaiViet__MaDanhM__4959E263" Association="DULICHModel.FK__BaiViet__MaDanhM__4959E263">
+            <End Role="DanhMucBlog" EntitySet="DanhMucBlogs" />
+            <End Role="BaiViet" EntitySet="BaiViets" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -682,15 +677,40 @@
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
-        <Association Name="FK_Tours_Guide">
-          <End Type="DULICHModel.guide" Role="guide" Multiplicity="0..1" />
-          <End Type="DULICHModel.Tour" Role="Tour" Multiplicity="*" />
+        <EntityType Name="BaiViet">
+          <Key>
+            <PropertyRef Name="MaBaiViet" />
+          </Key>
+          <Property Name="MaBaiViet" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TieuDe" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TomTat" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="NoiDung" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HinhAnh" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NgayDang" Type="DateTime" Precision="3" />
+          <Property Name="LuotXem" Type="Int32" />
+          <Property Name="MaDanhMucBlog" Type="Int32" />
+          <NavigationProperty Name="DanhMucBlog" Relationship="DULICHModel.FK__BaiViet__MaDanhM__4959E263" FromRole="BaiViet" ToRole="DanhMucBlog" />
+          <Property Name="Tacgia" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="DanhMucBlog">
+          <Key>
+            <PropertyRef Name="MaDanhMucBlog" />
+          </Key>
+          <Property Name="MaDanhMucBlog" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenDanhMuc" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Slug" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Mota" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BaiViets" Relationship="DULICHModel.FK__BaiViet__MaDanhM__4959E263" FromRole="DanhMucBlog" ToRole="BaiViet" />
+        </EntityType>
+        <Association Name="FK__BaiViet__MaDanhM__4959E263">
+          <End Type="DULICHModel.DanhMucBlog" Role="DanhMucBlog" Multiplicity="0..1" />
+          <End Type="DULICHModel.BaiViet" Role="BaiViet" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="guide">
-              <PropertyRef Name="maguide" />
+            <Principal Role="DanhMucBlog">
+              <PropertyRef Name="MaDanhMucBlog" />
             </Principal>
-            <Dependent Role="Tour">
-              <PropertyRef Name="MaGuide" />
+            <Dependent Role="BaiViet">
+              <PropertyRef Name="MaDanhMucBlog" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -703,7 +723,6 @@
           <EntitySetMapping Name="Bookings">
             <EntityTypeMapping TypeName="DULICHModel.Booking">
               <MappingFragment StoreEntitySet="Booking">
-                <ScalarProperty Name="ghichu" ColumnName="ghichu" />
                 <ScalarProperty Name="MaBooking" ColumnName="MaBooking" />
                 <ScalarProperty Name="MaKH" ColumnName="MaKH" />
                 <ScalarProperty Name="MaTour" ColumnName="MaTour" />
@@ -712,6 +731,7 @@
                 <ScalarProperty Name="SoNguoi" ColumnName="SoNguoi" />
                 <ScalarProperty Name="TongGia" ColumnName="TongGia" />
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+                <ScalarProperty Name="ghichu" ColumnName="ghichu" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -731,11 +751,10 @@
             <EntityTypeMapping TypeName="DULICHModel.DanhGia">
               <MappingFragment StoreEntitySet="DanhGia">
                 <ScalarProperty Name="IDDanhGia" ColumnName="IDDanhGia" />
-                <ScalarProperty Name="MaKH" ColumnName="MaKH" />
                 <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
                 <ScalarProperty Name="SoSao" ColumnName="SoSao" />
                 <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
-                <ScalarProperty Name="MaTour" ColumnName="MaTour" />
+                <ScalarProperty Name="MaBooking" ColumnName="MaBooking" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -784,48 +803,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="KhuyenMais">
-            <EntityTypeMapping TypeName="DULICHModel.KhuyenMai">
-              <MappingFragment StoreEntitySet="KhuyenMai">
-                <ScalarProperty Name="DieuKien" ColumnName="DieuKien" />
-                <ScalarProperty Name="SoTienGiam" ColumnName="SoTienGiam" />
-                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
-                <ScalarProperty Name="TenKM" ColumnName="TenKM" />
-                <ScalarProperty Name="MaKM" ColumnName="MaKM" />
-                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MucYeuThiches">
-            <EntityTypeMapping TypeName="DULICHModel.MucYeuThich">
-              <MappingFragment StoreEntitySet="MucYeuThich">
-                <ScalarProperty Name="MaMYT" ColumnName="MaMYT" />
-                <ScalarProperty Name="MaTour" ColumnName="MaTour" />
-                <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="NhanViens">
-            <EntityTypeMapping TypeName="DULICHModel.NhanVien">
-              <MappingFragment StoreEntitySet="NhanVien">
-                <ScalarProperty Name="MaNV" ColumnName="MaNV" />
-                <ScalarProperty Name="HoTen" ColumnName="HoTen" />
-                <ScalarProperty Name="GioiTinh" ColumnName="GioiTinh" />
-                <ScalarProperty Name="SDT" ColumnName="SDT" />
-                <ScalarProperty Name="DiaChi" ColumnName="DiaChi" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Quyens">
-            <EntityTypeMapping TypeName="DULICHModel.Quyen">
-              <MappingFragment StoreEntitySet="Quyen">
-                <ScalarProperty Name="TenQuyen" ColumnName="TenQuyen" />
-                <ScalarProperty Name="MaQuyen" ColumnName="MaQuyen" />
-                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
             <EntityTypeMapping TypeName="DULICHModel.sysdiagram">
               <MappingFragment StoreEntitySet="sysdiagrams">
@@ -837,11 +814,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TinhTrangTours">
+            <EntityTypeMapping TypeName="DULICHModel.TinhTrangTour">
+              <MappingFragment StoreEntitySet="TinhTrangTour">
+                <ScalarProperty Name="Matinhtrang" ColumnName="Matinhtrang" />
+                <ScalarProperty Name="Tentinhtrang" ColumnName="Tentinhtrang" />
+                <ScalarProperty Name="MaBooking" ColumnName="MaBooking" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Tours">
             <EntityTypeMapping TypeName="DULICHModel.Tour">
               <MappingFragment StoreEntitySet="Tour">
-                <ScalarProperty Name="PhuongTien" ColumnName="PhuongTien" />
-                <ScalarProperty Name="MaGuide" ColumnName="MaGuide" />
                 <ScalarProperty Name="MaTour" ColumnName="MaTour" />
                 <ScalarProperty Name="TenTour" ColumnName="TenTour" />
                 <ScalarProperty Name="Gia" ColumnName="Gia" />
@@ -852,6 +837,8 @@
                 <ScalarProperty Name="anhmota" ColumnName="anhmota" />
                 <ScalarProperty Name="songuoi" ColumnName="songuoi" />
                 <ScalarProperty Name="mota" ColumnName="mota" />
+                <ScalarProperty Name="MaGuide" ColumnName="MaGuide" />
+                <ScalarProperty Name="PhuongTien" ColumnName="PhuongTien" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -891,6 +878,31 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="DULICHModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="DULICHModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="BaiViets">
+            <EntityTypeMapping TypeName="DULICHModel.BaiViet">
+              <MappingFragment StoreEntitySet="BaiViet">
+                <ScalarProperty Name="Tacgia" ColumnName="Tacgia" />
+                <ScalarProperty Name="MaDanhMucBlog" ColumnName="MaDanhMucBlog" />
+                <ScalarProperty Name="LuotXem" ColumnName="LuotXem" />
+                <ScalarProperty Name="NgayDang" ColumnName="NgayDang" />
+                <ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
+                <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
+                <ScalarProperty Name="TomTat" ColumnName="TomTat" />
+                <ScalarProperty Name="TieuDe" ColumnName="TieuDe" />
+                <ScalarProperty Name="MaBaiViet" ColumnName="MaBaiViet" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DanhMucBlogs">
+            <EntityTypeMapping TypeName="DULICHModel.DanhMucBlog">
+              <MappingFragment StoreEntitySet="DanhMucBlog">
+                <ScalarProperty Name="Mota" ColumnName="Mota" />
+                <ScalarProperty Name="Slug" ColumnName="Slug" />
+                <ScalarProperty Name="TenDanhMuc" ColumnName="TenDanhMuc" />
+                <ScalarProperty Name="MaDanhMucBlog" ColumnName="MaDanhMucBlog" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

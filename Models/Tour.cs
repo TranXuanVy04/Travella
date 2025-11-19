@@ -18,7 +18,6 @@ namespace Trave.Models
         public Tour()
         {
             this.Bookings = new HashSet<Booking>();
-            this.DanhGias = new HashSet<DanhGia>();
         }
     
         public string MaTour { get; set; }
@@ -36,8 +35,6 @@ namespace Trave.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Booking> Bookings { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DanhGia> DanhGias { get; set; }
         public virtual DanhMuc DanhMuc { get; set; }
         public virtual DiaDiem DiaDiem { get; set; }
         public virtual guide guide { get; set; }

@@ -1,0 +1,148 @@
+﻿@model Trave.Models.BaiViet
+
+@{
+    ViewBag.Title = "Chỉnh Sửa Bài Viết";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // Sử dụng layout Admin
+}
+
+<h2 class="mb-4">📝 Chỉnh Sửa Bài Viết Blog</h2>
+<hr />
+
+@using (Html.BeginForm("BlogEdit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-primary text-white">
+            <h6 class="m-0 fw-bold">Thông Tin Bài Viết</h6>
+        </div>
+        <div class="card-body">
+            @Html.ValidationSummary(true, "Vui lòng kiểm tra lại các lỗi sau:", new { @class = "alert alert-danger" })
+
+            @Html.HiddenFor(model => model.MaBaiViet)
+            @Html.HiddenFor(model => model.HinhAnh) @* Giữ lại tên ảnh cũ nếu không upload mới *@
+            @Html.HiddenFor(model => model.NgayDang) @* Giữ nguyên Ngày Đăng gốc *@
+            @Html.HiddenFor(model => model.LuotXem) @* Giữ nguyên Lượt Xem *@
+
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.TieuDe, new { @class = "form-label fw-bold" })
+                        @Html.EditorFor(model => model.TieuDe, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tiêu đề bài viết" } })
+                        @Html.ValidationMessageFor(model => model.TieuDe, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.TomTat, new { @class = "form-label fw-bold" })
+                        @Html.TextAreaFor(model => model.TomTat, new { @class = "form-control", rows = 3, placeholder = "Tóm tắt ngắn gọn, hiển thị trên trang danh sách" })
+                        @Html.ValidationMessageFor(model => model.TomTat, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.NoiDung, new { @class = "form-label fw-bold" })
+                        @Html.TextAreaFor(model => model.NoiDung, new { @class = "form-control tinymce-editor", rows = 15 })
+                        @Html.ValidationMessageFor(model => model.NoiDung, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-lg-12 mt-4">
+                    <div class="p-4 border rounded bg-light">
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                @Html.LabelFor(model => model.Tacgia, "Tác Giả (Tên)", new { @class = "form-label fw-bold" })
+                                @Html.EditorFor(model => model.Tacgia, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên tác giả" } })
+                                @Html.ValidationMessageFor(model => model.Tacgia, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                @Html.LabelFor(model => model.MaDanhMucBlog, "Danh Mục Blog", new { @class = "form-label fw-bold" })
+                                @Html.DropDownList("MaDanhMucBlog", null, "--- Chọn Danh Mục ---", new { @class = "form-select" })
+                                @Html.ValidationMessageFor(model => model.MaDanhMucBlog, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                @Html.LabelFor(model => model.HinhAnh, "Ảnh Đại Diện Hiện Tại", new { @class = "form-label fw-bold" })
+
+                                @* Trường input cho phép tải file mới *@
+                                <input type="file" name="HinhAnhFile" id="HinhAnhFile" class="form-control mb-2" />
+                                <small class="text-muted d-block">Để trống nếu không muốn thay đổi ảnh.</small>
+
+                                @* Xem trước ảnh hiện tại *@
+                                @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                                {
+                                    <img src="@Url.Content("~/img/Blog/" + Model.HinhAnh)"
+                                         id="currentImagePreview"
+                                         class="img-fluid rounded shadow-sm mt-2"
+                                         style="max-height: 100px; object-fit: cover;"
+                                         alt="Ảnh hiện tại">
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <button type="submit" value="Save" class="btn btn-primary btn-lg rounded-pill shadow-sm me-3">
+                        <i class="fa fa-save me-2"></i> Lưu Thay Đổi
+                    </button>
+                    <a href="@Url.Action("BlogList")" class="btn btn-outline-secondary rounded-pill">
+                        <i class="fa fa-arrow-left me-2"></i> Quay Lại Danh Sách
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/7xj05p055j0wr0h3tglqrhnfsw4ki2qyup5gsuaef9bxahlb/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+
+
+    <script>
+        // Kích hoạt TinyMCE
+        tinymce.init({
+            selector: '.tinymce-editor',
+            apiKey: '7xj05p055j0wr0h3tglqrhnfsw4ki2qyup5gsuaef9bxahlb',
+
+            plugins: 'advlist autolink lists link image charmap print preview anchor code',
+            toolbar_mode: 'floating',
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | code | help',
+            height: 500,
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+        });
+    </script>
+
+    @* Script xem trước ảnh khi người dùng tải file mới *@
+    <script>
+        document.getElementById('HinhAnhFile').onchange = function (evt) {
+            var tgt = evt.target || window.event.srcElement,
+                files = tgt.files;
+            if (FileReader && files && files.length) {
+                var fr = new FileReader();
+                fr.onload = function () {
+                    // Cập nhật thẻ img xem trước hiện tại, hoặc tạo mới
+                    let imgPreview = document.getElementById('currentImagePreview');
+                    if (!imgPreview) {
+                        imgPreview = document.createElement('img');
+                        imgPreview.id = 'currentImagePreview';
+                        imgPreview.className = 'img-fluid rounded shadow-sm mt-2';
+                        imgPreview.style.maxHeight = '100px';
+                        imgPreview.style.objectFit = 'cover';
+                        document.getElementById('HinhAnhFile').parentNode.appendChild(imgPreview);
+                    }
+                    imgPreview.src = fr.result;
+                }
+                fr.readAsDataURL(files[0]);
+            }
+        }
+    </script>
+}

@@ -22,10 +22,17 @@ namespace Trave.Controllers
             var model = db.Tours
                 .Include(t => t.DiaDiem)
                 .Include(t => t.DanhMuc)
-                .Include(t => t.DanhGias)
                 .Include(t => t.Bookings)
-                .Include(t => t.DanhGias.Select(dg => dg.KhachHang))
+                .Include(t => t.Bookings.Select(dg => dg.DanhGias))
+                .Include(t => t.Bookings.Select(dg => dg.KhachHang))
                 .ToList();
+
+            ViewBag.Blogs = db.BaiViets
+    //.Include(b => b.Tacgia) // Tải tác giả (KhachHang) của bài viết
+    .Include(b => b.DanhMucBlog) // Tải Danh mục Blog
+    .OrderByDescending(b => b.NgayDang)
+    .Take(4)
+    .ToList();
 
             // 1. Lấy danh sách Địa điểm (duy nhất)
             var allDestinations = model
@@ -463,7 +470,7 @@ namespace Trave.Controllers
             //    ->    -> Thông tin DanhGia CỦA Booking
             var khachHang = db.KhachHangs
                 .Include(k => k.Bookings.Select(b => b.Tour.guide))
-                .Include(k => k.Bookings.Select(b => b.Tour.DanhGias))
+                .Include(k => k.Bookings.Select(b => b.DanhGias))
                 .FirstOrDefault(k => k.MaKH == currentMaKH);
 
             if (khachHang == null)
@@ -474,6 +481,71 @@ namespace Trave.Controllers
 
             // 3. Gửi đối tượng KhachHang (đã chứa tất cả dữ liệu) đến View
             return View(khachHang);
+        }
+        // BookingController.cs
+        // (Cần có using System.Web.Mvc; và using Trave.Models; và DbContext của bạn)
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitReview(int MaBooking, int SoSao, string NoiDung)
+        {
+            // 1. --- LẤY THÔNG TIN KHÁCH HÀNG (MAKH) ---
+            // **LƯU Ý:** Bạn cần thay thế logic này bằng cách lấy MaKH thực tế từ Session/Authentication
+            // Giả định bạn đang dùng Session["MaKH"] để lưu ID khách hàng
+            int maKhachHang = 0;
+            if (Session["MaKH"] != null)
+            {
+                maKhachHang = (int)Session["MaKH"];
+            }
+
+            // Giả định rằng bảng DanhGia có cột MaKH, nếu không có, bạn có thể xóa dòng này
+            if (maKhachHang == 0)
+            {
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để gửi đánh giá.";
+                return RedirectToAction("Profile", "Home");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var danhGiaMoi = new DanhGia
+                {
+                    MaBooking = MaBooking,
+                    SoSao = SoSao,
+                    NoiDung = NoiDung,
+                    //MaKH = maKhachHang,         // Gán ID khách hàng hiện tại
+                    NgayTao = DateTime.Now      // Lấy thời điểm hiện tại
+                };
+
+                try
+                {
+                    // 2. --- LƯU VÀO CƠ SỞ DỮ LIỆU ---
+                    db.DanhGias.Add(danhGiaMoi);
+                    db.SaveChanges();
+
+                    // 3. --- CHUYỂN HƯỚNG ---
+                    TempData["SuccessMessage"] = "Đánh giá của bạn đã được gửi thành công! Cảm ơn bạn.";
+                    // Chuyển hướng về trang Profile (giả định là Home/Profile)
+                    return RedirectToAction("Profile", "Home");
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi DB (ví dụ: MaBooking không tồn tại, v.v.)
+                    TempData["ErrorMessage"] = "Lỗi khi lưu đánh giá: " + ex.Message;
+                    return RedirectToAction("Profile", "Home");
+                }
+            }
+
+            // Nếu dữ liệu không hợp lệ (lỗi validation trên server), chuyển hướng lại
+            TempData["ErrorMessage"] = "Dữ liệu không hợp lệ. Vui lòng chọn số sao và nhập nội dung.";
+            return RedirectToAction("Profile", "Home");
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

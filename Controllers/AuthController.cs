@@ -192,9 +192,9 @@ namespace Trave.Controllers
                     redirectUrl = Url.Action("dashboard", "Admin");
                 else if (user.Role == "NhanVien" || user.Role == "Employee")
                 {
-                    var nv = db.NhanViens.FirstOrDefault(x => x.Email.ToLower() == user.Email.ToLower());
-                    if (nv != null) Session["MaNV"] = nv.MaNV;
-                    redirectUrl = Url.Action("dashboard", "admin");
+                    //var nv = db.NhanViens.FirstOrDefault(x => x.Email.ToLower() == user.Email.ToLower());
+                    //if (nv != null) Session["MaNV"] = nv.MaNV;
+                    //redirectUrl = Url.Action("dashboard", "admin");
                 }
                 // =================================================================
 

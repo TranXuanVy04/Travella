@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Trave.Models.BaiViet>
+
+@{
+    ViewBag.Title = "Travel Blog - Tin tức và Hướng dẫn Du lịch";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Sử dụng Layout chung
+}
+
+<div class="container-fluid bg-breadcrumb">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h1 class="text-white display-3 mb-4">
+            Blog
+        </h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Home</a></li>
+            <li class="breadcrumb-item active text-white">Blog</li>
+        </ol>
+    </div>
+</div>
+<div class="container-fluid py-5 bg-light">
+    <div class="container pt-4 pb-5">
+
+        <h1 class="display-5 fw-bold text-center mb-4">Latest Travel Stories 📰</h1>
+        <p class="text-center text-muted mb-5">Khám phá các câu chuyện, mẹo vặt và hướng dẫn du lịch mới nhất từ Travela.</p>
+
+        <div class="row mb-5 justify-content-center">
+            <div class="col-lg-8">
+                <form class="d-flex" action="@Url.Action("Index", "Blog")" method="get">
+                    <input class="form-control me-2 rounded-pill shadow-sm" type="search" placeholder="Tìm kiếm bài viết..." aria-label="Search" name="search">
+                    <button class="btn btn-primary rounded-pill shadow-sm" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6 d-flex">
+                        <div class="card blog-card h-100 rounded-3 shadow border-0 overflow-hidden">
+
+                            <div class="blog-img-wrapper overflow-hidden">
+                                <a href="@Url.Action("Details", "Blog", new { id = item.MaBaiViet })">
+                                    <img src="@Url.Content("~/img/Blog/" + item.HinhAnh)"
+                                         class="card-img-top img-fluid"
+                                         alt="@item.TieuDe"
+                                         style="height: 250px; object-fit: cover; transition: all 0.3s;">
+                                </a>
+                            </div>
+
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between text-muted mb-2">
+                                    <small><i class="fa fa-calendar-alt me-1"></i> @(item.NgayDang?.ToString("dd/MM/yyyy") ?? "N/A")</small>
+
+                                    @if (item.DanhMucBlog != null)
+                                    {
+                                        <small><i class="fa fa-tag me-1 text-primary"></i> @item.DanhMucBlog.TenDanhMuc</small>
+                                    }
+                                </div>
+
+                                <h5 class="card-title fw-bold">
+                                    <a href="@Url.Action("Details", "Blog", new { id = item.MaBaiViet })" class="text-dark text-decoration-none blog-title-link">
+                                        @item.TieuDe
+                                    </a>
+                                </h5>
+
+                                <p class="card-text text-muted mb-4 text-clamp-3">
+                                    @item.TomTat
+                                </p>
+
+                                <hr class="mt-auto mb-3 opacity-25">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fa fa-user me-1"></i> @(item.Tacgia ?? "Admin")
+                                    </small>
+
+                                    <a href="@Url.Action("Details", "Blog", new { id = item.MaBaiViet })"
+                                       class="btn btn-sm btn-primary rounded-pill px-4 py-2 fw-bold transition-hover">
+                                        Đọc Tiếp
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Xin lỗi!</strong> Hiện chưa có bài viết nào trong danh sách này.
+                    </div>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary rounded-pill mt-3">Quay lại Trang Chủ</a>
+                </div>
+            }
+
+        </div>
+
+        <div class="mt-5 text-center">
+            @* Thêm mã phân trang ở đây nếu cần *@
+        </div>
+    </div>
+</div>
+<style>
+    /* Custom style to make the card image zoom on hover */
+    .blog-img-wrapper img {
+        transition: transform 0.5s ease;
+    }
+
+    .blog-card:hover .blog-img-wrapper img {
+        transform: scale(1.05);
+    }
+    /* Title link hover effect */
+    .blog-title-link:hover {
+        color: var(--bs-primary) !important;
+    }
+    /* Limiting the summary text to 3 lines */
+    .text-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 3.9em; /* Adjust based on line-height for 3 lines */
+    }
+</style>

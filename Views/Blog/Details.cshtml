@@ -1,0 +1,132 @@
+﻿@model Trave.Models.BaiViet
+
+@{
+    ViewBag.Title = @Model.TieuDe;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid bg-breadcrumb">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h1 class="text-white display-3 mb-4">
+            Blog
+        </h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("index","home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("index","blog")">Blog</a></li>
+            <li class="breadcrumb-item active text-white">Chi Tiết</li>
+        </ol>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row g-5">
+
+        <div class="col-lg-8">
+            <article class="blog-detail-content">
+
+                <h2 class="display-5 fw-bold mb-4">@Model.TieuDe</h2>
+
+                @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                {
+                    <figure class="mb-5 rounded-3 overflow-hidden shadow">
+                        <img src="@Url.Content("~/img/Blog/" + Model.HinhAnh)"
+                             class="img-fluid w-100"
+                             alt="@Model.TieuDe"
+                             style="max-height: 480px; object-fit: cover;">
+                    </figure>
+                }
+
+                <div class="d-flex justify-content-between mb-4 border-bottom pb-3">
+                    <small class="text-muted">
+                        <i class="fa fa-user text-primary me-2"></i>Tác giả:
+                        <strong>@(Model.Tacgia ?? "Admin")</strong>
+                    </small>
+                    <small class="text-muted"><i class="fa fa-calendar-alt text-primary me-2"></i>Ngày đăng: @(Model.NgayDang?.ToString("dd/MM/yyyy"))</small>
+                    <small class="text-muted"><i class="fa fa-eye text-primary me-2"></i>Lượt xem: @(Model.LuotXem ?? 0)</small>
+                </div>
+
+                <p class="fs-5 fw-light text-secondary mb-5 p-3 border-start border-5 border-primary bg-light rounded-end">
+                    @Model.TomTat
+                </p>
+
+                <div class="full-blog-content mb-5" style="line-height: 1.8;">
+                    @* Quan trọng: Sử dụng Html.Raw để hiển thị nội dung HTML từ WYSIWYG *@
+                    @Html.Raw(Model.NoiDung)
+                </div>
+
+                <div class="d-flex align-items-center mb-4 pt-3 border-top">
+                    <strong class="me-2">Danh mục:</strong>
+                    @if (Model.DanhMucBlog != null)
+                    {
+                        <span class="badge bg-primary text-white p-2">@Model.DanhMucBlog.TenDanhMuc</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary text-white p-2">Tin Tức</span>
+                    }
+                </div>
+            </article>
+
+            <section class="comments mt-5 pt-4 border-top">
+                <h4 class="fw-bold">Bình luận</h4>
+                <p class="text-muted">Tính năng bình luận (nếu có) sẽ được hiển thị ở đây.</p>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <aside>
+
+                <div class="mb-4 p-4 border rounded-3 bg-light">
+                    <h5 class="fw-bold mb-3 text-primary">Tìm kiếm</h5>
+                    <form class="d-flex" action="@Url.Action("Index", "Blog")" method="get">
+                        <input class="form-control me-2 rounded-pill shadow-sm"
+                               type="search"
+                               placeholder="Tìm kiếm bài viết..."
+                               aria-label="Search"
+                               name="search"> @* <-- ĐẢM BẢO CÓ THUỘC TÍNH name="search" *@
+                            <button class="btn btn-primary rounded-pill shadow-sm" type="submit">Search</button>
+                        </form>
+                </div>
+
+                <div class="mb-4 p-4 border rounded-3 bg-light text-center">
+                    <i class="fa fa-user-circle fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold mb-1">Tác giả: @(Model.Tacgia ?? "Admin")</h5>
+                    @*<p class="small text-muted">@Model.TieuDe là một trong những bài viết của tác giả này.</p>*@
+                </div>
+
+                <div class="p-4 border rounded-3 bg-light">
+                    <h5 class="fw-bold mb-3 text-primary">Bài Viết Phổ Biến</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="@Url.Action("Index", "Blog")" class="text-dark text-decoration-none">Top 5 địa điểm bí ẩn nhất thế giới</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Index", "Blog")" class="text-dark text-decoration-none">Mẹo tiết kiệm khi du lịch châu Âu</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Index", "Blog")" class="text-dark text-decoration-none">Khám phá ẩm thực đường phố Việt Nam</a></li>
+                    </ul>
+                </div>
+
+            </aside>
+        </div>
+    </div>
+</div>
+<div class="container pb-5">
+    <p class="text-center">
+        @* Bạn nên kiểm tra quyền trước khi hiển thị nút Edit này *@
+        @* @Html.ActionLink("Sửa Bài Viết", "Edit", new { id = Model.MaBaiViet }, new { @class = "btn btn-outline-warning me-3 rounded-pill" }) *@
+        @Html.ActionLink("Quay lại Danh sách Blog", "Index", null, new { @class = "btn btn-outline-secondary rounded-pill" })
+    </p>
+</div>
+
+<style>
+    /* Styling để đảm bảo nội dung HTML hiển thị tốt */
+    .full-blog-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+
+    .full-blog-content h1, .full-blog-content h2, .full-blog-content h3 {
+        margin-top: 25px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+</style>

@@ -12,14 +12,18 @@ namespace Trave.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DanhGia
+    public partial class BaiViet
     {
-        public int IDDanhGia { get; set; }
+        public int MaBaiViet { get; set; }
+        public string TieuDe { get; set; }
+        public string TomTat { get; set; }
         public string NoiDung { get; set; }
-        public int SoSao { get; set; }
-        public Nullable<System.DateTime> NgayTao { get; set; }
-        public Nullable<int> MaBooking { get; set; }
+        public string HinhAnh { get; set; }
+        public Nullable<System.DateTime> NgayDang { get; set; }
+        public Nullable<int> LuotXem { get; set; }
+        public Nullable<int> MaDanhMucBlog { get; set; }
+        public string Tacgia { get; set; }
     
-        public virtual Booking Booking { get; set; }
+        public virtual DanhMucBlog DanhMucBlog { get; set; }
     }
 }

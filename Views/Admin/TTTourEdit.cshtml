@@ -1,0 +1,118 @@
+﻿@model Trave.Models.TinhTrangTour
+
+@{
+    ViewBag.Title = "Cập nhật trạng thái";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(45deg, #0d6efd, #0a58ca);
+        color: white;
+        padding: 15px 20px;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+
+    .input-group-text {
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+    /* Style riêng cho ô bị khóa để dễ nhận biết */
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card card-custom">
+                <div class="card-header card-header-custom">
+                    <i class="fa-solid fa-pen-to-square me-2"></i> CẬP NHẬT TÌNH TRẠNG TOUR
+                </div>
+
+                <div class="card-body p-4">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger small", @style = "display:none" })
+
+                        @Html.HiddenFor(model => model.Matinhtrang)
+
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.Tentinhtrang, "Tên tình trạng", new { @class = "form-label" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                @Html.EditorFor(model => model.Tentinhtrang, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Tentinhtrang, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.MaBooking, "Mã Booking liên kết", new { @class = "form-label" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                @Html.EditorFor(model => model.MaBooking, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="form-text text-muted small">Không thể thay đổi mã Booking của trạng thái này.</div>
+                            @Html.ValidationMessageFor(model => model.MaBooking, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-primary">Cập nhật Trạng thái</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fa-solid fa-toggle-on text-primary"></i></span>
+                                <select class="form-select form-select-lg" name="TrangThai">
+                                    <option value="0" @(Model.TrangThai == 0 ? "selected" : "") class="fw-bold text-warning">
+                                        🟡 Tour đang diễn ra (0)
+                                    </option>
+
+                                    <option value="1" @(Model.TrangThai == 1 ? "selected" : "") class="fw-bold text-success">
+                                        🟢 Đã kết thúc (1)
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-text text-success mt-2">
+                                <i class="fa-solid fa-circle-info"></i> Chọn "Đã kết thúc" để hoàn tất quy trình tour.
+                            </div>
+                            @Html.ValidationMessageFor(model => model.TrangThai, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                <i class="fa-solid fa-floppy-disk me-1"></i> LƯU THAY ĐỔI
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

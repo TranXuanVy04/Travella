@@ -12,10 +12,13 @@ namespace Trave.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class MucYeuThich
+    public partial class TinhTrangTour
     {
-        public string MaMYT { get; set; }
-        public string MaTour { get; set; }
-        public int SoLuong { get; set; }
+        public int Matinhtrang { get; set; }
+        public string Tentinhtrang { get; set; }
+        public Nullable<int> MaBooking { get; set; }
+        public Nullable<int> TrangThai { get; set; }
+    
+        public virtual Booking Booking { get; set; }
     }
 }

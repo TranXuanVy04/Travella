@@ -230,7 +230,7 @@
             <h1 class="mb-0">Awesome Packages</h1>
         </div>
         <div class="packages-carousel owl-carousel">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Take(9))
             {
                 <div class="packages-item p-2 h-100">
                     <div class="card package-card h-100 rounded-3 shadow-sm border-0">
@@ -291,27 +291,38 @@
         <div class="testimonial-carousel owl-carousel">
             @foreach (var item in Model)
             {
-                var review = item.DanhGias.FirstOrDefault();
+                // BƯỚC 1: Thay vì lấy review trực tiếp từ Tour, ta phải tìm trong danh sách Bookings
+                // Logic: "Lục trong các đơn đặt của tour này, lấy ra đơn đầu tiên mà khách CÓ viết đánh giá"
+                var bookingCoReview = item.Bookings.FirstOrDefault(b => b.DanhGias != null && b.DanhGias.Any());
 
-                @* 2. Chỉ hiển thị nếu tour này CÓ đánh giá *@
-                if (review != null)
+                // BƯỚC 2: Nếu tìm thấy Booking có đánh giá thì mới hiện
+                if (bookingCoReview != null)
                 {
+                    // Lấy nội dung đánh giá đó ra
+                    var review = bookingCoReview.DanhGias.FirstOrDefault();
+
                     <div class="packages-item p-2 h-100">
                         <div class="card package-card h-100 rounded-3 shadow-sm border-0">
 
                             <div class="package-img-wrapper rounded-top-3">
-                                <img src="@Url.Content("~/img/Destination/" + item.anhmota)" alt="@item.TenTour">
+                                <img src="@Url.Content("~/img/Destination/" + (item.anhmota ?? "default.jpg"))" alt="@item.TenTour">
 
                                 <div class="category-badge shadow-sm">
-                                    <i class="fa fa-user me-1"></i> Author: @(review.KhachHang?.TenKH)
+                                    <i class="fa fa-user me-1"></i> Author: @(bookingCoReview.KhachHang?.TenKH ?? "Ẩn danh")
                                 </div>
                             </div>
 
                             <div class="card-body p-4 d-flex flex-column">
                                 <div class="d-flex justify-content-between mb-3 package-meta">
-                                    <small><i class="fa fa-calendar-alt text-primary me-2"></i>Ngày đi: @(item.Bookings.FirstOrDefault()?.NgayDi.ToString("dd/MM/yyyy"))</small>
+                                    <small>
+                                        <i class="fa fa-calendar-alt text-primary me-2"></i>
+                                        Ngày đi: @(bookingCoReview.NgayDi.ToString("dd/MM/yyyy"))
+                                    </small>
 
-                                    <small><i class="fa fa-calendar-check text-primary me-2"></i>Ngày ĐG: @(review.NgayTao?.ToString("dd/MM/yyyy"))</small>
+                                    <small>
+                                        <i class="fa fa-calendar-check text-primary me-2"></i>
+                                        Ngày ĐG: @(review.NgayTao.HasValue ? review.NgayTao.Value.ToString("dd/MM/yyyy") : "")
+                                    </small>
                                 </div>
 
                                 <h5 class="card-title mb-2 fw-bold text-dark">@item.TenTour</h5>
@@ -339,8 +350,88 @@
                     </div>
                 }
             }
+        </div>
+    </div>
+</div>
+<!-- Blog -->
+<div class="container-fluid blog py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Our Blog</h5>
+            <h1 class="mb-0">Latest Travel News & Guides</h1>
+        </div>
 
+        <div class="row g-4 justify-content-center">
+            @{
+                IEnumerable<Trave.Models.BaiViet> recentBlogs = ViewBag.Blogs as IEnumerable<Trave.Models.BaiViet>;
 
+                if (recentBlogs != null && recentBlogs.Any())
+                {
+                    foreach (var blog in recentBlogs.Take(4))
+                    {
+                        // Kiểm tra Null cho Ngày Đăng để tránh lỗi
+                        DateTime ngayDang = blog.NgayDang ?? DateTime.Now;
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="blog-item bg-light rounded-3 shadow-sm overflow-hidden h-100">
+
+                                <div class="blog-img position-relative overflow-hidden">
+                                    <img class="img-fluid w-100"
+                                         src="@Url.Content("~/img/Blog/" + blog.HinhAnh)"
+                                         alt="@blog.TieuDe"
+                                         style="height: 250px; object-fit: cover;">
+
+                                    <div class="blog-date position-absolute top-0 start-0 bg-primary text-white rounded-end py-2 px-4 mt-4">
+                                        <small class="fw-bold">@ngayDang.ToString("MMM")</small>
+                                        <span class="d-block fw-bold fs-5">@ngayDang.Day</span>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 d-flex flex-column h-100">
+                                    <div class="d-flex mb-3">
+                                        <small class="me-3"><i class="fa fa-user text-primary me-2"></i>@blog.Tacgia</small>
+
+                                        @* Giả sử bạn có MaDanhMucBlog, nếu không có, bạn có thể xóa tag này *@
+                                        @if (blog.DanhMucBlog != null)
+                                        {
+                                            <small><i class="fa fa-tag text-primary me-2"></i>@blog.DanhMucBlog.TenDanhMuc</small>
+                                        }
+                                        else
+                                        {
+                                            <small><i class="fa fa-tag text-primary me-2"></i>Tin Tức</small>
+                                        }
+
+                                    </div>
+
+                                    <a href="@Url.Action("Details", "Blog", new { id = blog.MaBaiViet })"
+                                       class="d-block h5 mb-3 text-dark text-decoration-none fw-bold blog-title-hover">
+                                        @blog.TieuDe
+                                    </a>
+
+                                    <p class="card-text text-muted mb-4 text-clamp-3">
+                                        @(blog.TomTat)
+                                    </p>
+
+                                    <div class="mt-auto">
+                                        <a class="btn btn-sm btn-outline-primary rounded-pill px-4"
+                                           href="@Url.Action("Details", "Blog", new { id = blog.MaBaiViet })">
+                                            Read More <i class="fa fa-arrow-right ms-2"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-info text-center" role="alert">
+                            Hiện chưa có bài viết nào được đăng tải.
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>
