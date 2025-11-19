@@ -1,4 +1,164 @@
-﻿@model Trave.Models.Booking
+﻿@*@model Trave.Models.Booking
+
+    @{
+        ViewBag.Title = "Xác nhận và Thanh toán";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <style>
+        /* CSS Tùy chỉnh giao diện thanh toán */
+        .payment-option {
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+        }
+
+            .payment-option:hover {
+                border-color: #0d6efd; /* Màu primary */
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                transform: translateY(-2px);
+                background-color: #f8f9fa;
+            }
+
+            /* Khi radio được chọn, highlight khung lên */
+            .payment-option input:checked + .payment-content {
+                /* Bạn có thể thêm style highlight ở đây nếu muốn */
+            }
+
+        .form-control-plaintext {
+            background-color: #f8f9fa;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+    </style>
+
+    <div class="container-fluid bg-breadcrumb">
+        <div class="container text-center py-5" style="max-width: 900px;">
+            <h1 class="text-white display-3 mb-4">Book tour</h1>
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                <li class="breadcrumb-item active text-white">@Model.Tour.TenTour</li>
+            </ol>
+        </div>
+    </div>
+    <div class="container py-5">
+        @using (Html.BeginForm("ProcessPayment", "Home", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            /* Giữ nguyên các Hidden Field để truyền dữ liệu sang Controller */
+            @Html.HiddenFor(m => m.MaTour)
+            @Html.HiddenFor(m => m.MaKH)
+            @Html.HiddenFor(m => m.NgayDi)
+            @Html.HiddenFor(m => m.SoNguoi)
+            @Html.HiddenFor(m => m.TongGia)
+
+            <div class="row g-5">
+                <div class="col-lg-7">
+                    <h1 class="fw-light mb-4">Hoàn tất Đặt tour</h1>
+
+                    <h2 class="h4 mb-3"><i class="fas fa-user-check text-primary me-2"></i> 1. Thông tin Khách hàng</h2>
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small">Họ tên</label>
+                                    <div class="fw-bold">@Model.KhachHang.TenKH</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small">Số điện thoại</label>
+                                    <div class="fw-bold">@Model.KhachHang.SoDT</div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted small">Email</label>
+                                    <div class="fw-bold">@Model.KhachHang.Email</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="h4 mt-5 mb-3"><i class="fas fa-credit-card text-primary me-2"></i> 2. Phương thức Thanh toán</h2>
+                    <div class="list-group">
+                        <div class="list-group-item list-group-item-action d-flex align-items-center p-3 payment-option">
+                            <input type="radio" name="PhuongThucThanhToan" value="VNPay" class="form-check-input mt-0 me-3" checked>
+                            <img src="~/img/VnPayLogog.png" alt="VNPay" style="height: 30px; width: auto; margin-right: 15px;">
+                            <div class="flex-fill payment-content">
+                                <strong class="d-block">Thanh toán qua VNPay</strong>
+                                <small class="text-muted">Quét mã QR hoặc dùng thẻ ATM/Visa nội địa.</small>
+                            </div>
+                        </div>
+
+                        <div class="list-group-item list-group-item-action d-flex align-items-center p-3 payment-option">
+                            <input type="radio" name="PhuongThucThanhToan" value="TienMat" class="form-check-input mt-0 me-3">
+                            <i class="fas fa-money-bill-wave fa-lg text-success" style="width: 30px; margin-right: 15px; text-align: center;"></i>
+                            <div class="flex-fill payment-content">
+                                <strong class="d-block">Tiền mặt / Chuyển khoản sau</strong>
+                                <small class="text-muted">Thanh toán tại văn phòng hoặc thanh toán trực tiếp.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="h4 mt-5 mb-3"><i class="fas fa-pencil-alt text-primary me-2"></i> 3. Ghi chú (Tùy chọn)</h2>
+                    @Html.TextAreaFor(m => m.ghichu, new { @class = "form-control", rows = 4, placeholder = "Ví dụ: Tôi ăn chay, cần ghế trẻ em..." })
+
+                    <hr class="my-4">
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold px-5 py-3 shadow">
+                            Xác nhận và Thanh toán
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                    <div class="text-end mt-2">
+                        <small class="text-muted">
+                            Bằng cách nhấn nút, bạn đồng ý với <a href="#">Điều khoản Dịch vụ</a>.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="position-sticky" style="top: 100px;">
+                        <div class="card shadow-lg border-0 bg-white">
+                            @{
+                                string imgPath = Model.Tour.anhmota != null
+                                    ? Url.Content("~/img/Destination/" + Model.Tour.anhmota)
+                                    : Url.Content("~/img/default-tour.jpg");
+                            }
+                            <img src="@imgPath" class="card-img-top" alt="@Model.Tour.TenTour" style="height: 250px; object-fit: cover;">
+
+                            <div class="card-body p-4">
+                                <h4 class="card-title mb-3 text-primary">@Model.Tour.TenTour</h4>
+
+                                <ul class="list-unstyled mb-4">
+                                    <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
+                                        <span class="text-muted">Ngày khởi hành:</span>
+                                        <strong>@Model.NgayDi.ToString("dd/MM/yyyy")</strong>
+                                    </li>
+                                    <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
+                                        <span class="text-muted">Số lượng khách:</span>
+                                        <strong>@Model.SoNguoi người</strong>
+                                    </li>
+                                    <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
+                                        <span class="text-muted">Đơn giá:</span>
+                                        <span>@(((decimal)Model.Tour.Gia).ToString("N0")) $</span>
+                                    </li>
+                                </ul>
+
+                                <div class="d-flex justify-content-between fs-4 fw-bold mb-0 p-3 bg-light rounded">
+                                    <span>Tổng cộng:</span>
+                                    <span class="text-primary">@Model.TongGia.Value.ToString("N0") $</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>*@
+
+@model Trave.Models.Booking
 
 @{
     ViewBag.Title = "Xác nhận và Thanh toán";
@@ -22,7 +182,7 @@
 
         /* Khi radio được chọn, highlight khung lên */
         .payment-option input:checked + .payment-content {
-            /* Bạn có thể thêm style highlight ở đây nếu muốn */
+            color: #0d6efd;
         }
 
     .form-control-plaintext {
@@ -43,6 +203,7 @@
         </ol>
     </div>
 </div>
+
 <div class="container py-5">
     @using (Html.BeginForm("ProcessPayment", "Home", FormMethod.Post))
     {
@@ -133,22 +294,42 @@
 
                             <ul class="list-unstyled mb-4">
                                 <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
-                                    <span class="text-muted">Ngày khởi hành:</span>
+                                    <span class="text-muted"><i class="far fa-calendar-alt me-2"></i>Ngày khởi hành:</span>
                                     <strong>@Model.NgayDi.ToString("dd/MM/yyyy")</strong>
                                 </li>
                                 <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
-                                    <span class="text-muted">Số lượng khách:</span>
+                                    <span class="text-muted"><i class="fas fa-users me-2"></i>Số lượng khách:</span>
                                     <strong>@Model.SoNguoi người</strong>
                                 </li>
+
                                 <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
-                                    <span class="text-muted">Đơn giá:</span>
-                                    <span>@(((decimal)Model.Tour.Gia).ToString("N0")) $</span>
+                                    <span class="text-muted"><i class="fas fa-bus me-2"></i>Phương tiện:</span>
+                                    <strong class="text-end">@Model.Tour.PhuongTien</strong>
+                                </li>
+
+                                <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
+                                    <span class="text-muted"><i class="fas fa-user-tie me-2"></i>Hướng dẫn viên:</span>
+                                    <strong class="text-end">
+                                        @if (Model.Tour.guide != null)
+                                        {
+                                            @Model.Tour.guide.tenguide
+                                        }
+                                        else
+                                        {
+                                            <span>Đang cập nhật</span>
+                                        }
+                                    </strong>
+                                </li>
+
+                                <li class="d-flex justify-content-between mb-2 border-bottom pb-2">
+                                    <span class="text-muted"><i class="fas fa-tag me-2"></i>Đơn giá:</span>
+                                    <span>$@(((decimal)Model.Tour.Gia).ToString("N0")) / khách</span>
                                 </li>
                             </ul>
 
-                            <div class="d-flex justify-content-between fs-4 fw-bold mb-0 p-3 bg-light rounded">
+                            <div class="d-flex justify-content-between fs-4 fw-bold mb-0 p-3 bg-light rounded border">
                                 <span>Tổng cộng:</span>
-                                <span class="text-primary">@Model.TongGia.Value.ToString("N0") $</span>
+                                <span class="text-danger">$@Model.TongGia.Value.ToString("N0")</span>
                             </div>
                         </div>
                     </div>

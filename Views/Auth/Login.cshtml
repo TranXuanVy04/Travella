@@ -1,101 +1,100 @@
 ﻿@{
-        ViewBag.Title = "Login";
-        Layout = "~/Views/Shared/AuthView.cshtml";
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/AuthView.cshtml";
+
+    // --- LẤY RETURN URL TỪ THANH ĐỊA CHỈ NGAY LÚC TẢI TRANG ---
+    string returnUrl = Request.QueryString["ReturnUrl"];
+}
+
+<style>
+    /* Giữ nguyên CSS cũ của bạn để giao diện đẹp */
+    body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
     }
 
+    .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        max-width: 450px;
+        width: 100%;
+        padding: 40px;
+        background: white;
+    }
 
-    <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
+    .form-control {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+    }
+
+        .form-control:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.25);
         }
 
+    .password-input {
+        padding-right: 45px;
+    }
 
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        cursor: pointer;
+        font-size: 1.1rem;
+        z-index: 10;
+    }
 
-
-        .card {
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            max-width: 450px;
-            width: 100%;
-            padding: 40px;
-            background: white;
+        .password-toggle:hover {
+            color: #2575fc;
         }
 
-        .form-control {
-            border-radius: 10px;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-            .form-control:focus {
-                border-color: #2575fc;
-                box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.25);
-            }
+    .alert {
+        border-radius: 12px;
+        font-size: 0.9rem;
+        padding: 12px 15px;
+    }
 
-        .password-input {
-            padding-right: 45px;
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
         }
 
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+        .divider span {
+            padding: 0 10px;
             color: #888;
-            cursor: pointer;
-            font-size: 1.1rem;
-            z-index: 10;
-        }
-
-            .password-toggle:hover {
-                color: #2575fc;
-            }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            padding: 12px;
-            font-weight: 600;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-            .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            }
-
-        .alert {
-            border-radius: 12px;
             font-size: 0.9rem;
-            padding: 12px 15px;
         }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-            .divider::before,
-            .divider::after {
-                content: '';
-                flex: 1;
-                border-bottom: 1px solid #ddd;
-            }
-
-            .divider span {
-                padding: 0 10px;
-                color: #888;
-                font-size: 0.9rem;
-            }
-    </style>
+</style>
 
 <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 px-3">
     <div class="card">
@@ -111,20 +110,15 @@
         <form id="loginForm" class="needs-validation" novalidate>
             @Html.AntiForgeryToken()
 
+            <input type="hidden" name="ReturnUrl" value="@returnUrl" />
+
             <div class="mb-3">
                 <label for="email" class="form-label">Email Address</label>
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px;">
                         <i class="fas fa-envelope text-muted"></i>
                     </span>
-                    <input type="email"
-                           id="email"
-                           name="email"
-                           class="form-control border-start-0"
-                           placeholder="your@email.com"
-                           required
-                           autocomplete="email"
-                           style="border-radius: 0 10px 10px 0;">
+                    <input type="email" id="email" name="email" class="form-control border-start-0" placeholder="your@email.com" required autocomplete="email" style="border-radius: 0 10px 10px 0;">
                 </div>
             </div>
 
@@ -135,15 +129,7 @@
                         <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px;">
                             <i class="fas fa-lock text-muted"></i>
                         </span>
-                        <input type="password"
-                               id="password"
-                               name="password"
-                               class="form-control border-start-0 password-input"
-                               placeholder="Enter your password"
-                               required
-                               minlength="6"
-                               autocomplete="current-password"
-                               style="border-radius: 0 10px 10px 0;">
+                        <input type="password" id="password" name="password" class="form-control border-start-0 password-input" placeholder="Enter your password" required minlength="6" autocomplete="current-password" style="border-radius: 0 10px 10px 0;">
                     </div>
                     <i class="fa fa-eye password-toggle" id="togglePass" onclick="togglePassword()"></i>
                 </div>
@@ -152,13 +138,9 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                    <label class="form-check-label small text-muted" for="remember">
-                        Remember me
-                    </label>
+                    <label class="form-check-label small text-muted" for="remember">Remember me</label>
                 </div>
-                <a href="@Url.Action("ForgotPassword", "Auth")" class="small text-decoration-none" style="color: #667eea;">
-                    Forgot Password?
-                </a>
+                <a href="@Url.Action("ForgotPassword", "Auth")" class="small text-decoration-none" style="color: #667eea;">Forgot Password?</a>
             </div>
 
             <button type="submit" id="submitBtn" class="btn btn-primary w-100 fw-bold">
@@ -172,134 +154,71 @@
         <div class="text-center">
             <small class="text-muted">
                 Don't have an account?
-                <a href="@Url.Action("Register", "Auth")" class="fw-semibold text-decoration-none" style="color: #667eea;">
-                    Sign Up
-                </a>
+                <a href="@Url.Action("Register", "Auth")" class="fw-semibold text-decoration-none" style="color: #667eea;">Sign Up</a>
             </small>
         </div>
     </div>
 </div>
-<form id="loginForm" class="needs-validation" novalidate>
-    @Html.AntiForgeryToken()
-
-    <input type="hidden" name="ReturnUrl" value="@Request.QueryString["ReturnUrl"]" />
-
-   
-</form>
-
 <script>
-    // URL từ Razor (đảm bảo render đúng)
-    const loginUrl = '@Url.Action("Login", "Auth")';
+    const loginBaseUrl = '@Url.Action("Login", "Auth")';
 
-    // Toggle password
     function togglePassword() {
-        const input = document.getElementById('password');
+        const pwd = document.getElementById('password');
         const icon = document.getElementById('togglePass');
-        if (!input || !icon) return;
-
-        const isPassword = input.type === 'password';
-        input.type = isPassword ? 'text' : 'password';
-        icon.classList.toggle('fa-eye-slash', isPassword);
-        icon.classList.toggle('fa-eye', !isPassword);
-        icon.style.color = isPassword ? '#667eea' : '#888';
+        if (pwd.type === 'password') {
+            pwd.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            pwd.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
     }
 
-    // Submit form bằng Fetch API (Hiện đại, giữ lại khối này)
-    document.getElementById('loginForm')?.addEventListener('submit', async function (e) {
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        const form = e.currentTarget;
         const btn = document.getElementById('submitBtn');
-        const spinner = btn?.querySelector('.spinner-border');
+        const spinner = btn.querySelector('.spinner-border');
         const btnText = document.getElementById('btnText');
         const alertDiv = document.getElementById('alertMsg');
 
-        if (!btn || !spinner || !btnText || !alertDiv) return;
-
-        // Reset
         alertDiv.innerHTML = '';
-        form.classList.remove('was-validated');
-
-        // HTML5 Validation
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated');
-            return;
-        }
-
-        // Loading
         btn.disabled = true;
         spinner.classList.remove('d-none');
         btnText.textContent = 'Signing in...';
 
-        const formData = new FormData(form);
-        const data = {};
-        for (const [key, value] of formData.entries()) {
-            data[key] = value;
-        }
+        // Lấy toàn bộ dữ liệu form + token (bắt buộc phải có token trong body)
+        const formData = new FormData(this);
+
+        // Cách chắc chắn nhất: dùng FormData trực tiếp (browser tự thêm boundary + token)
+        const queryString = window.location.search; // ?ReturnUrl=...
+        const finalUrl = loginBaseUrl + queryString;
 
         try {
-            const response = await fetch(loginUrl, {
+            const response = await fetch(finalUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': formData.get('__RequestVerificationToken')
-                },
-                body: new URLSearchParams(data)
+                body: formData   // <<< QUAN TRỌNG: dùng FormData trực tiếp, KHÔNG dùng URLSearchParams
+                // Không cần set Content-Type, browser sẽ tự set multipart/form-data + token đúng chỗ
             });
 
             const result = await response.json();
 
-            // Reset button
             btn.disabled = false;
             spinner.classList.add('d-none');
             btnText.textContent = 'Sign In';
 
             if (result.success) {
-                alertDiv.innerHTML = `
-                    <div class="alert alert-success mt-3">
-                        <i class="fas fa-check-circle me-2"></i>
-                        ${result.message}
-                    </div>`;
-
-                // ** PHẦN CHUYỂN HƯỚNG **
-                setTimeout(() => {
-                    window.location.href = result.redirectUrl;
-                }, 1000); // Chuyển hướng sau 1 giây để người dùng thấy thông báo
+                alertDiv.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle"></i> ${result.message}</div>`;
+                setTimeout(() => window.location.href = result.redirectUrl, 800);
             } else {
-                alertDiv.innerHTML = `
-                    <div class="alert alert-danger mt-3">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        ${result.message}
-                    </div>`;
+                alertDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> ${result.message}</div>`;
             }
         } catch (err) {
-            console.error('Login error:', err);
+            console.error(err);
             btn.disabled = false;
             spinner.classList.add('d-none');
             btnText.textContent = 'Sign In';
-            alertDiv.innerHTML = `
-                <div class="alert alert-danger mt-3">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    Lỗi kết nối. Vui lòng thử lại!
-                </div>`;
+            alertDiv.innerHTML = `<div class="alert alert-danger">Lỗi hệ thống, vui lòng thử lại!</div>`;
         }
-    });
-
-    // Tự động ẩn alert sau 5s (chỉ áp dụng cho lỗi)
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            const alert = document.querySelector('#alertMsg .alert-danger'); // Chỉ ẩn alert-danger
-            if (alert) {
-                alert.style.transition = 'opacity 0.5s ease';
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 500);
-            }
-        }, 5000);
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        // ... (Khối jQuery Ajax cũ đã bị loại bỏ)
     });
 </script>

@@ -42,6 +42,15 @@
                         @Html.TextAreaFor(model => model.mota, new { @class = "form-control", rows = 8 })
                         @Html.ValidationMessageFor(model => model.mota, "", new { @class = "text-danger small" })
                     </div>
+
+                    @*<div class="mb-3">
+                        @Html.LabelFor(model => model.trangthai, "Trạng thái (Hiển thị)", htmlAttributes: new { @class = "form-label fw-bold" })
+                        <div class="form-check form-switch">
+                            @Html.EditorFor(model => model.trangthai, new { htmlAttributes = new { @class = "form-check-input" } })
+                            <label class="form-check-label text-muted small" for="trangthai">Kích hoạt tour này</label>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.trangthai, "", new { @class = "text-danger small" })
+                    </div>*@
                 </div>
             </div>
         </div>
@@ -58,7 +67,6 @@
                     <div class="mb-3">
                         <label for="ImageFile" class="form-label fw-bold">Ảnh Tour</label>
                         <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
-
                         @Html.HiddenFor(model => model.anhmota)
                     </div>
 
@@ -82,6 +90,12 @@
                     </div>
 
                     <div class="mb-3">
+                        @Html.LabelFor(model => model.PhuongTien, "Phương tiện", htmlAttributes: new { @class = "form-label fw-bold" })
+                        @Html.EditorFor(model => model.PhuongTien, new { htmlAttributes = new { @class = "form-control", placeholder = "VD: Xe du lịch, Máy bay" } })
+                        @Html.ValidationMessageFor(model => model.PhuongTien, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-3">
                         @Html.LabelFor(model => model.MaDM, "Danh mục Tour", htmlAttributes: new { @class = "form-label fw-bold" })
                         @Html.DropDownList("MaDM", null, "--- Chọn Danh mục ---", htmlAttributes: new { @class = "form-select" })
                         @Html.ValidationMessageFor(model => model.MaDM, "", new { @class = "text-danger small" })
@@ -92,6 +106,13 @@
                         @Html.DropDownList("MaDD", null, "--- Chọn Địa điểm ---", htmlAttributes: new { @class = "form-select" })
                         @Html.ValidationMessageFor(model => model.MaDD, "", new { @class = "text-danger small" })
                     </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.MaGuide, "Hướng dẫn viên", htmlAttributes: new { @class = "form-label fw-bold" })
+                        @Html.DropDownList("MaGuide", null, "--- Chọn Hướng dẫn viên ---", htmlAttributes: new { @class = "form-select" })
+                        @Html.ValidationMessageFor(model => model.MaGuide, "", new { @class = "text-danger small" })
+                    </div>
+
                 </div>
             </div>
         </div>

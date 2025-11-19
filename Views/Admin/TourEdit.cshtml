@@ -9,7 +9,7 @@
     <h1 class="h3 mb-0 text-dark">@ViewBag.Title: @Model.TenTour</h1>
 </div>
 
-@using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("TourEdit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -59,15 +59,17 @@
 
                     <div class="mb-3 text-center">
                         <label class="form-label fw-bold">Ảnh hiện tại</label>
-                        <img src="@Url.Content(String.Format("~/img/Destination/{0}", Model.anhmota))"
-                             alt="Ảnh Tour"
-                             class="img-thumbnail mb-2"
-                             style="max-width: 100%; height: auto; object-fit: cover;"
-                             onerror="this.src='@Url.Content("~/Content/images/placeholder.png")'" />
+                        <div class="mb-2">
+                            <img src="@Url.Content(String.Format("~/img/Destination/{0}", Model.anhmota))"
+                                 alt="Ảnh Tour"
+                                 class="img-thumbnail"
+                                 style="max-width: 100%; height: auto; object-fit: cover;"
+                                 onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'" />
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="ImageFile" class="form-label fw-bold">Chọn ảnh mới (nếu cần)</label>
+                        <label for="ImageFile" class="form-label fw-bold">Chọn ảnh mới (nếu cần thay đổi)</label>
                         <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
                         @Html.HiddenFor(model => model.anhmota)
                     </div>
@@ -92,12 +94,16 @@
                     </div>
 
                     <div class="mb-3">
+                        @Html.LabelFor(model => model.PhuongTien, "Phương tiện", htmlAttributes: new { @class = "form-label fw-bold" })
+                        @Html.EditorFor(model => model.PhuongTien, new { htmlAttributes = new { @class = "form-control", placeholder = "VD: Xe du lịch, Máy bay" } })
+                        @Html.ValidationMessageFor(model => model.PhuongTien, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-3">
                         @Html.LabelFor(model => model.trangthai, htmlAttributes: new { @class = "form-label fw-bold" })
                         @Html.EditorFor(model => model.trangthai, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.trangthai, "", new { @class = "text-danger small" })
                     </div>
-
-                    
 
                     <div class="mb-3">
                         @Html.LabelFor(model => model.MaDM, "Danh mục Tour", htmlAttributes: new { @class = "form-label fw-bold" })
@@ -109,6 +115,12 @@
                         @Html.LabelFor(model => model.MaDD, "Địa điểm", htmlAttributes: new { @class = "form-label fw-bold" })
                         @Html.DropDownList("MaDD", null, "--- Chọn Địa điểm ---", htmlAttributes: new { @class = "form-select" })
                         @Html.ValidationMessageFor(model => model.MaDD, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.MaGuide, "Hướng dẫn viên", htmlAttributes: new { @class = "form-label fw-bold" })
+                        @Html.DropDownList("MaGuide", null, "--- Chọn Hướng dẫn viên ---", htmlAttributes: new { @class = "form-select" })
+                        @Html.ValidationMessageFor(model => model.MaGuide, "", new { @class = "text-danger small" })
                     </div>
 
                 </div>

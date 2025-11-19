@@ -152,8 +152,14 @@ namespace Trave.Controllers
             // 1. Kiểm tra đăng nhập
             if (Session["MaKH"] == null)
             {
-                TempData["ErrorMessage"] = "Vui lòng đăng nhập để tiếp tục đặt tour.";
-                return RedirectToAction("Login", "Auth"); // Hoặc controller chứa Login
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt tour.";
+
+                // --- QUAN TRỌNG: Gửi kèm ReturnUrl để đăng nhập xong quay lại đây ---
+                // Tạo đường dẫn hiện tại: /Home/BookTour?id=...&date=...&persons=...
+                string returnUrl = Url.Action("BookTour", "Home", new { id = id, date = date, persons = persons });
+
+                // Chuyển hướng sang Login kèm ReturnUrl
+                return RedirectToAction("Login", "Auth", new { ReturnUrl = returnUrl });
             }
 
             // 2. Xử lý tham số đầu vào an toàn
@@ -169,12 +175,16 @@ namespace Trave.Controllers
             // 3. Lấy dữ liệu từ Database
             int currentMaKH = (int)Session["MaKH"]; // Đã check null ở bước 1 nên cast an toàn
             var khachHang = db.KhachHangs.Find(currentMaKH);
-            var tour = db.Tours.Find(id); // ID là string theo thiết kế của bạn
+
+            //var tour = db.Tours.Find(id); // ID là string theo thiết kế của bạn
+            var tour = db.Tours.FirstOrDefault(t => t.MaTour.Trim() == id.Trim());
 
             // Kiểm tra dữ liệu tồn tại
             if (tour == null || khachHang == null)
             {
-                return HttpNotFound("Không tìm thấy thông tin Tour hoặc Khách hàng.");
+                TempData["Debug"] = "Tour null: " + (tour == null) + " | KH null: " + (khachHang == null) + " | MaKH: " + Session["MaKH"];
+                return HttpNotFound();
+                //return HttpNotFound("Không tìm thấy thông tin Tour hoặc Khách hàng.");
             }
 
             // 4. Xử lý ngày tháng (Date)
@@ -212,120 +222,6 @@ namespace Trave.Controllers
             return View("BookTour", bookingModel);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ProcessPayment(Booking bookingModel, string PhuongThucThanhToan)
-        //{
-        //    // Chúng ta nhận 'bookingModel' đã được bind (MaTour, MaKH, NgayDi, SoNguoi, TongGia, ghichu)
-        //    // và 'PhuongThucThanhToan' (từ input radio)
-
-        //    try
-        //    {
-        //        // 1. Hoàn thiện đối tượng Booking trước khi lưu
-        //        bookingModel.NgayDat = DateTime.Now;
-
-        //        if (PhuongThucThanhToan == "VnPay")
-        //        {
-        //            bookingModel.TrangThai = "Chờ thanh toán VNPay";
-        //        }
-        //        else // BankTransfer
-        //        {
-        //            bookingModel.TrangThai = "Chờ xác nhận (Chuyển khoản)";
-        //        }
-
-        //        // 2. Thêm vào DB và Lưu
-        //        db.Bookings.Add(bookingModel);
-        //        db.SaveChanges();
-
-        //        // Sau khi SaveChanges(), 'bookingModel.MaBooking' sẽ tự động
-        //        // cập nhật ID của đơn hàng vừa được tạo (ví dụ: 105)
-
-        //        // 3. Xử lý logic thanh toán
-        //        if (PhuongThucThanhToan == "VnPay")
-        //        {
-        //            // ==========================================================
-        //            // TODO: TÍCH HỢP VNPAY TẠI ĐÂY
-        //            // ==========================================================
-        //            // 1. Gọi thư viện VNPay, tạo URL thanh toán
-        //            // 2. Gán 'bookingModel.MaBooking' làm mã tham chiếu (vnp_TxnRef)
-        //            // 3. string paymentUrl = vnpay.CreateRequestUrl(...);
-        //            // 4. return Redirect(paymentUrl);
-        //            // ==========================================================
-
-        //            // (Mã tạm thời cho đến khi bạn tích hợp VNPay)
-        //            TempData["SuccessMessage"] = "Đang chuyển hướng đến cổng thanh toán VNPay...";
-        //            // Chúng ta chuyển tạm đến trang xác nhận
-        //            return RedirectToAction("BookingConfirmation", new { id = bookingModel.MaBooking });
-        //        }
-        //        else // BankTransfer
-        //        {
-        //            // Chuyển thẳng đến trang xác nhận, nơi sẽ hiển thị thông tin STK
-        //            return RedirectToAction("BookingConfirmation", new { id = bookingModel.MaBooking });
-        //        }
-        //    }
-        //    catch (DbEntityValidationException ex)
-        //    {
-        //        // Xử lý lỗi validation (nếu có)
-        //        var errorMessages = ex.EntityValidationErrors
-        //                .SelectMany(x => x.ValidationErrors)
-        //                .Select(x => x.ErrorMessage);
-        //        TempData["ErrorMessage"] = "Lỗi dữ liệu: " + string.Join("; ", errorMessages);
-
-        //        // Quay lại trang thanh toán (cần tải lại Nav Properties)
-        //        bookingModel.Tour = db.Tours.Find(bookingModel.MaTour);
-        //        bookingModel.KhachHang = db.KhachHangs.Find(bookingModel.MaKH);
-        //        return View("BookTour", bookingModel);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Xử lý lỗi chung
-        //        TempData["ErrorMessage"] = "Đã xảy ra lỗi không mong muốn: " + ex.Message;
-
-        //        // Quay lại trang thanh toán (cần tải lại Nav Properties)
-        //        bookingModel.Tour = db.Tours.Find(bookingModel.MaTour);
-        //        bookingModel.KhachHang = db.KhachHangs.Find(bookingModel.MaKH);
-        //        return View("BookTour", bookingModel);
-        //    }
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ProcessPayment(Booking bookingModel, string PhuongThucThanhToan)
-        //{
-        //    // Chúng ta nhận 'bookingModel' đã được bind và 'PhuongThucThanhToan'
-
-        //    try
-        //    {
-        //        // 1. Hoàn thiện đối tượng Booking
-        //        bookingModel.NgayDat = DateTime.Now; // Gán ngày đặt
-
-        //        // --- SỬA ĐỔI TẠI ĐÂY ---
-        //        // Mặc định mọi đơn hàng đều thành công (đã thanh toán)
-        //        bookingModel.TrangThai = "Đã thanh toán";
-        //        // (Hoặc "Đã xác nhận", "Đã hoàn thành" tùy theo quy trình của bạn)
-        //        // Bỏ qua logic kiểm tra (if PhuongThucThanhToan == "VnPay"...)
-
-        //        // 2. Thêm vào DB và Lưu
-        //        db.Bookings.Add(bookingModel);
-        //        db.SaveChanges();
-
-        //        // 3. Chuyển thẳng đến trang xác nhận (Cảm ơn)
-        //        // Vì đã mặc định thành công, chúng ta không cần chuyển đến VNPay
-        //        return RedirectToAction("BookingConfirmation", new { id = bookingModel.MaBooking });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Xử lý lỗi
-        //        TempData["ErrorMessage"] = "Đã xảy ra lỗi: " + ex.Message;
-
-        //        // Quay lại trang thanh toán (cần tải lại Nav Properties)
-        //        bookingModel.Tour = db.Tours.Find(bookingModel.MaTour);
-        //        bookingModel.KhachHang = db.KhachHangs.Find(bookingModel.MaKH);
-
-        //        // Trả về View "BookTour" từ HomeController
-        //        return View("~/Views/Home/BookTour.cshtml", bookingModel);
-        //    }
-        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -508,9 +404,9 @@ namespace Trave.Controllers
                         // Chuyển ngày sang chuỗi yyyy-MM-dd để truyền lên URL an toàn
                         ViewBag.LastDate = booking.NgayDi.ToString("yyyy-MM-dd");
 
-                        // Xóa đơn hàng lỗi khỏi Database (Dọn dẹp rác)
-                        db.Bookings.Remove(booking);
-                        db.SaveChanges();
+                        //// Xóa đơn hàng lỗi khỏi Database (Dọn dẹp rác)
+                        //db.Bookings.Remove(booking);
+                        //db.SaveChanges();
                     }
                 }
                 catch (Exception ex)

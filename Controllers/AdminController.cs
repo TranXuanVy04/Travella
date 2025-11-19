@@ -68,7 +68,7 @@ namespace Trave.Controllers
 
             ViewBag.ChartLabels_Tour = tourPopularity.Select(t => t.TourName).ToList();
             ViewBag.ChartData_Tour = tourPopularity.Select(t => t.Count).ToList();
-
+                
 
             // --- 4. LẤY MODEL CHO BẢNG (Mã cũ) ---
             var model = db.Bookings
@@ -212,35 +212,16 @@ namespace Trave.Controllers
         {
             ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM");
             ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD");
+            ViewBag.MaGuide = new SelectList(db.guides, "maguide", "tenguide");
             return View();
         }
 
-        // POST: Tours/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "MaTour,TenTour,Gia,trangthai,ThoiGian,NgayKhoiHanh,MaDD,MaDM,PhuongTien,anhmota,songuoi,mota")] Tour tour)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Tours.Add(tour);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Tourlist");
-        //    }
-
-        //    ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
-        //    ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
-        //    return View(tour);
-        //}
-        // POST: Admin/Create
-        // POST: Admin/TourCreate
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult TourCreate(
-     [Bind(Include = "MaTour,TenTour,Gia,ThoiGian,MaDD,MaDM,songuoi,mota,NgayKhoiHanh")]
-    Tour tour,
-     HttpPostedFileBase ImageFile)
+        public ActionResult TourCreate([Bind(Include = "MaTour,TenTour,Gia,ThoiGian,MaDD,MaDM,songuoi,mota,NgayKhoiHanh,MaGuide,PhuongTien")]
+        Tour tour,
+        HttpPostedFileBase ImageFile)
         {
             // LƯU Ý: 'trangthai' và 'anhmota' vẫn được xử lý ở ngoài [Bind]
 
@@ -293,6 +274,8 @@ namespace Trave.Controllers
             // 4. Nếu lỗi (ModelState không hợp lệ HOẶC lỗi Validation EF), load lại View
             ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
             ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
+            ViewBag.MaGuide = new SelectList(db.guides, "maguide", "tenguide");
+
             return View(tour);
         }
 
@@ -310,26 +293,12 @@ namespace Trave.Controllers
             }
             ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
             ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
+            ViewBag.MaGuide = new SelectList(db.guides, "maguide", "tenguide");
+
             return View(tour);
         }
 
-        // POST: Tours/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "MaTour,TenTour,Gia,trangthai,ThoiGian,NgayKhoiHanh,MaDD,MaDM,PhuongTien,anhmota,songuoi,mota")] Tour tour)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(tour).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Tourlist");
-        //    }
-        //    ViewBag.MaDM = new SelectList(db.DanhMucs, "MaDM", "TenDM", tour.MaDM);
-        //    ViewBag.MaDD = new SelectList(db.DiaDiems, "MaDD", "TenDD", tour.MaDD);
-        //    return View(tour);
-        //}
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         // Phải thêm tham số 'HttpPostedFileBase ImageFile'
