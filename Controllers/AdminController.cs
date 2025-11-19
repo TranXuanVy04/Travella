@@ -514,6 +514,333 @@ namespace Trave.Controllers
             return RedirectToAction("Account");
         }
 
+        // ========== TÌNH TRẠNG TOUR ===========
+        public ActionResult TTTourList()
+        {
+            var tinhTrangTours = db.TinhTrangTours.Include(t => t.Booking);
+            return View(tinhTrangTours.ToList());
+        }
+        public ActionResult TTTourEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TinhTrangTour tinhTrangTour = db.TinhTrangTours.Find(id);
+            if (tinhTrangTour == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.MaBooking = new SelectList(db.Bookings, "MaBooking", "MaTour", tinhTrangTour.MaBooking);
+            return View(tinhTrangTour);
+        }
+
+        // POST: TinhTrangTours/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult TTTourEdit(int Matinhtrang, int TrangThai)
+        {
+            // 1. Tìm đối tượng gốc trong Database
+            var tourInDb = db.TinhTrangTours.Find(Matinhtrang);
+
+            if (tourInDb == null)
+            {
+                return HttpNotFound();
+            }
+
+            // 2. CHỈ CẬP NHẬT CỘT TRẠNG THÁI
+            // Các cột khác (Tên, Mã Booking) giữ nguyên giá trị cũ trong DB -> An toàn tuyệt đối
+            tourInDb.TrangThai = TrangThai;
+
+            // 3. Lưu thay đổi
+            // Lúc này Trigger SQL "trg_CapNhatTenHienThi" sẽ chạy và tự cập nhật Tên Tình Trạng chuẩn xác
+            db.SaveChanges();
+
+            return RedirectToAction("TTTourList");
+        }
+        // ========== BLOG ===========
+
+        public ActionResult BlogList()
+        {
+            // Tải Danh sách bài viết, bao gồm Danh mục đi kèm để hiển thị (Eager Loading)
+            var model = db.BaiViets.Include(b => b.DanhMucBlog).ToList();
+            return View(model);
+        }
+
+        // GET: Blog/Details/5
+        // POST: Blog/Details/5
+        public ActionResult BlogDetails(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Tải Bài viết và Danh mục liên quan. 
+            // SỬ DỤNG ASNOTRACKING để ngăn EF theo dõi đối tượng này ngay từ đầu
+            BaiViet baiViet = db.BaiViets
+                                .Include(b => b.DanhMucBlog)
+                                .AsNoTracking() // Ngăn EF theo dõi đối tượng
+                                .SingleOrDefault(b => b.MaBaiViet == id);
+
+            if (baiViet == null)
+            {
+                return HttpNotFound();
+            }
+
+            // -----------------------------------------------------------
+            // BƯỚC TỐI ƯU HÓA: Cập nhật chỉ trường LuotXem
+            // -----------------------------------------------------------
+
+            try
+            {
+                // 1. Tăng lượt xem (dựa trên giá trị hiện tại)
+                int newLuotXem = (baiViet.LuotXem ?? 0) + 1;
+
+                // 2. Tạo đối tượng proxy chỉ chứa ID
+                var counter = new BaiViet { MaBaiViet = baiViet.MaBaiViet };
+
+                // 3. Đính kèm đối tượng proxy (sẽ không gây lỗi vì baiViet đã là NoTracking)
+                db.BaiViets.Attach(counter);
+
+                // 4. Gán giá trị mới và đánh dấu CHỈ trường LuotXem bị sửa đổi
+                counter.LuotXem = newLuotXem;
+                db.Entry(counter).Property(x => x.LuotXem).IsModified = true;
+
+                db.SaveChanges(); // Lưu chỉ một trường này
+
+                // 5. Cập nhật lại đối tượng đang được hiển thị trong View 
+                baiViet.LuotXem = newLuotXem;
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi (chỉ trong Console hoặc file log, không hiển thị cho người dùng)
+                System.Diagnostics.Debug.WriteLine("Lỗi khi cập nhật lượt xem: " + ex.Message);
+                // Bỏ qua lỗi và vẫn trả về View
+            }
+
+            return View(baiViet);
+        }
+
+        // GET: Blog/Create
+        public ActionResult BlogCreate()
+        {
+            // Chỉ cần tải Danh mục Blog (đã loại bỏ MaKH)
+            ViewBag.MaDanhMucBlog = new SelectList(db.DanhMucBlogs, "MaDanhMucBlog", "TenDanhMuc");
+            return View();
+        }
+
+        // POST: Blog/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        // Chỉ bind các trường cần nhập thủ công. NgayDang, LuotXem sẽ được gán trong code.
+        public ActionResult BlogCreate([Bind(Include = "TieuDe,TomTat,NoiDung,HinhAnh,Tacgia,MaDanhMucBlog")] BaiViet baiViet,HttpPostedFileBase HinhAnhFile) // Tham số nhận file upload
+        {
+            // Kiểm tra tính hợp lệ của Model (trừ trường HinhAnh, vì ta sẽ gán nó sau)
+            // Nếu bạn muốn yêu cầu phải có ảnh: if (HinhAnhFile == null) ModelState.AddModelError("HinhAnh", "Vui lòng chọn ảnh đại diện.");
+            if (ModelState.IsValid)
+            {
+                // 1. Xử lý Upload Ảnh
+                if (HinhAnhFile != null && HinhAnhFile.ContentLength > 0)
+                {
+                    try
+                    {
+                        // Lấy đường dẫn thư mục đích: ~/img/Blog/
+                        string uploadPath = Server.MapPath("~/img/Blog/");
+
+                        // Đảm bảo thư mục tồn tại
+                        if (!Directory.Exists(uploadPath))
+                        {
+                            Directory.CreateDirectory(uploadPath);
+                        }
+
+                        // Tạo tên file mới duy nhất (sử dụng Guid)
+                        string extension = Path.GetExtension(HinhAnhFile.FileName);
+                        // Giới hạn độ dài extension để tránh lỗi
+                        if (extension != null && extension.Length > 10) extension = extension.Substring(0, 10);
+
+                        string newFileName = Guid.NewGuid().ToString() + extension;
+                        string path = Path.Combine(uploadPath, newFileName);
+
+                        // Lưu file vật lý vào thư mục trên server
+                        HinhAnhFile.SaveAs(path);
+
+                        // Gán tên file mới vào Model để lưu vào Database
+                        baiViet.HinhAnh = newFileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Nếu có lỗi upload, thêm lỗi vào ModelState
+                        ModelState.AddModelError("", "Lỗi khi upload file: " + ex.Message);
+                        goto RebindView;
+                    }
+                }
+                else
+                {
+                    // Tùy chọn: Nếu không có ảnh, gán ảnh mặc định
+                    baiViet.HinhAnh = "default_blog.jpg";
+                }
+
+                // 2. Gán các giá trị mặc định/hệ thống
+                baiViet.NgayDang = DateTime.Now;
+                baiViet.LuotXem = 0;
+
+                // 3. Lưu vào Database
+                db.BaiViets.Add(baiViet);
+                db.SaveChanges();
+                return RedirectToAction("BlogList");
+            }
+
+        RebindView:
+            // Tải lại ViewBag nếu ModelState không hợp lệ hoặc có lỗi upload
+            ViewBag.MaDanhMucBlog = new SelectList(db.DanhMucBlogs, "MaDanhMucBlog", "TenDanhMuc", baiViet.MaDanhMucBlog);
+            return View(baiViet);
+        }
+
+        // GET: Blog/Edit/5
+        // GET: Blog/Edit/5
+        public ActionResult BlogEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Tải Bài viết
+            BaiViet baiViet = db.BaiViets.Find(id);
+
+            if (baiViet == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Chỉ cần MaDanhMucBlog
+            ViewBag.MaDanhMucBlog = new SelectList(db.DanhMucBlogs, "MaDanhMucBlog", "TenDanhMuc", baiViet.MaDanhMucBlog);
+
+            // KHÔNG cần MaKH (KhachHang) nữa
+
+            return View(baiViet);
+        }
+
+        // POST: Blog/Edit/5
+        // POST: Blog/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)] // Cho phép nội dung HTML
+        public ActionResult BlogEdit(
+            [Bind(Include = "MaBaiViet,TieuDe,TomTat,NoiDung,HinhAnh,Tacgia,NgayDang,LuotXem,MaDanhMucBlog")] BaiViet baiViet,
+            HttpPostedFileBase HinhAnhFile)
+        {
+            // Lấy thông tin bài viết cũ (trước khi chỉnh sửa)
+            var baiVietDb = db.BaiViets.AsNoTracking().FirstOrDefault(b => b.MaBaiViet == baiViet.MaBaiViet);
+            if (baiVietDb == null) return HttpNotFound();
+
+            // 1. Gán lại các giá trị hệ thống không thay đổi từ form
+            baiViet.NgayDang = baiVietDb.NgayDang;
+            baiViet.LuotXem = baiVietDb.LuotXem;
+            string oldFileName = baiVietDb.HinhAnh; // Lưu tên file cũ để xử lý sau
+
+            if (ModelState.IsValid)
+            {
+                // 2. Xử lý Upload/Cập nhật Ảnh
+                if (HinhAnhFile != null && HinhAnhFile.ContentLength > 0)
+                {
+                    try
+                    {
+                        string uploadPath = Server.MapPath("~/img/Blog/");
+                        string extension = Path.GetExtension(HinhAnhFile.FileName);
+                        string newFileName = Guid.NewGuid().ToString() + extension;
+                        string path = Path.Combine(uploadPath, newFileName);
+
+                        // Lưu file mới
+                        HinhAnhFile.SaveAs(path);
+
+                        // Xóa file cũ (tùy chọn, nên làm để tiết kiệm dung lượng)
+                        if (!string.IsNullOrEmpty(oldFileName) && oldFileName != "default_blog.jpg")
+                        {
+                            string oldPath = Path.Combine(uploadPath, oldFileName);
+                            if (System.IO.File.Exists(oldPath))
+                            {
+                                System.IO.File.Delete(oldPath);
+                            }
+                        }
+
+                        // Gán tên file mới
+                        baiViet.HinhAnh = newFileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", "Lỗi khi upload file: " + ex.Message);
+                        goto RebindView;
+                    }
+                }
+                else
+                {
+                    // Nếu không upload file mới, giữ nguyên tên file cũ
+                    baiViet.HinhAnh = oldFileName;
+                }
+
+                // 3. Lưu vào Database
+                db.Entry(baiViet).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("BlogList");
+            }
+
+        RebindView:
+            ViewBag.MaDanhMucBlog = new SelectList(db.DanhMucBlogs, "MaDanhMucBlog", "TenDanhMuc", baiViet.MaDanhMucBlog);
+            return View(baiViet);
+        }
+
+        // GET: Blog/Delete/5
+        public ActionResult BlogDelete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            // Tải Bài viết, bao gồm Danh mục để hiển thị thông tin xác nhận
+            BaiViet baiViet = db.BaiViets.Include(b => b.DanhMucBlog).SingleOrDefault(b => b.MaBaiViet == id);
+
+            if (baiViet == null)
+            {
+                return HttpNotFound();
+            }
+            return View(baiViet);
+        }
+
+        // POST: Blog/Delete/5
+        // POST: Blog/Delete/5
+        [HttpPost, ActionName("BlogDelete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult BlogDeleteConfirmed(int id)
+        {
+            BaiViet baiViet = db.BaiViets.Find(id);
+
+            if (baiViet != null)
+            {
+                // Xử lý Xóa file ảnh trên Server
+                if (!string.IsNullOrEmpty(baiViet.HinhAnh) && baiViet.HinhAnh != "default_blog.jpg")
+                {
+                    string uploadPath = Server.MapPath("~/img/Blog/");
+                    string path = Path.Combine(uploadPath, baiViet.HinhAnh);
+
+                    if (System.IO.File.Exists(path))
+                    {
+                        System.IO.File.Delete(path);
+                    }
+                }
+
+                // Xóa khỏi Database
+                db.BaiViets.Remove(baiViet);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("BlogList");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -59,14 +59,23 @@
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -77,12 +86,18 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -127,9 +142,6 @@
       <Private>True</Private>
       <HintPath>packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -148,11 +160,16 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BaiViet.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Booking.cs">
       <DependentUpon>Travela.tt</DependentUpon>
@@ -166,6 +183,9 @@
     <Compile Include="Models\DanhMuc.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DanhMucBlog.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DiaDiem.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
@@ -175,18 +195,6 @@
     <Compile Include="Models\KhachHang.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\KhuyenMai.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MucYeuThich.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\NhanVien.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Quyen.cs">
-      <DependentUpon>Travela.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
@@ -194,6 +202,9 @@
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>Travela.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TinhTrangTour.cs">
       <DependentUpon>Travela.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tour.cs">
@@ -219,8 +230,12 @@
     </Compile>
     <Compile Include="Models\VnPay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TourData.ashx.cs">
+      <DependentUpon>TourData.ashx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="chatbot.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -240,6 +255,7 @@
     <Content Include="Content\css\Admin_Layout.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\card_tour.css" />
+    <Content Include="Content\css\Chatbot.css" />
     <Content Include="Content\css\destination.css" />
     <Content Include="Content\css\detail.css" />
     <Content Include="Content\css\guide.css" />
@@ -269,7 +285,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="HtmlPage1.html" />
     <Content Include="Icon.ico" />
     <Content Include="img\about-img-1.png" />
     <Content Include="img\about-img.jpg" />
@@ -487,11 +502,24 @@
     <Content Include="Views\Home\BookingConfirmation.cshtml" />
     <Content Include="Views\Home\Profile.cshtml" />
     <Content Include="Views\Home\PaymentFail.cshtml" />
+    <Content Include="Views\Admin\TTTourList.cshtml" />
+    <Content Include="Views\Admin\TTTourEdit.cshtml" />
+    <Content Include="Views\Admin\BlogList.cshtml" />
+    <Content Include="Views\Admin\BlogCreate.cshtml" />
+    <Content Include="Views\Blog\Details.cshtml" />
+    <Content Include="Views\Admin\BlogDetails.cshtml" />
+    <Content Include="Views\Admin\BlogEdit.cshtml" />
+    <Content Include="Views\Admin\BlogDelete.cshtml" />
+    <Content Include="Views\Blog\index.cshtml" />
+    <Content Include="TourData.ashx" />
+    <Content Include="Tour_Data.ashx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="img\Blog\" />
     <Folder Include="img\Destination\" />
     <Folder Include="img\Tours\" />
+    <Folder Include="Views\Chatbot\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

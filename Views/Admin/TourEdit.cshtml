@@ -86,11 +86,6 @@
                             @Html.EditorFor(model => model.ThoiGian, new { htmlAttributes = new { @class = "form-control", placeholder = "VD: 3N2Đ" } })
                             @Html.ValidationMessageFor(model => model.ThoiGian, "", new { @class = "text-danger small" })
                         </div>
-                        <div class="col-md-6 mb-3">
-                            @Html.LabelFor(model => model.songuoi, htmlAttributes: new { @class = "form-label fw-bold" })
-                            @Html.EditorFor(model => model.songuoi, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1" } })
-                            @Html.ValidationMessageFor(model => model.songuoi, "", new { @class = "text-danger small" })
-                        </div>
                     </div>
 
                     <div class="mb-3">

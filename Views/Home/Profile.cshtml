@@ -1,214 +1,284 @@
 ﻿@model Trave.Models.KhachHang
 @{
-    ViewBag.Title = "Hồ sơ Khách hàng";
+    ViewBag.Title = "Hồ sơ của tôi";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-    /* --- Header của trang Profile (Nền ảnh) --- */
+    /* --- 1. FIX LỖI DISPLAY (Giao diện) --- */
+
+    /* Tăng khoảng cách header để không bị dính lên trên */
+    .profile-container-wrapper {
+        margin-top: 3rem !important; /* Đẩy xuống */
+        padding-bottom: 3rem;
+    }
+
     .profile-header {
-        background:  url('/img/Background/c.png'); /* Đảm bảo bạn có ảnh /img/carousel-1.jpg */
-        background-size: cover;
-        background-position: center;
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%) ;
         color: white;
-        padding: 4rem 2rem;
-        border-radius: 0.5rem;
+        padding: 2.5rem 2rem; /* Thu gọn padding chút cho đẹp */
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.2);
+        position: relative;
+        margin-bottom: 2rem;
     }
 
-    /* --- Ảnh đại diện (Avatar) --- */
     .profile-avatar {
-        width: 120px;
-        height: 120px;
+        width: 100px; /* Thu nhỏ avatar xíu cho cân đối */
+        height: 100px;
         border-radius: 50%;
-        border: 4px solid white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border: 4px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         object-fit: cover;
+        background-color: #fff;
     }
 
-    /* --- Tùy chỉnh các Tab (Bootstrap) --- */
-    .nav-tabs .nav-link {
+    /* --- 2. FIX LỖI SAO NHẢY TRANG --- */
+    .rate {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end; /* Căn trái */
+    }
+
+        .rate > input {
+            /* CŨ: top: -9999px; => Gây lỗi nhảy trang */
+            /* MỚI: Ẩn tại chỗ */
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none; /* Không cho click vào input ẩn */
+        }
+
+        .rate > label {
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+            padding: 0 5px; /* Thêm khoảng cách giữa các sao */
+            transition: color 0.2s;
+        }
+
+            /* Hiệu ứng sao */
+            .rate > label:before {
+                content: '★ ';
+            }
+
+        .rate > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+
+    /* --- Badge trạng thái --- */
+    .status-badge-pill {
+        padding: 0.5em 1em;
+        border-radius: 50rem;
         font-weight: 600;
-        color: #555;
-        border: none;
-        border-bottom: 3px solid transparent;
-    }
-
-        .nav-tabs .nav-link.active {
-            color: #0d6efd; /* Màu primary */
-            background-color: transparent;
-            border-bottom: 3px solid #0d6efd;
-        }
-
-    /* --- Thẻ hiển thị Đơn đặt hàng --- */
-    .order-card {
-        border: 1px solid #e0e0e0;
-        border-radius: 0.5rem;
-        transition: all 0.2s ease-in-out;
-    }
-
-        .order-card:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            transform: translateY(-3px);
-        }
-
-    .order-card-header {
-        background-color: #f8f9fa; /* Màu xám nhạt */
-        border-bottom: 1px solid #e0e0e0;
-        padding: 0.75rem 1.25rem;
-    }
-
-    /* --- Màu sao đánh giá --- */
-    .star-rating .fa-star {
-        color: #ffc107; /* Màu vàng */
-    }
-
-    .profile-page-wrapper {
-        /* Đẩy nội dung trang xuống dưới thanh navbar */
-        padding-top: 80px;
-        /* (Bạn có thể cần điều chỉnh 80px thành 90px hoặc 70px
-           cho vừa khít với chiều cao navbar của bạn) */
+        font-size: 0.85rem;
+        min-width: 120px; /* Đảm bảo nút có độ rộng tối thiểu */
+        display: inline-block;
+        text-align: center;
     }
 </style>
-<!-- Header Start -->
+
 <div class="container-fluid bg-breadcrumb">
     <div class="container text-center py-5" style="max-width: 900px;">
-        <h1 class="text-white display-3 mb-4">
-            Your Profile
-        </h1>
-        <ol class="breadcrumb justify-content-center mb-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("index","home")">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Pages</a></li>
-            <li class="breadcrumb-item active text-white">Profile</li>
-        </ol>
+        <h3 class="text-white display-3 mb-4">Hồ sơ khách hàng</h3>
     </div>
 </div>
-<!-- Header End -->
 
-<div class="container py-5 profile-page-wrapper">
+<div class="container profile-container-wrapper">
 
-    <div class="profile-header mb-4 text-center text-lg-start">
-        <div class="d-flex flex-column flex-lg-row align-items-center">
-            @*<img src="@(Model.AnhDaiDien ?? "/img/testimonial-1.jpg")" alt="Avatar" class="profile-avatar mb-3 mb-lg-0">*@
-            <div class="ms-lg-4">
-                <h1 class="h2 mb-0 text-white">@Model.TenKH</h1>
-                <p class="mb-1 text-white"><i class="fas fa-envelope me-2"></i>@Model.Email</p>
-                <p class="mb-0 text-white"><i class="fas fa-phone me-2"></i>@Model.SoDT</p>
-            </div>
-            <div class="ms-lg-auto mt-3 mt-lg-0">
-                <a href="#" class="btn btn-light"><i class="fas fa-edit me-2"></i> Chỉnh sửa Hồ sơ</a>
+    <div class="profile-header">
+        <div class="d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+            
+            <div class="text-white flex-grow-1">
+                <h2 class="fw-bold mb-1">@Model.TenKH</h2>
+                <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-3 opacity-75 small">
+                    <span><i class="fas fa-envelope me-1"></i>@Model.Email</span>
+                    <span><i class="fas fa-phone me-1"></i>@(Model.SoDT ?? "Chưa cập nhật")</span>
+                </div>
+            </div>  
+            <div class="mt-3 mt-md-0">
+                <button class="btn btn-light text-primary fw-bold shadow-sm rounded-pill px-4 btn-sm">
+                    <i class="fas fa-user-edit me-2"></i>Sửa hồ sơ
+                </button>
             </div>
         </div>
     </div>
 
-    <ul class="nav nav-tabs nav-fill mb-4" id="profileTab" role="tablist">
+    <ul class="nav nav-pills mb-4 justify-content-center gap-2" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="true">
-                <i class="fas fa-box me-2"></i> Lịch sử Đặt tour (@Model.Bookings.Count)
+            <button class="btn btn-primary rounded-pill px-4 active" id="pills-history-tab" data-bs-toggle="pill" data-bs-target="#pills-history" type="button">
+                <i class="fas fa-suitcase-rolling me-2"></i>Lịch sử Tour
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">
-                <i class="fas fa-star me-2"></i> Đánh giá của tôi (@Model.Bookings.SelectMany(b => b.Tour.DanhGias).Count())
+            <button class="btn btn-outline-primary border-0 rounded-pill px-4" id="pills-reviews-tab" data-bs-toggle="pill" data-bs-target="#pills-reviews" type="button">
+                <i class="fas fa-comment-alt me-2"></i>Đánh giá của tôi
             </button>
         </li>
     </ul>
 
-    <div class="tab-content" id="profileTabContent">
+    <div class="tab-content" id="pills-tabContent">
 
-        <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
+        <div class="tab-pane fade show active" id="pills-history">
             @if (!Model.Bookings.Any())
             {
-                <div class="alert alert-info text-center">Bạn chưa đặt tour nào.</div>
+                <div class="text-center py-5 text-muted bg-light rounded-3">
+                    <p class="mb-0">Bạn chưa đặt chuyến đi nào.</p>
+                </div>
             }
 
             @foreach (var item in Model.Bookings.OrderByDescending(b => b.NgayDat))
             {
-                <div class="card shadow-sm mb-4 order-card">
-                    <div class="order-card-header d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <span class="text-muted me-3">Mã đơn: <strong>#@item.MaBooking</strong></span>
-                            <span class="text-muted">Ngày đi: <strong>@item.NgayDi.ToString("dd/MM/yyyy")</strong></span>
-                        </div>
-                        <span class="badge
-                            @(item.TrangThai == "Đã hoàn thành" ? "bg-success" :
-                              item.TrangThai == "Đã hủy" ? "bg-danger" : "bg-warning text-dark") fs-6">
-                            @item.TrangThai
-                        </span>
-                    </div>
+                // Logic kiểm tra trạng thái
+                bool isCompleted = item.TinhTrangTours != null && item.TinhTrangTours.Any(tt => tt.TrangThai == 1);
+                bool hasReviewed = item.DanhGias != null && item.DanhGias.Any();
 
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-5 d-flex">
-                                <img src="@Url.Content("~/img/destination/"+@item.Tour.anhmota)" alt="@item.Tour.TenTour" style="width: 100px; height: 100px; object-fit: cover; border-radius: 0.25rem; margin-right: 15px;">
-                                <div>
-                                    <h5 class="card-title mb-1">@item.Tour.TenTour</h5>
-                                    <h6 class="card-subtitle text-primary fw-bold">@item.TongGia.Value.ToString("N0") $</h6>
+                <div class="card border-0 shadow-sm mb-3 overflow-hidden">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-2">
+                                <img src="@Url.Content("~/img/Destination/" + (item.Tour.anhmota ?? "default.jpg"))"
+                                     class="img-fluid rounded-3" alt="@item.Tour.TenTour" style="height: 80px; width: 100%; object-fit: cover;">
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="d-flex align-items-center mb-1">
+                                    <span class="text-primary fw-bold me-2">#@item.MaBooking</span>
+                                    <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> @item.NgayDi.ToString("dd/MM/yyyy")</small>
                                 </div>
+                                <h5 class="fw-bold mb-1 text-dark text-truncate">@item.Tour.TenTour</h5>
+                                <span class="text-secondary fw-bold">@string.Format("{0:N0}", item.TongGia) $</span>
                             </div>
 
-                            <div class="col-md-4">
-                                <dl class="row mb-0">
-                                    <dt class="col-sm-5 text-muted"><i class="fas fa-user-tie me-2"></i>HDV:</dt>
-                                    <dd class="col-sm-7">@(item.Tour.guide?.tenguide ?? "Chưa gán")</dd>
-
-                                    <dt class="col-sm-5 text-muted"><i class="fas fa-bus me-2"></i>Phương tiện:</dt>
-                                    <dd class="col-sm-7">@(item.Tour.PhuongTien ?? "N/A")</dd>
-                                </dl>
-                            </div>
-
-                            <div class="col-md-3 text-center text-md-end align-self-center">
-                                @{ bool daDanhGia = item.Tour.DanhGias.Any(); }
-
-                                @if (item.TrangThai == "Đã hoàn thành" && !daDanhGia)
+                            <div class="col-md-3 text-md-center">
+                                @if (isCompleted)
                                 {
-                                    <a href="@Url.Action("DanhGia", "Booking", new { id = item.MaBooking })"
-                                       class="btn btn-primary btn-sm">
-                                        <i class="fas fa-star me-1"></i> Viết Đánh Giá
+                                    <span class="badge bg-success status-badge-pill">
+                                        Hoàn thành
+                                    </span>
+                                }
+                                else if (item.TrangThai == "Đã hủy")
+                                {
+                                    <span class="badge bg-danger status-badge-pill">
+                                        Đã hủy
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark status-badge-pill">
+                                        Đang diễn ra
+                                    </span>
+                                }
+                            </div>
+
+                            <div class="col-md-2 text-md-end">
+                                @if (isCompleted && !hasReviewed)
+                                {
+                                    <button class="btn btn-primary btn-sm rounded-pill w-100" type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#reviewForm-@item.MaBooking">
+                                        <i class="fas fa-star me-1"></i> Đánh giá
+                                    </button>
+                                }
+                                else if (hasReviewed)
+                                {
+                                    <button class="btn btn-outline-secondary btn-sm rounded-pill w-100" disabled>
+                                        Đã đánh giá
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Details", "Home", new { id = item.MaTour })" class="btn btn-outline-primary btn-sm rounded-pill w-100">
+                                        Xem Tour
                                     </a>
                                 }
-                                @if (daDanhGia)
-                                {
-                                    <span class="btn btn-outline-success btn-sm disabled">Đã đánh giá</span>
-                                }
                             </div>
                         </div>
                     </div>
+
+                    @if (isCompleted && !hasReviewed)
+                    {
+                        <div class="collapse bg-light border-top" id="reviewForm-@item.MaBooking">
+                            <div class="p-4">
+                                @using (Html.BeginForm("SubmitReview", "Home", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="MaBooking" value="@item.MaBooking" />
+                                    <input type="hidden" name="MaTour" value="@item.MaTour" />
+
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <label class="form-label fw-bold text-dark">Chấm điểm chuyến đi:</label>
+                                            <div class="rate">
+                                                <input type="radio" id="star5-@item.MaBooking" name="SoSao" value="5" checked />
+                                                <label for="star5-@item.MaBooking" title="Tuyệt vời"></label>
+
+                                                <input type="radio" id="star4-@item.MaBooking" name="SoSao" value="4" />
+                                                <label for="star4-@item.MaBooking" title="Tốt"></label>
+
+                                                <input type="radio" id="star3-@item.MaBooking" name="SoSao" value="3" />
+                                                <label for="star3-@item.MaBooking" title="Tạm được"></label>
+
+                                                <input type="radio" id="star2-@item.MaBooking" name="SoSao" value="2" />
+                                                <label for="star2-@item.MaBooking" title="Kém"></label>
+
+                                                <input type="radio" id="star1-@item.MaBooking" name="SoSao" value="1" />
+                                                <label for="star1-@item.MaBooking" title="Rất tệ"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <textarea name="NoiDung" class="form-control" rows="2" placeholder="Viết cảm nhận của bạn..."></textarea>
+                                        </div>
+                                        <div class="col-md-12 text-end">
+                                            <button type="submit" class="btn btn-success px-4">Gửi</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
             }
         </div>
 
-        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-            @if (!Model.Bookings.SelectMany(b => b.Tour.DanhGias).Any())
-            {
-                <div class="alert alert-info text-center">Bạn chưa có đánh giá nào.</div>
-            }
-
-            @foreach (var item in Model.Bookings.SelectMany(b => b.Tour.DanhGias).OrderByDescending(dg => dg.NgayTao))
-            {
-                <div class="card shadow-sm mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-2">
-                            <h5 class="card-title mb-0">@item.Tour.TenTour</h5>
-                            <span class="text-muted">@item.NgayTao</span>
+        <div class="tab-pane fade" id="pills-reviews">
+            <div class="row">
+                @if (!Model.Bookings.SelectMany(b => b.DanhGias).Any())
+                {
+                    <div class="text-center text-muted py-4">Chưa có đánh giá nào.</div>
+                }
+                @foreach (var review in Model.Bookings.SelectMany(b => b.DanhGias).OrderByDescending(r => r.NgayTao))
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <h6 class="fw-bold text-primary mb-1">@review.Booking.Tour.TenTour</h6>
+                                <div class="text-warning mb-2 small">
+                                    @for (int i = 0; i < review.SoSao; i++)
+                                    {<i class="fas fa-star"></i>}
+                                    @for (int i = 0; i < (5 - review.SoSao); i++)
+                                    {<i class="far fa-star"></i>}
+                                </div>
+                                <p class="card-text text-muted small">"@review.NoiDung"</p>
+                            </div>
                         </div>
-                        <div class="star-rating mb-2">
-                            @for (int i = 0; i < item.SoSao; i++)
-                            {
-                                <i class="fas fa-star"></i>
-                            }
-                            @for (int i = 0; i < (5 - item.SoSao); i++)
-                            {
-                                <i class="far fa-star"></i>
-                            }
-                        </div>
-                        <p class="card-text">@item.NoiDung</p>
-                        @*@if (!item.DaDuyet)
-                            {
-                                <span class="badge bg-light text-dark">Chờ duyệt</span>
-                            }*@
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
 
     </div>

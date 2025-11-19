@@ -30,6 +30,7 @@
     <link href="~/Content/css/detail.css" rel="stylesheet" />
     <link href="~/Content/css/Tour_Detail.css" rel="stylesheet" />
     <link href="~/Content/css/Testimonial.css" rel="stylesheet" />
+    <link href="~/Content/css/Chatbot.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
@@ -61,16 +62,16 @@
             </div>
             <div class="col-lg-4 text-center text-lg-end">
                 @*<div class="d-inline-flex align-items-center" style="height: 45px;">
-            <a href="@Url.Action("Register","Auth")"><small class="me-3 text-light"><i class="fa fa-user me-2"></i>Register</small></a>
-            <a href="@Url.Action("Login","Auth")"><small class="me-3 text-light"><i class="fa fa-sign-in-alt me-2"></i>Login</small></a>
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle text-light" data-bs-toggle="dropdown"><small><i class="fa fa-home me-2"></i> My Dashboard</small></a>
-                <div class="dropdown-menu rounded">
-                    <a href="#" class="dropdown-item"><i class="fas fa-user-alt me-2"></i> My Profile</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-power-off me-2"></i> Log Out</a>
-                </div>
-            </div>
-        </div>*@
+                        <a href="@Url.Action("Register","Auth")"><small class="me-3 text-light"><i class="fa fa-user me-2"></i>Register</small></a>
+                        <a href="@Url.Action("Login","Auth")"><small class="me-3 text-light"><i class="fa fa-sign-in-alt me-2"></i>Login</small></a>
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-toggle text-light" data-bs-toggle="dropdown"><small><i class="fa fa-home me-2"></i> My Dashboard</small></a>
+                            <div class="dropdown-menu rounded">
+                                <a href="#" class="dropdown-item"><i class="fas fa-user-alt me-2"></i> My Profile</a>
+                                <a href="#" class="dropdown-item"><i class="fas fa-power-off me-2"></i> Log Out</a>
+                            </div>
+                        </div>
+                    </div>*@
                 <div class="d-inline-flex align-items-center" style="height: 45px;">
                     @if (Request.IsAuthenticated)
                     {
@@ -129,20 +130,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
+
                     <a href="@Url.Action("tour","Home")" class="nav-item nav-link">Tours</a>
+                    <a href="@Url.Action("index","Blog")" class="nav-item nav-link">Blog</a>
                     <a href="@Url.Action("about","home")" class="nav-item nav-link">About</a>
-                    @*<div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                            <div class="dropdown-menu m-0">
-                                <a href="destination.html" class="dropdown-item">Destination</a>
-                                <a href="tour.html" class="dropdown-item">Explore Tour</a>
-                                <a href="booking.html" class="dropdown-item">Travel Booking</a>
-                                <a href="gallery.html" class="dropdown-item">Our Gallery</a>
-                                <a href="guides.html" class="dropdown-item">Travel Guides</a>
-                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                <a href="404.html" class="dropdown-item">404 Page</a>
-                            </div>
-                        </div>*@
                     <a href="@Url.Action("contact","home")" class="nav-item nav-link ">Contact</a>
                 </div>
                 <a href="@Url.Action("tour","home")" class="btn btn-primary rounded-pill py-2 px-4 ms-lg-4">Book Now</a>
@@ -244,12 +235,13 @@
     <a href="#" class="btn btn-primary btn-primary-outline-0 btn-md-square back-to-top"><i class="fa fa-arrow-up"></i></a>
 
 
+    <!-- ===== HẾT CHATBOT ===== -->
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/Content/lib/easing/easing.min.js"></script>
     <script src="~/Content/lib/waypoints/waypoints.min.js"></script>
-    <script src="~/Content/lib/owlcarousel/owl.carousel.min.js"></script>s
+    <script src="~/Content/lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="~/Content/lib/lightbox/js/lightbox.min.js"></script>
 
 
@@ -258,6 +250,392 @@
 
     <!-- Template Javascript -->
     <script src="~/Scripts/js/main.js"></script>
+
+
+
+    <div class="travela-chat-container">
+        <div id="travela-bubble"></div>
+        <div id="travela-chatbox">
+            <div class="chat-header">
+                <div class="avatar">✈️</div>
+                <div class="info">
+                    <h3>Tư Vấn Viên Travela AI</h3>
+                    <div class="status online">Sẵn sàng tư vấn</div>
+                </div>
+            </div>
+            <div id="travela-messages">
+                <div class="typing-indicator" id="typing">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="travela-input" placeholder="Nhập câu hỏi của bạn...">
+                <button class="send-btn" onclick="sendMsg()"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== QUẢN LÝ UI =====
+        const bubble = document.getElementById('travela-bubble');
+        const chatbox = document.getElementById('travela-chatbox');
+        const messages = document.getElementById('travela-messages');
+        const input = document.getElementById('travela-input');
+        const typing = document.getElementById('typing');
+
+        bubble.onclick = () => {
+            chatbox.classList.toggle('active');
+            if (chatbox.classList.contains('active') && conversationHistory.length === 0) {
+                showWelcomeMessage();
+            }
+        };
+
+        // ===== QUẢN LÝ DỮ LIỆU & HỘI THOẠI =====
+        let conversationHistory = [];
+        let tourCache = null;
+        let lastFetchTime = 0;
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 phút
+        const API_ENDPOINT = '/TourData.ashx';
+
+        function addToHistory(role, content) {
+            conversationHistory.push({ role, content });
+            if (conversationHistory.length > 10) {
+                conversationHistory = conversationHistory.slice(-10);
+            }
+        }
+
+        // ===== LẤY DỮ LIỆU TOUR TỪ API =====
+        async function getTours() {
+            const now = Date.now();
+
+            if (tourCache && (now - lastFetchTime < CACHE_DURATION)) {
+                console.log('✅ Sử dụng cache');
+                return tourCache;
+            }
+
+            try {
+                console.log('🔄 Đang fetch dữ liệu từ API...');
+                const res = await fetch(API_ENDPOINT);
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                if (!Array.isArray(data) || data.length === 0) throw new Error('Dữ liệu không hợp lệ');
+
+                tourCache = data;
+                lastFetchTime = now;
+                console.log(`✅ Đã tải ${data.length} tour`);
+                return tourCache;
+
+            } catch (err) {
+                console.error('❌ Lỗi API:', err);
+                if (!tourCache) {
+                    console.log('⚠️ Dùng dữ liệu mẫu dự phòng');
+                    tourCache = FALLBACK_TOURS;
+                }
+                return tourCache;
+            }
+        }
+
+        // ===== DỮ LIỆU MẪU =====
+        const FALLBACK_TOURS = [
+            { "MaTour": "TOUR001", "TenTour": "Luxury Honeymoon Paris 7N6Đ", "Gia": 35000, "SoChoCon": 10, "PhuongTien": "Máy bay", "MoTa": "Chuyến đi lãng mạn cao cấp, bao gồm du thuyền trên sông Seine và khách sạn 5 sao.", "guide": "Alex Turner" },
+            { "MaTour": "TOUR002", "TenTour": "Kyoto Cổ Kính & Văn Hóa 8 Ngày", "Gia": 1850.50, "SoChoCon": 20, "PhuongTien": "Máy bay", "MoTa": "Khám phá các đền thờ cổ, trà đạo truyền thống và khu phố Gion.", "guide": "" },
+            { "MaTour": "TOUR003", "TenTour": "Ẩm Thực Phục Hưng Florence 6 Ngày", "Gia": 1200.00, "SoChoCon": 15, "PhuongTien": "Máy bay", "MoTa": "Học làm Pasta, nếm rượu vang Chianti và thăm chợ trung tâm.", "guide": "Maria Rossi" },
+            { "MaTour": "TOUR007", "TenTour": "New York Gia Đình 5 Ngày", "Gia": 980.50, "SoChoCon": 40, "PhuongTien": "Máy bay", "MoTa": "Tượng Nữ thần Tự do, Times Square và Bảo tàng Lịch sử Tự nhiên.", "guide": "Jason Lee" },
+            { "MaTour": "TOUR015", "TenTour": "Honeymoon Santorini 7 Ngày", "Gia": 2900.00, "SoChoCon": 5, "PhuongTien": "Máy bay", "MoTa": "Tour trăng mật sang trọng, ngắm hoàng hôn và biệt thự riêng.", "guide": "" },
+            { "MaTour": "TOUR019", "TenTour": "Trekking Fansipan 3 Ngày", "Gia": 250.00, "SoChoCon": 12, "PhuongTien": "Ô tô/Đi bộ", "MoTa": "Thử thách chinh phục nóc nhà Đông Dương, cảnh quan hùng vĩ, phù hợp với du khách mạo hiểm.", "guide": "Trần Văn Dũng" },
+            { "MaTour": "TOUR021", "TenTour": "Hà Nội - Phố Cổ Ẩm Thực 2 Ngày", "Gia": 150.00, "SoChoCon": 30, "PhuongTien": "Xe máy/Đi bộ", "MoTa": "Khám phá các món ăn đường phố nổi tiếng: Phở, Bún chả, Cà phê trứng.", "guide": "Nguyễn Thu Hương" }
+        ];
+
+        // ===== HIỂN THỊ TIN NHẮN =====
+        function botReply(text, isHTML = false, showQuickReplies = false) {
+            typing.classList.remove('active');
+            const msg = document.createElement('div');
+            msg.className = 'message bot-msg';
+            if (isHTML) msg.innerHTML = text;
+            else msg.textContent = text;
+
+            if (showQuickReplies) {
+                const quickReplies = document.createElement('div');
+                quickReplies.className = 'quick-replies';
+                quickReplies.innerHTML = `
+                    <button class="quick-reply-btn" onclick="testMessage('Tour lãng mạn')">💑 Lãng mạn</button>
+                    <button class="quick-reply-btn" onclick="testMessage('Tour gia đình')">👨‍👩‍👧 Gia đình</button>
+                    <button class="quick-reply-btn" onclick="testMessage('Tour mạo hiểm')">⛰️ Mạo hiểm</button>
+                    <button class="quick-reply-btn" onclick="testMessage('Tour ẩm thực')">🍜 Ẩm thực</button>
+                `;
+                msg.appendChild(quickReplies);
+            }
+
+            messages.insertBefore(msg, typing);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function userReply(text) {
+            const msg = document.createElement('div');
+            msg.className = 'message user-msg';
+            msg.textContent = text;
+            messages.insertBefore(msg, typing);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function showTyping() {
+            typing.classList.add('active');
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // ===== XỬ LÝ THÔNG MINH =====
+        //function extractBudget(text) {
+        //    text = text.toLowerCase();
+        //    let match = text.match(/(?:dưới|thấp hơn|tối đa|max)?\s*(\d+(?:[.,]\d+)?)(k)?\s*(usd|\$|đô|dollar)?/i);
+        //    if (match) {
+        //        let value = parseFloat(match[1].replace(/[.]/g, ''));
+        //        if (match[2]) value *= 1000;
+        //        return value;
+        //    }
+        //    return null;
+        //}
+        function extractBudget(text) {
+            text = text.toLowerCase();
+
+            // tìm số + k(optional) + đơn vị(optional)
+            const match = text.match(/(?:<|<=|dưới|thấp hơn|max|tối đa)?\s*(\d+(?:[.,]\d+)?)(\s*k)?\s*(usd|\$|đô|dollar)?/i);
+
+            if (!match) return null;
+
+            let number = match[1].replace(/,/g, '.');     // đổi , thành .
+            let value = parseFloat(number);
+
+            if (isNaN(value)) return null;
+
+            // nếu có chữ K → nhân 1000
+            if (match[2]) value *= 1000;
+
+            return value;
+        }
+
+
+        function findRelevantTours(userText, tours) {
+            const text = userText.toLowerCase();
+            let filtered = [...tours];
+
+            // Lọc ngân sách
+            const budgetLimit = extractBudget(userText);
+            if (budgetLimit !== null) filtered = filtered.filter(t => parseFloat(t.Gia) <= budgetLimit);
+
+            // Lọc từ khóa
+            const keywords = {
+                // Paris & Pháp
+                'paris': ['paris', 'pháp', 'luxury', 'honeymoon', 'eiffel', 'disneyland', 'giáng sinh', 'lễ hội hoa'],
+                // Nhật Bản
+                'nhật': ['kyoto', 'tokyo', 'japan', 'nhật bản', 'meiji', 'onsen', 'kaiseki', 'shinjuku', 'shibuya', 'yoga'],
+                // Italy
+                'italy': ['florence', 'venice', 'rome', 'tuscany', 'italy', 'pasta', 'wine', 'culinary'],
+                // Mỹ
+                'mỹ': ['new york', 'ny', 'usa', 'america', 'fifth avenue', 'times square', 'museum', 'shopping'],
+                // Brazil
+                'brazil': ['rio', 'ipanema', 'brazil', 'copacabana', 'cristo', 'lướt sóng', 'beach'],
+                // Campuchia
+                'campuchia': ['angkor', 'siem reap', 'cambodia', 'ta prohm', 'chiêm bái', 'phật giáo'],
+                // Thổ Nhĩ Kỳ
+                'thổ nhĩ kỳ': ['istanbul', 'turkey', 'cappadocia', 'pamukkale', 'blue mosque', 'hagia sophia', 'coffee', 'culinary'],
+                // Hy Lạp / Santorini
+                'santorini': ['santorini', 'honeymoon', 'greece', 'hy lạp', 'sunset', 'villa'],
+                // Barcelona / Tây Ban Nha
+                'barcelona': ['barcelona', 'barca', 'catalonia', 'sagrada familia', 'gaudí', 'parc guell', 'lễ hội', 'team building'],
+                // Venice
+                'venice': ['venice', 'italy', 'gondola', 'canal', 'romantic'],
+                // Tokyo / Nhật Bản ẩm thực
+                'ẩm thực nhật': ['shinjuku', 'shibuya', 'culinary', 'food', 'ẩm thực', 'tokyo', 'street food', 'japanese cuisine'],
+                // Mạo hiểm / Adventure
+                'mạo hiểm': ['adventure', 'extreme', 'leo núi', 'trekking', 'himalaya', 'hang động', 'alps', 'fansipan', 'amazon', 'table mountain', 'scuba'],
+                // Gia đình / Family
+                'gia đình': ['family', 'children', 'kids', 'gia đình', 'disney', 'park', 'school trip', 'museum', 'team building'],
+                // Ẩm thực / Culinary
+                'ẩm thực': ['culinary', 'food', 'ẩm thực', 'đường phố', 'rượu vang', 'hải sản', 'cooking', 'khmer', 'local food'],
+                // Văn hóa / Cultural
+                'văn hóa': ['văn hóa', 'lịch sử', 'di sản', 'museum', 'bảo tàng', 'di tích', 'temple', 'religion', 'heritage'],
+                // Biển / Beach
+                'biển': ['beach', 'sea', 'ocean', 'coast', 'mediterranean', 'copacabana', 'ipanema', 'rio', 'summer'],
+                // Team Building / Corporate
+                'team building': ['team building', 'corporate', 'workshop', 'company', 'retreat', 'hoạt động nhóm', 'hội thảo'],
+                // Yoga / Wellness
+                'yoga': ['yoga', 'meditation', 'wellness', 'retreat', 'thiền', 'khóa tu']
+            };
+
+
+            let matchedCategory = null;
+
+            // Tìm nhóm keyword tương ứng với câu người dùng
+            for (const [key, patterns] of Object.entries(keywords)) {
+                if (patterns.some(p => text.includes(p))) {
+                    matchedCategory = patterns;
+                    break;
+                }
+            }
+
+            // Nếu tìm được nhóm → chỉ giữ tour thuộc nhóm đó
+            if (matchedCategory) {
+                filtered = filtered.filter(t => {
+                    const content = (t.TenTour + " " + t.MoTa).toLowerCase();
+                    return matchedCategory.some(p => content.includes(p));
+                });
+            }
+
+
+
+
+            // === Lọc số ngày linh hoạt ===
+            function extractNumber(text) {
+                const match = text.match(/(\d+)\s*(ngày|day)/i);
+                return match ? parseInt(match[1]) : null;
+            }
+
+            const dayLimit = extractNumber(text);
+            if (dayLimit) {
+                filtered = filtered.filter(t => {
+                    const days = extractDays(t.TenTour);
+
+                    if (!days) return false;
+
+                    if (text.includes("hơn") || text.includes("trên")) {
+                        return days > dayLimit;
+                    }
+                    if (text.includes("dưới") || text.includes("ít hơn")) {
+                        return days < dayLimit;
+                    }
+
+                    return days === dayLimit;
+                });
+            }
+
+            return filtered.slice(0, 4);
+        }
+
+        function generateResponse(userText, relevantTours) {
+            const text = userText.toLowerCase();
+            let response = '';
+
+            if (relevantTours.length === 0) {
+                response = `Dạ em xin lỗi anh/chị 😢<br><br>Em chưa tìm thấy tour phù hợp với yêu cầu này. Anh/chị có thể:<br>
+                    • Thử tìm kiếm với từ khóa khác<br>
+                    • Điều chỉnh ngân sách<br>
+                    • Linh hoạt về điểm đến<br><br>
+                    Hoặc anh/chị nói rõ hơn để em tư vấn tốt hơn nha! ❤️`;
+            } else {
+                if (text.includes('lãng mạn') || text.includes('honeymoon')) {
+                    response = `Dạ em có những tour lãng mạn tuyệt vời cho anh/chị đây ạ! 💑✨<br><br>`;
+                } else if (text.includes('gia đình')) {
+                    response = `Dạ em gợi ý những tour phù hợp cho cả gia đình nè! 👨‍👩‍👧‍👦❤️<br><br>`;
+                } else if (text.includes('mạo hiểm')) {
+                    response = `Dạ tour mạo hiểm đầy kịch tính cho anh/chị đây! ⛰️🔥<br><br>`;
+                } else if (text.includes('ẩm thực')) {
+                    response = `Dạ tour ẩm thực tuyệt vời cho anh/chị sành ăn nè! 🍜😋<br><br>`;
+                } else {
+                    response = `Dạ em tìm được những tour phù hợp cho anh/chị đây ạ! ✈️😊<br><br>`;
+                }
+
+                relevantTours.forEach((tour) => {
+                    const price = parseFloat(tour.Gia);
+                    const priceFormatted = price.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2
+                    }).replace('$', '').trim() + ' USD';
+
+                    const guideStatus = tour.guide && tour.guide.trim() !== ""
+                        ? `🙋 HDV: <strong>${tour.guide}</strong>`
+                        : `💁 HDV: Đang sắp xếp`;
+
+                    response += `<div class="tour-card">
+                        <div class="tour-header">
+                            <h4>${tour.TenTour}</h4>
+                            <span class="tour-code">Mã: ${tour.MaTour}</span>
+                        </div>
+                        <p class="tour-description">✨ ${tour.MoTa}</p>
+                        <div class="tour-details">
+                            <span class="detail-item">✈️ Phương tiện: <strong>${tour.PhuongTien}</strong></span>
+                            <span class="detail-item">${guideStatus}</span>
+                        </div>
+                        <p class="price">💰 Giá: <strong>${priceFormatted}</strong>/khách</p>
+                    </div>`;
+                });
+
+                response += '<br>Anh/chị thích tour nào để em tư vấn chi tiết hơn nhé! 😊';
+            }
+
+            return response;
+        }
+
+        async function sendMsg() {
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            userReply(userText);
+            addToHistory('user', userText);
+            input.value = '';
+            showTyping();
+
+            const tours = await getTours();
+            if (!tours || tours.length === 0) {
+                botReply("Em xin lỗi 😢 Hiện không thể tải dữ liệu tour. Anh/chị thử lại sau nhé! ❤️");
+                return;
+            }
+
+            setTimeout(() => {
+                const relevantTours = findRelevantTours(userText, tours);
+                const response = generateResponse(userText, relevantTours);
+                addToHistory('assistant', response);
+                botReply(response, true);
+            }, 800 + Math.random() * 800);
+        }
+
+        function testMessage(msg) {
+            if (!chatbox.classList.contains('active')) {
+                chatbox.classList.add('active');
+                if (conversationHistory.length === 0) showWelcomeMessage();
+            }
+
+            setTimeout(() => {
+                input.value = msg;
+                input.focus();
+                setTimeout(() => sendMsg(), 500);
+            }, 500);
+        }
+
+        function showWelcomeMessage() {
+            setTimeout(() => {
+                botReply(`Chào anh/chị! Em là AI Tư Vấn Viên Travela đây ạ! ❤️✈️<br><br>
+                    Em có thể giúp anh/chị:<br>
+                    • Tìm tour phù hợp với ngân sách<br>
+                    • Gợi ý điểm đến lãng mạn, gia đình, mạo hiểm...<br>
+                    • Kiểm tra chỗ trống và giá tour<br><br>
+                    Anh/chị muốn đi đâu, kiểu tour nào để em tư vấn nhé! 😊`, true, true);
+            }, 500);
+        }
+
+        input.addEventListener('keypress', e => { if (e.key === 'Enter') sendMsg(); });
+
+        const observer = new MutationObserver(() => { messages.scrollTop = messages.scrollHeight; });
+        observer.observe(messages, { childList: true });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (conversationHistory.length === 0 && chatbox && !chatbox.classList.contains('active')) {
+                    chatbox.classList.add('active');
+                    showWelcomeMessage();
+                }
+            }, 1000);
+        });
+    </script>
+
+
+
+
     @RenderSection("Scripts", required: false)
 </body>
 

@@ -1,0 +1,167 @@
+﻿@model Trave.Models.BaiViet
+@{
+    ViewBag.Title = "Chi Tiết Bài Viết: " + Model.TieuDe;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid     ">
+    <!-- Header Card -->
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+        <div class="card-header bg-gradient-primary text-white py-4">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h3 class="mb-1 fw-bold text-white">@Model.TieuDe</h3>
+                    <small class="opacity-90">Mã bài viết: #@Model.MaBaiViet • Đăng ngày @(Model.NgayDang?.ToString("dd/MM/yyyy HH:mm"))</small>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-light text-primary fs-6 px-3 py-2">@(Model.DanhMucBlog?.TenDanhMuc ?? "Chưa phân loại")</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-5">
+            <div class="row g-5">
+                <!-- Left: Thumbnail + Thông tin nhanh -->
+                <div class="col-lg-4">
+                    <div class="sticky-top" style="top: 100px;">
+                        <div class="text-center mb-4">
+                            @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                            {
+                                <img src="@Url.Content("~/img/Blog/" + Model.HinhAnh)"
+                                     alt="Ảnh đại diện"
+                                     class="img-fluid rounded-4 shadow-sm"
+                                     style="max-height: 300px; object-fit: cover; width: 100%;">
+                            }
+                            else
+                            {
+                                <div class="bg-light border rounded-4 d-flex align-items-center justify-content-center text-muted"
+                                     style="height: 300px; font-size: 1.2rem;">
+                                    <i class="fas fa-image fa-3x mb-3"></i><br />Không có ảnh đại diện
+                                </div>
+                            }
+                        </div>
+
+                        <div class="bg-light rounded-4 p-4 shadow-sm">
+                            <h5 class="fw-bold text-dark mb-4"><i class="fas fa-info-circle text-primary me-2"></i>Thông tin bài viết</h5>
+                            <table class="table table-borderless table-sm">
+                                <tr>
+                                    <th class="text-muted pe-3">Tác giả</th>
+                                    <td class="fw-600">@(Model.Tacgia ?? "N/A")</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Lượt xem</th>
+                                    <td><span class="badge bg-success fs-6">@(Model.LuotXem ?? 0)</span></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Trạng thái</th>
+                                    <td>
+                                        <span class="badge bg-success">Đã xuất bản</span>
+                                        @* Nếu có cột Active thì thay bằng: @(Model.Active == true ? "<span class='badge bg-success'>Đã xuất bản</span>" : "<span class='badge bg-secondary'>Nháp</span>") *@
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Nội dung chính -->
+                <div class="col-lg-8">
+                    <!-- Tóm tắt -->
+                    @if (!string.IsNullOrEmpty(Model.TomTat))
+                    {
+                        <div class="alert alert-info border-start border-primary border-5 ps-4 mb-5">
+                            <h5 class="alert-heading fw-bold"><i class="fas fa-quote-left me-2"></i>Tóm tắt</h5>
+                            <p class="mb-0 lead">@Model.TomTat</p>
+                        </div>
+                    }
+
+                    <!-- Nội dung chi tiết -->
+                    <div class="blog-content-viewer">
+                        <h4 class="fw-bold mb-4 text-primary border-bottom pb-3"><i class="fas fa-file-alt me-2"></i>Nội dung chi tiết</h4>
+                        <article class="prose prose-lg max-w-none">
+                            @Html.Raw(Model.NoiDung)
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Action Buttons -->
+        <div class="card-footer bg-white border-top-0 py-4">
+            <div class="d-flex flex-wrap gap-3 justify-content-end">
+                <a href="@Url.Action("BlogEdit", new { id = Model.MaBaiViet })"
+                   class="btn btn-warning btn-lg rounded-pill px-4 shadow-sm">
+                    <i class="fas fa-edit me-2"></i>Chỉnh sửa
+                </a>
+                <button type="button" class="btn btn-danger btn-lg rounded-pill px-4 shadow-sm"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash-alt me-2"></i>Xóa bài viết
+                </button>
+                <a href="@Url.Action("BlogList")"
+                   class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow-lg">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Xác nhận xóa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="lead">Bạn có chắc chắn muốn <strong>xóa vĩnh viễn</strong> bài viết này?</p>
+                <p class="text-danger"><strong>@Model.TieuDe</strong></p>
+                <small class="text-muted">Hành động này không thể hoàn tác.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                <a href="@Url.Action("BlogDelete", new { id = Model.MaBaiViet })"
+                   class="btn btn-danger rounded-pill">Xóa vĩnh viễn</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .blog-content-viewer img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin: 20px 0;
+    }
+
+    .blog-content-viewer iframe {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .prose :where(h1, h2, h3, h4, h5, h6) {
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 700;
+    }
+
+    .prose p {
+        line-height: 1.8;
+        margin-bottom: 1.2em;
+    }
+
+    .card {
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+</style>

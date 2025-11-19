@@ -76,7 +76,49 @@
                         </ul>
                     </div>
                 </li>
-
+                <li class="nav-item mb-1">
+                    <a class="nav-link"
+                       href="#tdtour-submenu"
+                       data-bs-toggle="collapse"
+                       role="button"
+                       aria-expanded="false"
+                       aria-controls="tdtour-submenu">
+                        <i class="fa-solid fa-suitcase-rolling me-2"></i> Theo dõi tour
+                    </a>
+                    <div class="collapse" id="tdtour-submenu">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("TTTourlist", "Admin")">
+                                    <i class="fa-solid fa-caret-right me-2"></i> Danh sách Tour
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mb-1">
+                    <a class="nav-link"
+                       href="#blog-submenu"
+                       data-bs-toggle="collapse"
+                       role="button"
+                       aria-expanded="false"
+                       aria-controls="blog-submenu">
+                        <i class="fa-solid fa-suitcase-rolling me-2"></i> Quản lý Bài Viết
+                    </a>
+                    <div class="collapse" id="blog-submenu">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("BlogList", "Admin")">
+                                    <i class="fa-solid fa-caret-right me-2"></i> Danh sách Bài Viết
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("BlogCreate", "Admin")">
+                                    <i class="fa-solid fa-caret-right me-2"></i> Thêm Bài Viết Mới
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
                 <li class="nav-item mb-1">
                     <a class="nav-link"
